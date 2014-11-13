@@ -1,4 +1,7 @@
-package com.example.testos2;
+package com.iut.oneswitch.model;
+
+import com.iut.oneswitch.view.VerticalLine;
+import com.iut.oneswitch.view.HorizontalLine;
 
 import android.app.Service;
 import android.content.Context;
@@ -13,16 +16,12 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-//LOL
-//Je suis un commentaire
-//3
-//wesh
 
 public class OneSwitchService extends Service {
 
 	private WindowManager windowManager;
-	private DrawView chatHead;
-	private DrawSecondView chatHead2;
+	private HorizontalLine chatHead;
+	private VerticalLine chatHead2;
 	private View chatHead3;
 
 
@@ -35,11 +34,11 @@ public class OneSwitchService extends Service {
 		//chatHead.setImageResource(R.drawable.ic_launcher);
 
 
-		chatHead = new DrawView(this);
+		chatHead = new HorizontalLine(this);
 		chatHead.setBackgroundColor(Color.WHITE);
 
 
-		chatHead2 = new DrawSecondView(this);
+		chatHead2 = new VerticalLine(this);
 		chatHead2.setBackgroundColor(Color.WHITE);
 
 		chatHead3 = new View(this);

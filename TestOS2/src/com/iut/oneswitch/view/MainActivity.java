@@ -1,4 +1,10 @@
-package com.example.testos2;
+package com.iut.oneswitch.view;
+
+import com.example.testos2.R;
+import com.example.testos2.R.id;
+import com.example.testos2.R.layout;
+import com.example.testos2.R.menu;
+import com.iut.oneswitch.model.OneSwitchService;
 
 import android.app.Activity;
 import android.content.Intent;

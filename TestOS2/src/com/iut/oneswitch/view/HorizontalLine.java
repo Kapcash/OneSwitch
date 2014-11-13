@@ -1,4 +1,4 @@
-package com.example.testos2;
+package com.iut.oneswitch.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -6,10 +6,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.View;
 
-public class DrawView extends View {
+public class HorizontalLine extends View {
     Paint paint = new Paint();
 
-    public DrawView(Context context) {
+    public HorizontalLine(Context context) {
         super(context);            
     }
 

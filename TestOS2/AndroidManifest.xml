@@ -15,7 +15,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name="com.iut.oneswitch.view.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
         <service
-            android:name=".OneSwitchService"
+            android:name="com.iut.oneswitch.model.OneSwitchService"
             android:exported="false"/>
     </application>
 
