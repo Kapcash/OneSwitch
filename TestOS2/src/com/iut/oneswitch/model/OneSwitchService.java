@@ -1,209 +1,293 @@
 package com.iut.oneswitch.model;
 
-import com.iut.oneswitch.view.VerticalLine;
-import com.iut.oneswitch.view.HorizontalLine;
-
+import android.app.Instrumentation;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
+import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.InputDevice;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 
-public class OneSwitchService extends Service {
+import com.iut.oneswitch.view.HorizontalLine;
+import com.iut.oneswitch.view.VerticalLine;
+
+public class OneSwitchService extends Service implements OnTouchListener{
+
+	private final IBinder mBinder = new LocalBinder();
 
 	private WindowManager windowManager;
-	private HorizontalLine chatHead;
-	private VerticalLine chatHead2;
-	private View chatHead3;
+	private HorizontalLine horizLine;
+	private VerticalLine verticalLine;
+	private View clickPanel;
 
+	private boolean horizMoving = false;
+	private boolean horizInit = false;
+	private WindowManager.LayoutParams horizParams;
+
+	private boolean verticalMoving = false;
+	private boolean verticalInit = false;
+	private WindowManager.LayoutParams verticalParams;
+
+
+	public class LocalBinder extends Binder {
+		public OneSwitchService getService() {
+			// Return this instance of service so clients can call public methods
+			return OneSwitchService.this;
+		}
+	}
 
 	@Override public void onCreate() {
 		super.onCreate();
+		windowManager = (WindowManager) getSystemService(WINDOW_SERVICE); //UI access
 
-		windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+		drawClickPanel(); //view used to incercept click on all the screen
 
-		//chatHead = new ImageView(this);
-		//chatHead.setImageResource(R.drawable.ic_launcher);
+	}
 
-
-		chatHead = new HorizontalLine(this);
-		chatHead.setBackgroundColor(Color.WHITE);
-
-
-		chatHead2 = new VerticalLine(this);
-		chatHead2.setBackgroundColor(Color.WHITE);
-
-		chatHead3 = new View(this);
-		//chatHead3.setBackgroundColor(Color.YELLOW);
-		//chatHead3.setAlpha((float) 0.1);
-
+	private void drawClickPanel() {
+		clickPanel = new View(this);
 		final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
 				WindowManager.LayoutParams.WRAP_CONTENT,
 				WindowManager.LayoutParams.WRAP_CONTENT,
 				WindowManager.LayoutParams.TYPE_PHONE,
 				WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-				PixelFormat.TRANSLUCENT);
+				PixelFormat.TRANSLUCENT); 
 
-		WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
-		Display display = wm.getDefaultDisplay();
-		Point size = new Point();
-		display.getSize(size);
 
 		params.gravity = Gravity.TOP | Gravity.LEFT;
 		params.x = 0;
 		params.y = 0;
-		params.height = 2;
-		params.width = size.x;
-		
-		
-		final WindowManager.LayoutParams params2 = new WindowManager.LayoutParams(
-				WindowManager.LayoutParams.WRAP_CONTENT,
-				WindowManager.LayoutParams.WRAP_CONTENT,
-				WindowManager.LayoutParams.TYPE_PHONE,
-				WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-				PixelFormat.TRANSLUCENT);
+		params.height = getScreenDimensions().y;
+		params.width = getScreenDimensions().x;
 
-
-		params2.gravity = Gravity.TOP | Gravity.LEFT;
-		params2.x = 0;
-		params2.y = 0;
-		params2.height = size.y;
-		params2.width = 2;
-		
-		final WindowManager.LayoutParams params3 = new WindowManager.LayoutParams(
-				WindowManager.LayoutParams.WRAP_CONTENT,
-				WindowManager.LayoutParams.WRAP_CONTENT,
-				WindowManager.LayoutParams.TYPE_PHONE,
-				WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-				PixelFormat.TRANSLUCENT);
-
-
-		params3.gravity = Gravity.TOP | Gravity.LEFT;
-		params3.x = 0;
-		params3.y = 0;
-		params3.height = size.y;
-		params3.width = size.x;
+		windowManager.addView(clickPanel, params);
 
 
 
-		windowManager.addView(chatHead, params);
-		windowManager.addView(chatHead2, params2);
-		//windowManager.addView(chatHead3, params3);
-		try {
-			final Handler handler = new Handler();
-			
-			Runnable runnable = new Runnable() {
-				boolean down = true;
-				   @Override
-				   public void run() {
-				       try {
-				    	   
-				    	   Point size = new Point();
-				    	   windowManager.getDefaultDisplay().getSize(size);
-				    	   if((params.y <= size.y)&&(down == true)){
-							   params.y += 1;
-							   
-								windowManager.updateViewLayout(chatHead, params);
-								if(params.y == size.y)
-									down = false;
-						   }else
-						   {
-							   params.y -= 1;
-								
-								windowManager.updateViewLayout(chatHead, params);
-								if(params.y == 0)
-									down = true;
-						   }
-				    	   handler.postDelayed(this, 10);
-					} catch (Exception e) {
-						// TODO: handle exception
-					}
-					  
-				     
-				      
-				   }
-				};
-				handler.postDelayed(runnable, 2000);
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		
-		try {
-			final Handler handler = new Handler();
-			
-			Runnable runnable = new Runnable() {
-				boolean down = true;
-				   @Override
-				   public void run() {
-					   Point size = new Point();
-			    	   windowManager.getDefaultDisplay().getSize(size);
-				       try {
-				    	   if((params2.x <= size.x)&&(down == true)){
-							   params2.x += 1;
-							   
-								windowManager.updateViewLayout(chatHead2, params2);
-								if(params2.x == size.x)
-									down = false;
-						   }else
-						   {
-							   params2.x -= 1;
-								
-								windowManager.updateViewLayout(chatHead2, params2);
-								if(params2.x == 0)
-									down = true;
-						   }
-				    	   handler.postDelayed(this, 10);
-					} catch (Exception e) {
-						// TODO: handle exception
-					}
-					  				      
-				    }
-				};
-				handler.postDelayed(runnable, 2000);
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
+		clickPanel.setOnTouchListener(this);
 
-			
-		chatHead3.setOnTouchListener(new View.OnTouchListener() {
-		
-
-			  @Override public boolean onTouch(View v, MotionEvent event) {
-			    switch (event.getAction()) {
-			      case MotionEvent.ACTION_DOWN:
-			        System.out.println("DOOOOWN");
-			        
-			        return true;
-			      case MotionEvent.ACTION_UP:
-			    	  System.out.println("UUUUUPP");
-			        return true;
-			     
-			    }
-			    return false;
-			  }
-			});
-		
 	}
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		if (chatHead != null) windowManager.removeView(chatHead);
-		if (chatHead2 != null) windowManager.removeView(chatHead2);
+	public void createVerticalLine(){
+
+		if(!verticalInit){
+			System.out.println("VERTICAL LINE");
+			verticalLine = new VerticalLine(this);
+
+			verticalParams = new WindowManager.LayoutParams(
+					WindowManager.LayoutParams.WRAP_CONTENT,
+					WindowManager.LayoutParams.WRAP_CONTENT,
+					WindowManager.LayoutParams.TYPE_PHONE,
+					WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+					PixelFormat.TRANSLUCENT);
+
+
+
+			verticalParams.gravity = Gravity.TOP | Gravity.LEFT;
+			verticalParams.x = 0;
+			verticalParams.y = 0;
+			verticalParams.height = getScreenDimensions().y;
+			verticalParams.width = 2;
+
+			windowManager.addView(verticalLine, verticalParams);
+			verticalInit = true;
+		}
+
+		if(verticalInit){
+			try {
+				final Handler handler = new Handler();
+
+				Runnable runnable = new Runnable() {
+					boolean down = true;
+					@Override
+					public void run() {
+						try {
+
+							Point size = new Point();
+							windowManager.getDefaultDisplay().getSize(size);
+							if((verticalParams.x <= size.x)&&(down == true)){
+								verticalParams.x += 1;
+
+								windowManager.updateViewLayout(verticalLine, verticalParams);
+								if(verticalParams.x == size.x)
+									down = false;
+							}else
+							{
+								verticalParams.x -= 1;
+
+								windowManager.updateViewLayout(verticalLine, verticalParams);
+								if(verticalParams.x == 0)
+									down = true;
+							}
+							if(verticalMoving)
+								handler.postDelayed(this, 10);
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+
+
+
+					}
+				};
+				handler.postDelayed(runnable, 2000);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+
+	}
+
+	public void createHorizontalLine(){
+
+		if(!horizInit){ //si la barre horizontale n'existe pas, on la crée
+			System.out.println("HORIZONTAL LINE");
+			horizLine = new HorizontalLine(this);
+
+			horizParams = new WindowManager.LayoutParams(
+					WindowManager.LayoutParams.WRAP_CONTENT,
+					WindowManager.LayoutParams.WRAP_CONTENT,
+					WindowManager.LayoutParams.TYPE_PHONE,
+					WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+					PixelFormat.TRANSLUCENT);
+
+			horizParams.gravity = Gravity.TOP | Gravity.LEFT;
+			horizParams.x = 0;
+			horizParams.y = 0;
+			horizParams.height = 2;
+			horizParams.width = getScreenDimensions().x;
+
+			windowManager.addView(horizLine, horizParams);
+			horizInit = true;
+		}
+
+		if(horizInit){
+			//gestion de son deplacement
+			try {
+				final Handler handler = new Handler();
+
+				Runnable runnable = new Runnable() {
+					boolean down = true;
+					@Override
+					public void run() {
+						try {
+
+							Point size = new Point();
+							windowManager.getDefaultDisplay().getSize(size);
+							if((horizParams.y <= size.y)&&(down == true)){
+								horizParams.y += 1;
+
+								windowManager.updateViewLayout(horizLine, horizParams);
+								if(horizParams.y == size.y)
+									down = false;
+							}else
+							{
+								horizParams.y -= 1;
+
+								windowManager.updateViewLayout(horizLine, horizParams);
+								if(horizParams.y == 0)
+									down = true;
+							}
+							if(horizMoving) //si elle doit continuer de bouger, alors on planifie le prochain mouvement
+								handler.postDelayed(this, 10);
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+
+
+
+					}
+				};
+				handler.postDelayed(runnable, 1000); //demarrage apres 1 seconde
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+	}
+
+	private Point getScreenDimensions(){
+		Display display = windowManager.getDefaultDisplay();
+		Point size = new Point();
+		display.getSize(size);
+		return size;
 	}
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		// TODO Auto-generated method stub
-		return null;
+		return mBinder;
 	}
-}
+
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		switch (event.getAction()) {
+		case MotionEvent.ACTION_DOWN:
+			System.out.println("DOOOOWN");
+
+
+			return true;
+		case MotionEvent.ACTION_UP:
+			System.out.println("UUUUUPP");
+
+			handleClick();
+
+			return true;
+		}
+		return false;
+	}
+
+
+	private void handleClick(){
+		if(!horizInit){
+			createHorizontalLine();
+			horizMoving = true;
+		}
+		else{
+			if(horizMoving){
+				horizMoving = false;
+				if(!verticalInit){
+					createVerticalLine();
+					verticalMoving = true;
+				}
+
+			}
+			else{
+				if(verticalMoving){
+					verticalMoving = false;
+					//click
+					//windowManager.removeView(clickPanel);
+					
+					System.out.println("X" + verticalParams.x);
+					System.out.println("Y" + horizParams.y);
+
+					
+					
+						
+					}
+					else if(!verticalMoving&&!horizMoving&&verticalInit&&horizInit){
+						verticalInit = false;
+						horizInit = false;
+						windowManager.removeView(horizLine);
+						windowManager.removeView(verticalLine);
+
+					}
+				}
+			}
+
+
+
+
+
+
+		}
+
+	}
 
