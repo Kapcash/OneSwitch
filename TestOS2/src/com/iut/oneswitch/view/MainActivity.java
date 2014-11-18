@@ -1,5 +1,7 @@
 package com.iut.oneswitch.view;
 
+import java.io.IOException;
+
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -30,12 +32,18 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		
 		final Button button = (Button) findViewById(R.id.button1);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
             	TextView t = (TextView) findViewById(R.id.textView1);
-            	t.setText("LOL");
+            	if(t.getText() == "LOL"){
+            		t.setText("BLAGUE");
+            	}
+            	else{
+            		t.setText("LOL");
+            	}
+            
             }
         });
 		

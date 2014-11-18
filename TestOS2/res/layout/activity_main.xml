@@ -19,8 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView1"
-        android:layout_marginTop="107dp"
         android:layout_toRightOf="@+id/textView1"
-        android:text="SERVICE" />
+        android:text="@string/button_service" />
 
 </RelativeLayout>

@@ -1,5 +1,10 @@
 package com.iut.oneswitch.model;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import android.app.Instrumentation;
 import android.app.Service;
 import android.content.Intent;
@@ -139,7 +144,7 @@ public class OneSwitchService extends Service implements OnTouchListener{
 
 					}
 				};
-				handler.postDelayed(runnable, 2000);
+				handler.postDelayed(runnable, 500);
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
@@ -207,7 +212,7 @@ public class OneSwitchService extends Service implements OnTouchListener{
 
 					}
 				};
-				handler.postDelayed(runnable, 1000); //demarrage apres 1 seconde
+				handler.postDelayed(runnable, 100); //demarrage apres 0.1 seconde
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
@@ -235,7 +240,7 @@ public class OneSwitchService extends Service implements OnTouchListener{
 
 			return true;
 		case MotionEvent.ACTION_UP:
-			System.out.println("UUUUUPP");
+			System.out.println("UUUUPP");
 
 			handleClick();
 
@@ -263,31 +268,69 @@ public class OneSwitchService extends Service implements OnTouchListener{
 				if(verticalMoving){
 					verticalMoving = false;
 					//click
-					//windowManager.removeView(clickPanel);
-					
-					System.out.println("X" + verticalParams.x);
-					System.out.println("Y" + horizParams.y);
+					windowManager.removeView(clickPanel);
 
-					
-					
+					System.out.println("X " + verticalParams.x);
+					System.out.println("Y " + horizParams.y);
+
+					try {
+						String cmds[] = new String[6];
 						
-					}
-					else if(!verticalMoving&&!horizMoving&&verticalInit&&horizInit){
-						verticalInit = false;
-						horizInit = false;
-						windowManager.removeView(horizLine);
-						windowManager.removeView(verticalLine);
+						   cmds[0] = "sendevent /dev/input/event0 3 0 " + verticalParams.x;
+					        cmds[1] = "sendevent /dev/input/event0 3 1 " + horizParams.y;
+					       // cmds[0] = "sendevent /dev/input/event0 3 0 165";
+					       // cmds[1] = "sendevent /dev/input/event0 3 1 215";
+					        cmds[2] = "sendevent /dev/input/event0 1 330 1";
+					        cmds[3] = "sendevent /dev/input/event0 0 0 0";
+					        cmds[4] = "sendevent /dev/input/event0 1 330 0";
+					        cmds[5] = "sendevent /dev/input/event0 0 0 0";
+						
+					        Process d = Runtime.getRuntime().exec("su"); 
+					        
+						 Process p = Runtime.getRuntime().exec("su");
+					        DataOutputStream os = new DataOutputStream(p.getOutputStream());            
+					        for (String tmpCmd : cmds) {
+					        	System.out.println(tmpCmd);
+					                os.writeBytes(tmpCmd+"\n");
+					        }           
+					        os.writeBytes("exit\n");  
+					        os.flush();
+					      
 
+					       /* for (String tmpCmd : cmds) {
+					        	System.out.println(tmpCmd);
+					        	  //Runtime.getRuntime().exec(new String[] { "su", "-c", tmpCmd });
+					        	Runtime.getRuntime().exec(tmpCmd);
+					        } */ 
+					   
+
+						
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
+
+					//windowManager.addView(clickPanel, this);
+
+				}
+				else if(!verticalMoving&&!horizMoving&&verticalInit&&horizInit){
+					verticalInit = false;
+					horizInit = false;
+					windowManager.removeView(horizLine);
+					windowManager.removeView(verticalLine);
+
 				}
 			}
-
-
-
-
-
-
 		}
 
+
+
+
+
+
 	}
+
+	
+
+}
 
