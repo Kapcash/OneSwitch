@@ -42,6 +42,7 @@ public class OneSwitchService extends Service implements OnTouchListener{
 	private boolean verticalMoving = false;
 	private boolean verticalInit = false;
 	private WindowManager.LayoutParams verticalParams;
+	private WindowManager.LayoutParams clickParams;
 
 
 	public class LocalBinder extends Binder {
@@ -61,7 +62,7 @@ public class OneSwitchService extends Service implements OnTouchListener{
 
 	private void drawClickPanel() {
 		clickPanel = new View(this);
-		final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+		clickParams = new WindowManager.LayoutParams(
 				WindowManager.LayoutParams.WRAP_CONTENT,
 				WindowManager.LayoutParams.WRAP_CONTENT,
 				WindowManager.LayoutParams.TYPE_PHONE,
@@ -69,13 +70,13 @@ public class OneSwitchService extends Service implements OnTouchListener{
 				PixelFormat.TRANSLUCENT); 
 
 
-		params.gravity = Gravity.TOP | Gravity.LEFT;
-		params.x = 0;
-		params.y = 0;
-		params.height = getScreenDimensions().y;
-		params.width = getScreenDimensions().x;
+		clickParams.gravity = Gravity.TOP | Gravity.LEFT;
+		clickParams.x = 0;
+		clickParams.y = 0;
+		clickParams.height = getScreenDimensions().y;
+		clickParams.width = getScreenDimensions().x;
 
-		windowManager.addView(clickPanel, params);
+		windowManager.addView(clickPanel, clickParams);
 
 
 
@@ -275,42 +276,46 @@ public class OneSwitchService extends Service implements OnTouchListener{
 
 					try {
 						String cmds[] = new String[6];
-						
-						   cmds[0] = "sendevent /dev/input/event0 3 0 " + verticalParams.x;
-					        cmds[1] = "sendevent /dev/input/event0 3 1 " + horizParams.y;
-					       // cmds[0] = "sendevent /dev/input/event0 3 0 165";
-					       // cmds[1] = "sendevent /dev/input/event0 3 1 215";
-					        cmds[2] = "sendevent /dev/input/event0 1 330 1";
-					        cmds[3] = "sendevent /dev/input/event0 0 0 0";
-					        cmds[4] = "sendevent /dev/input/event0 1 330 0";
-					        cmds[5] = "sendevent /dev/input/event0 0 0 0";
-						
-					        Process d = Runtime.getRuntime().exec("su"); 
-					        
-						 Process p = Runtime.getRuntime().exec("su");
-					        DataOutputStream os = new DataOutputStream(p.getOutputStream());            
-					        for (String tmpCmd : cmds) {
-					        	System.out.println(tmpCmd);
-					                os.writeBytes(tmpCmd+"\n");
-					        }           
-					        os.writeBytes("exit\n");  
-					        os.flush();
-					      
 
-					       /* for (String tmpCmd : cmds) {
-					        	System.out.println(tmpCmd);
-					        	  //Runtime.getRuntime().exec(new String[] { "su", "-c", tmpCmd });
-					        	Runtime.getRuntime().exec(tmpCmd);
-					        } */ 
-					   
+				//	cmds[0] = "sendevent /dev/input/event0 3 0 " + verticalParams.x;
+					//	cmds[1] = "sendevent /dev/input/event0 3 1 " + horizParams.y;
+						// cmds[0] = "sendevent /dev/input/event0 3 0 180";
+						//cmds[1] = "sendevent /dev/input/event0 3 1 91";
+						 cmds[0] = "sendevent /dev/input/event0 3 0 136";
+						cmds[1] = "sendevent /dev/input/event0 3 1 1253";
+						cmds[2] = "sendevent /dev/input/event0 1 330 1";
+						cmds[3] = "sendevent /dev/input/event0 0 0 0";
+						cmds[4] = "sendevent /dev/input/event0 1 330 0";
+						cmds[5] = "sendevent /dev/input/event0 0 0 0";
 
+
+					/*	Process p = Runtime.getRuntime().exec("su");
+						DataOutputStream os = new DataOutputStream(p.getOutputStream());            
+						for (String tmpCmd : cmds) {
+							System.out.println(tmpCmd);
+							os.writeBytes(tmpCmd+"\n");
+						}           
+						os.writeBytes("exit\n");  
+						os.flush();
 						
+						
+*/
+
+						Runtime.getRuntime().exec("su -c chmod 666 /dev/input/event0"); //INDISPENSABLE avoir les droits pour ecrire des events
+																						//necessite que le telephone soit rooté
+						 for (String tmpCmd : cmds) {
+					        	System.out.println(tmpCmd);
+					        	Runtime.getRuntime().exec(tmpCmd); //execution des commandes
+					        } 
+
+
+
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 
-					//windowManager.addView(clickPanel, this);
+				//	windowManager.addView(clickPanel, clickParams);					
 
 				}
 				else if(!verticalMoving&&!horizMoving&&verticalInit&&horizInit){
@@ -330,7 +335,7 @@ public class OneSwitchService extends Service implements OnTouchListener{
 
 	}
 
-	
+
 
 }
 
