@@ -5,11 +5,12 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="15"
+        android:minSdkVersion="16"
         android:targetSdkVersion="21" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     
     <uses-permission android:name="android.permission.ACCESS_SUPERUSER"/>
+   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
    <!--   <uses-permission android:name="android.permission.INJECT_EVENTS"/> -->
     
 	
@@ -30,6 +31,16 @@
         <service
             android:name="com.iut.oneswitch.model.OneSwitchService"
             android:exported="false"/>
+            <!--
+<receiver android:enabled="true" android:name="com.iut.oneswitch.model.BootUpReceiver"
+        android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+
+        <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
+</receiver>
+        -->
     </application>
 
 </manifest>
