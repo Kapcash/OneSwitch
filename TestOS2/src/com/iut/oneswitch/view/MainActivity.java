@@ -1,5 +1,6 @@
 package com.iut.oneswitch.view;
 
+
 import java.io.IOException;
 
 import android.app.Activity;
@@ -12,7 +13,6 @@ import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -21,18 +21,25 @@ import com.iut.oneswitch.model.OneSwitchService;
 import com.iut.oneswitch.model.OneSwitchService.LocalBinder;
 
 public class MainActivity extends Activity {
-
+ 
 	OneSwitchService mService;
     boolean mBound = false;
+    MainActivity mainActivity;
 	
 	Button play;
 	int button_status=1;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+		try {
+			Runtime.getRuntime().exec("su -c chmod 666 /dev/input/event0");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		final Button button = (Button) findViewById(R.id.button1);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -44,6 +51,23 @@ public class MainActivity extends Activity {
             		t.setText("LOL");
             	}
             
+            }
+        });
+        mainActivity = this;
+        Button start = (Button) findViewById(R.id.btStart);
+        start.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+            	if(mService!=null){
+            		mService.btStartListener();
+            	}
+            }
+        });
+        Button stop = (Button) findViewById(R.id.btStop);
+        stop.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+            	if(mService!=null){
+            		mService.stopIt();
+            	}
             }
         });
 		
@@ -100,3 +124,4 @@ public class MainActivity extends Activity {
         }
     };
 }
+
