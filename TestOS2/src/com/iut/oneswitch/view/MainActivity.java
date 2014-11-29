@@ -17,8 +17,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.testos2.R;
-import com.iut.oneswitch.model.OneSwitchService;
-import com.iut.oneswitch.model.OneSwitchService.LocalBinder;
+import com.iut.oneswitch.application.OneSwitchService;
+import com.iut.oneswitch.application.OneSwitchService.LocalBinder;
 
 public class MainActivity extends Activity {
  
@@ -34,6 +34,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
 		try {
 			Runtime.getRuntime().exec("su -c chmod 666 /dev/input/event0");
 		} catch (IOException e) {
@@ -58,7 +59,7 @@ public class MainActivity extends Activity {
         start.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
             	if(mService!=null){
-            		mService.btStartListener();
+            		mService.startService();
             	}
             }
         });
@@ -66,7 +67,7 @@ public class MainActivity extends Activity {
         stop.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
             	if(mService!=null){
-            		mService.stopIt();
+            		mService.stopService();
             	}
             }
         });
