@@ -8,6 +8,10 @@ import android.view.WindowManager;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager.LayoutParams;
 
+/**
+ * @author OneSwitch B
+ *Classe permettant de gèrer le panel attrapant le clic
+ */
 public class ClickPanelCtrl implements OnTouchListener {
 	
 	private OneSwitchService theService;
@@ -23,6 +27,9 @@ public class ClickPanelCtrl implements OnTouchListener {
 		init();
 	}
 	
+	/**
+	 * création du panel prenant en compte la surface de l'écran
+	 */
 	public void init(){
 
 		clickParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,
@@ -46,6 +53,9 @@ public class ClickPanelCtrl implements OnTouchListener {
 		add();
 	}
 	
+	/**
+	 * Ajout du panel
+	 */
 	private void add(){
 		if(!isShown){
 			theService.addView(thePanel, clickParams);
@@ -54,6 +64,9 @@ public class ClickPanelCtrl implements OnTouchListener {
 	
 	}
 	
+	/**
+	 * Enleve le panel de l'écran
+	 */
 	public void remove(){
 		if((isShown)){
 			if(theHandler != null){

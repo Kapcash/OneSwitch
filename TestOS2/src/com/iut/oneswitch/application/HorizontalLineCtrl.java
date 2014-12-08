@@ -33,6 +33,7 @@ public class HorizontalLineCtrl extends LineController {
 	 */
 	public HorizontalLineCtrl(OneSwitchService service) {
 		this.theLine = new HorizontalLine(service);
+		this.theLine.setId(200);
 		this.theService = service;
 
 	}

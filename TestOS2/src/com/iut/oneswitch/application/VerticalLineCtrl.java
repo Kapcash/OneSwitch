@@ -33,6 +33,8 @@ public class VerticalLineCtrl extends LineController{
 	 */
 	public VerticalLineCtrl(OneSwitchService service) {
 		this.theLine = new VerticalLine(service);
+		this.theLine.setId(201);
+
 		this.theService = service;
 		
 	}

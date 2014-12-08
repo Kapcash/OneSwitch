@@ -19,11 +19,20 @@ import android.widget.TextView;
 import com.example.oneswitch.R;
 import com.iut.oneswitch.application.OneSwitchService;
 import com.iut.oneswitch.application.OneSwitchService.LocalBinder;
-
+/**
+ * Classe principale permettant le lancement de l'aplication.
+ * @author OneSwitch B
+ *
+ */
 public class MainActivity extends Activity {
  
+	/**
+	 * Service de l'application
+	 */
 	OneSwitchService mService;
     boolean mBound = false;
+    
+    
     MainActivity mainActivity;
 	
 	Button play;
