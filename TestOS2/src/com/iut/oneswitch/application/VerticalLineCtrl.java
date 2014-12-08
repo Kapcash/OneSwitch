@@ -9,8 +9,12 @@ import android.view.Gravity;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 
-
-public class VerticalLineCtrl {
+/**
+ * Permet la gestion de la ligne horizontale
+ * @author OneSwitch B
+ * @see com.iut.oneswitch.view.HorizontalLine
+ */
+public class VerticalLineCtrl extends LineController{
 	private int lineThickness = 3;
 	private int speed = 3;
 
@@ -20,16 +24,23 @@ public class VerticalLineCtrl {
 
 	private VerticalLine theLine;
 	private WindowManager.LayoutParams verticalParams;
-	private boolean isShown = false;
-	private boolean isMoving = false;
-	private boolean isMovingRight = true;
 
+	private boolean isMovingRight = true;
+	
+	/**
+	 * Constructeur de la ligne horizontale
+	 * @param service
+	 */
 	public VerticalLineCtrl(OneSwitchService service) {
 		this.theLine = new VerticalLine(service);
 		this.theService = service;
 		
 	}
-
+	
+	/**
+	 * Initialise la ligne sans l'afficher
+	 * Mise en place des paramètres (taille, position initiale)
+	 */
 	public void init(){
 		verticalParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,
 				theService.getStatusBarHeight(),
@@ -51,6 +62,9 @@ public class VerticalLineCtrl {
 		runnable = new VerticalLineRunnable();
 	}
 	
+	/**
+	 * Ajoute la vue de la ligne sur l'écran
+	 */
 	public void add(){
 		init();
 		if(!isShown){
@@ -61,6 +75,9 @@ public class VerticalLineCtrl {
 
 	}
 
+	/**
+	 * Supprime la vue de la ligne de l'écran
+	 */
 	public void remove(){
 		if((isShown)&&(!isMoving)){
 			theService.removeView(theLine);
@@ -68,39 +85,50 @@ public class VerticalLineCtrl {
 		}
 
 	}
-
-	private void start(){	
+	
+	/**
+	 * Démarre le mouvement de la ligne
+	 */
+	protected void start(){	
 		isMoving = true;
 		handler.postDelayed(runnable, 1000); //start après 1 seconde
 	}
 
+	/**
+	 * Met en pause le déplacement de la ligne
+	 */
 	public void pause(){
 		isMoving = false;
 	}
 
-
-
-	
-	
-
-	public boolean isShown() {
-		return isShown;
-	}
-
-	public boolean isMoving() {
-		return isMoving;
-	}
-
+	/**
+	 * Position en X sur l'écran
+	 * @return coordonée en abscisse de la ligne
+	 */
 	public int getX(){
 		return verticalParams.x;
 	}
+	
+	/**
+	 * Position en Y sur l'écran
+	 * @return coordonée en ordonée de la ligne
+	 */
+	public int getY(){
+		return verticalParams.y;
+	}
 
 
 
-
-
+	/**
+	 * Permet le déplacement automatique en tâche de fond
+	 * @author OneSwitch B
+	 *
+	 */
 	class VerticalLineRunnable implements Runnable{
 
+		/**
+		 * Permet le défilement de la ligne
+		 */
 		@Override
 		public void run() {
 			try {

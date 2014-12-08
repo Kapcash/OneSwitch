@@ -8,8 +8,12 @@ import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 
 import com.iut.oneswitch.view.HorizontalLine;
-
-public class HorizontalLineCtrl {
+/**
+ * Permet la gestion de la ligne horizontale
+ * @author OneSwitch B
+ * @see com.iut.oneswitch.view.HorizontalLine
+ */
+public class HorizontalLineCtrl extends LineController {
 	private int lineThickness = 3;
 	private int speed = 3;
 
@@ -23,12 +27,20 @@ public class HorizontalLineCtrl {
 	private boolean isMoving = false;
 	private boolean isMovingDown = true;
 
+	/**
+	 * Constructeur de la ligne horizontale
+	 * @param service
+	 */
 	public HorizontalLineCtrl(OneSwitchService service) {
 		this.theLine = new HorizontalLine(service);
 		this.theService = service;
-		
+
 	}
 
+	/**
+	 * Initialise la ligne sans l'afficher
+	 * Mise en place des paramètres (taille, position initiale)
+	 */
 	public void init(){
 		horizParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,
 				theService.getStatusBarHeight(),
@@ -46,14 +58,13 @@ public class HorizontalLineCtrl {
 
 		handler = new Handler();
 		runnable = new HorizLineRunnable();
-		
-	}
-	
-	public void initSize(){
-		horizParams.width = theService.getScreenSize().x;
-		theService.updateViewLayout(theLine, horizParams);
+
 	}
 
+
+	/**
+	 * Ajoute la vue de la ligne sur l'écran
+	 */
 	public void add(){
 		init();
 		if(!isShown){
@@ -65,6 +76,9 @@ public class HorizontalLineCtrl {
 
 	}
 
+	/**
+	 * Supprime la vue de la ligne de l'écran
+	 */
 	public void remove(){
 		if((isShown)&&(!isMoving)){
 			theService.removeView(theLine);
@@ -73,36 +87,66 @@ public class HorizontalLineCtrl {
 
 	}
 
-	private void start(){	
+	/**
+	 * Démarre le mouvement de la ligne
+	 */
+	protected void start(){	
 		isMoving = true;
 		handler.postDelayed(runnable, 1000); //start après 1 seconde
 	}
 
+	/**
+	 * Met en pause le déplacement de la ligne
+	 */
 	public void pause(){
 		isMoving = false;
 	}
 
 
-	
-	
-
+	/**
+	 * Ligne affichée sur l'écran ?
+	 * @return vrai ou faux
+	 */
 	public boolean isShown() {
 		return isShown;
 	}
 
+	/**
+	 * Ligne en déplacement sur l'écran
+	 * @return vrai ou faux
+	 */
 	public boolean isMoving() {
 		return isMoving;
 	}
 
+	/**
+	 * Position en X sur l'écran
+	 * @return coordonée en abscisse de la ligne
+	 */
+	public int getX(){
+		return horizParams.x;
+	}
+	
+	
+	/**
+	 * Position en Y sur l'écran
+	 * @return coordonée en ordonée de la ligne
+	 */
 	public int getY(){
 		return horizParams.y;
 	}
 
 
-
-
+	/**
+	 * Permet le déplacement automatique en tâche de fond
+	 * @author OneSwitch B
+	 *
+	 */
 	class HorizLineRunnable implements Runnable{
 
+		/**
+		 * Permet le défilement de la ligne
+		 */
 		@Override
 		public void run() {
 			try {

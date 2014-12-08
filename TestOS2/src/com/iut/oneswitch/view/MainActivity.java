@@ -16,7 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.testos2.R;
+import com.example.oneswitch.R;
 import com.iut.oneswitch.application.OneSwitchService;
 import com.iut.oneswitch.application.OneSwitchService.LocalBinder;
 
@@ -34,22 +34,16 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
-		try {
-			Runtime.getRuntime().exec("su -c chmod 666 /dev/input/event0");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
 		final Button button = (Button) findViewById(R.id.button1);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
             	TextView t = (TextView) findViewById(R.id.textView1);
-            	if(t.getText() == "LOL"){
-            		t.setText("BLAGUE");
+            	if(t.getText() == "BONJOUR"){
+            		t.setText("AUREVOIR");
             	}
             	else{
-            		t.setText("LOL");
+            		t.setText("BONJOUR");
             	}
             
             }

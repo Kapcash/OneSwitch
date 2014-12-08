@@ -3,12 +3,24 @@ package com.iut.oneswitch.application;
 import java.io.IOException;
 
 import android.os.Handler;
-
+/**
+ * Gère les actions à effectuer lors d'un clic sur le contacteur "oneswitch"
+ * @author OneSwitch B
+ *
+ */
 public class ClickHandler {
 
 	private static HorizontalLineCtrl horizLine;
 	private static VerticalLineCtrl verticalLine;
 
+	/**
+	 * 1) demarre la ligne horizontale
+	 * 2) met en pause la ligne horizontale et demarre la ligne verticale
+	 * 3) met en pause la ligne verticale et effectue le click
+	 * 4) supprime les deux lignes, et retour en 1
+	 * @param service le service de l'application
+	 * @param panel la vue interceptant le touch
+	 */
 	public void handleClick(OneSwitchService service, final ClickPanelCtrl panel){
 
 
@@ -38,7 +50,6 @@ public class ClickHandler {
 	                panel.init();
 	            }
 	        }, 500);
-			//panel.init();
 		}
 
 		else if(horizLine.isShown()&&verticalLine.isShown()&&!horizLine.isMoving()&&!verticalLine.isMoving()){ //quatrieme click : deux lignes affichées, aucun mouvement
@@ -49,7 +60,13 @@ public class ClickHandler {
 
 	}
 
-
+	/**
+	 * Simulation du clic sur l'écran via le "input swipe"
+	 * ROOT nécessaire
+	 * @param x coordonée abscisse
+	 * @param y coordonée ordonnée
+	 * @param time le temps d'appui à simuler
+	 */
 	private static void touchAsRoot(int x, int y, int time){
 		try {
 			//Runtime.getRuntime().exec("su -c input tap " + x + " " + y);
@@ -61,7 +78,9 @@ public class ClickHandler {
 		}
 	}
 
-
+	/**
+	 * supprime les deux lignes
+	 */
 	public void stop(){
 		if(horizLine != null)
 			horizLine.remove();	
@@ -70,15 +89,5 @@ public class ClickHandler {
 			verticalLine.remove();	
 	}
 	
-	public void reinit(){
-		if((horizLine.isMoving()))
-			horizLine.init();	
 
-		if((verticalLine.isMoving())){
-			horizLine.initSize();
-			verticalLine.init();
-		}
-				
-			
-	}
 }

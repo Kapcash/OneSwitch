@@ -66,15 +66,6 @@ public class ClickPanelCtrl implements OnTouchListener {
 	}
 	
 	
-	public void reinit(){
-		if((isShown)){
-			if(theHandler != null){
-				theHandler.reinit();
-			}
-			
-		}
-
-	}
 	
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
