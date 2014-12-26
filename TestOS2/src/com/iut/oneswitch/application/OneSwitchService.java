@@ -54,7 +54,6 @@ public class OneSwitchService extends Service{
 	@Override public void onCreate() {
 		super.onCreate();
 		windowManager = (WindowManager) getSystemService(WINDOW_SERVICE); //UI access
-
 	}
 
 	/**
@@ -64,9 +63,10 @@ public class OneSwitchService extends Service{
 		System.out.println("SERVICE STARTED");
 		//Disable auto rotation
 		Settings.System.putInt(this.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 0);
-		
 		clickCtrl = new ClickPanelCtrl(this); //click panel to incercept click anywhere on the display
 		
+		//Add running Notification
+		Notif.getInstance(this).createRunningNotification();
 	}
 
 	/**
@@ -78,15 +78,12 @@ public class OneSwitchService extends Service{
 			//Enable auto rotation
 			Settings.System.putInt(this.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 1);
 			System.out.println("SERVICE STOPPED");
+			//Remove running Notification
+			Notif.getInstance(this).removeRunningNotification();
 		}
-		
 	}
 	
-
-
 	//=================================
-	
-
 	
 	/**
 	 * Permet de récupérer la hauteur de la barre de statut

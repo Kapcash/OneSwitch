@@ -6,4 +6,9 @@
     <string name="action_settings">Settings</string>
     <string name="button_service">TEST</string>
     
+    <!-- Notifications -->
+    
+    <string name="notif_title">One Switch Running</string>
+    <string name="notif_desc">OneSwitch is currently running, don\'t panic.</string>
+    
 </resources>

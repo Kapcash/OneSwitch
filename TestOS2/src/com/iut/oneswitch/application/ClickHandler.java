@@ -9,7 +9,7 @@ import android.os.Handler;
  *
  */
 public class ClickHandler {
-
+	
 	private static HorizontalLineCtrl horizLine;
 	private static VerticalLineCtrl verticalLine;
 
@@ -22,8 +22,7 @@ public class ClickHandler {
 	 * @param panel la vue interceptant le touch
 	 */
 	public void handleClick(OneSwitchService service, final ClickPanelCtrl panel){
-
-
+		
 		if(horizLine == null)
 			horizLine = new HorizontalLineCtrl(service);
 
@@ -51,13 +50,11 @@ public class ClickHandler {
 	            }
 	        }, 500);
 		}
-
+		
 		else if(horizLine.isShown()&&verticalLine.isShown()&&!horizLine.isMoving()&&!verticalLine.isMoving()){ //quatrieme click : deux lignes affichées, aucun mouvement
 			verticalLine.remove();							//suppression des lignes
 			horizLine.remove();							//suppression des lignes
 		}
-
-
 	}
 
 	/**

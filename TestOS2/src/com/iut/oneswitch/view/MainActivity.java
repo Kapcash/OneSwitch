@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.oneswitch.R;
+import com.iut.oneswitch.application.Notif;
 import com.iut.oneswitch.application.OneSwitchService;
 import com.iut.oneswitch.application.OneSwitchService.LocalBinder;
 /**
@@ -32,7 +33,6 @@ public class MainActivity extends Activity {
 	OneSwitchService mService;
     boolean mBound = false;
     
-    
     MainActivity mainActivity;
 	
 	Button play;
@@ -45,6 +45,7 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 
 		final Button button = (Button) findViewById(R.id.button1);
+		
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
             	TextView t = (TextView) findViewById(R.id.textView1);
@@ -77,7 +78,6 @@ public class MainActivity extends Activity {
 		
 		Intent intent = new Intent(this, OneSwitchService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-		
 
 	}
 
@@ -103,7 +103,6 @@ public class MainActivity extends Activity {
 	@Override
 	public void onStop(){
 		super.onStop();
-		
 		if (mBound) {
             unbindService(mConnection);
             mBound = false;
@@ -113,7 +112,7 @@ public class MainActivity extends Activity {
 	/** Defines callbacks for service binding, passed to bindService() */
     private ServiceConnection mConnection = new ServiceConnection() {
 
-        @Override
+    	@Override
         public void onServiceConnected(ComponentName className,
                 IBinder service) {
             // We've bound to LocalService, cast the IBinder and get LocalService instance

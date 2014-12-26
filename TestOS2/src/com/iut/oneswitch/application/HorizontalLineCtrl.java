@@ -26,7 +26,7 @@ public class HorizontalLineCtrl extends LineController {
 	private boolean isShown = false;
 	private boolean isMoving = false;
 	private boolean isMovingDown = true;
-
+	
 	/**
 	 * Constructeur de la ligne horizontale
 	 * @param service
@@ -35,7 +35,6 @@ public class HorizontalLineCtrl extends LineController {
 		this.theLine = new HorizontalLine(service);
 		this.theLine.setId(200);
 		this.theService = service;
-
 	}
 
 	/**
@@ -162,7 +161,6 @@ public class HorizontalLineCtrl extends LineController {
 				else
 				{
 					horizParams.y -= speed;
-
 					theService.updateViewLayout(theLine, horizParams);
 					if(horizParams.y <= (0+speed))
 						isMovingDown = true;
@@ -172,9 +170,7 @@ public class HorizontalLineCtrl extends LineController {
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
-
 		}
-
 	}
 }
 

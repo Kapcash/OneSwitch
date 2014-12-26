@@ -45,8 +45,6 @@ public class ClickPanelCtrl implements OnTouchListener {
 		clickParams.y = 0;
 		clickParams.height = theService.getScreenSize().y;
 		clickParams.width = theService.getScreenSize().x;
-		
-		
 			
 		thePanel.setOnTouchListener(this); 
 		
@@ -75,10 +73,7 @@ public class ClickPanelCtrl implements OnTouchListener {
 			theService.removeView(thePanel);
 			isShown = false;
 		}
-
 	}
-	
-	
 	
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
@@ -86,8 +81,6 @@ public class ClickPanelCtrl implements OnTouchListener {
 			theHandler = new ClickHandler();
 			theHandler.handleClick(theService, this);
 		}
-	
 		return false;
 	}
-
 }
