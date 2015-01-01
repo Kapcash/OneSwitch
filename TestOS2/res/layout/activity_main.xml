@@ -22,30 +22,28 @@
         android:text="@string/button_service" />
 
 	    <Button
-	        android:id="@+id/btStop"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignBaseline="@+id/btStart"
-	        android:layout_alignBottom="@+id/btStart"
-	        android:layout_alignRight="@+id/button1"
-	        android:text="Stop" />
-
-	    <Button
 	        android:id="@+id/btStart"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
+	        android:layout_alignLeft="@+id/button1"
 	        android:layout_below="@+id/button1"
-	        android:layout_marginTop="32dp"
-	        android:layout_toRightOf="@+id/btStop"
-	        android:text="Start" />
+	        android:layout_marginTop="36dp"
+	        android:text="@string/button_start" />
 
 	    <Button
 	        android:id="@+id/btSwipe"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:layout_alignBaseline="@+id/btStart"
-	        android:layout_alignBottom="@+id/btStart"
+	        android:layout_alignLeft="@+id/btStart"
+	        android:layout_below="@+id/btStart"
+	        android:text="@string/button_glisser" />
+
+	    <Button
+	        android:id="@+id/btStop"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_above="@+id/btSwipe"
 	        android:layout_toRightOf="@+id/btStart"
-	        android:text="Glisser" />
+	        android:text="@string/button_stop" />
 
 </RelativeLayout>

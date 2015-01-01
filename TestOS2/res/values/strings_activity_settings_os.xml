@@ -1,0 +1,28 @@
+<resources>
+    <!-- Strings related to Settings -->
+
+	<!-- Titre de la page de préférences -->
+    <string name="title_activity_settings_os">SettingsOS</string>
+
+    <!--  Nom de la première catégorie -->
+	<string name="pref_header">General</string>
+	<!-- Nom de la list choissisant la taille des lignes -->
+	<string name="lign_size_title">Taille des lignes</string>
+
+	<!--
+	Valeurs affichées (entries) et valeurs associées (values)
+	Big = 7 - Medium = 5 - Small = 3
+	Possibilité de rajouter des lignes si besoin
+	-->
+    <string-array name="pref_lign_size_entries">
+        <item>Big</item>
+        <item>Medium</item>
+        <item>Small</item>
+    </string-array>
+    <string-array name="pref_lign_size_values">
+        <item>7</item>
+        <item>5</item>
+        <item>3</item>
+    </string-array>
+
+</resources>

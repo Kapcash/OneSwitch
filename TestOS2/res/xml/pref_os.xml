@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+    <PreferenceCategory android:title="General">
+	    
+        <!-- 
+        List de type AutoSummaryListPreference,
+        Permet une mise à jour automatique du summary
+         -->
+	    <com.iut.oneswitch.application.AutoSummaryListPreference
+	        android:defaultValue="3"
+	        android:entries="@array/pref_lign_size_entries"
+	        android:entryValues="@array/pref_lign_size_values"
+	        android:key="lign_size"
+	        android:title="@string/lign_size_title" />
+	
+	</PreferenceCategory>
+	
+</PreferenceScreen>

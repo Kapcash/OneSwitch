@@ -1,15 +1,15 @@
 package com.iut.oneswitch.view;
 
 
-import java.io.IOException;
-
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,7 +17,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.oneswitch.R;
-import com.iut.oneswitch.application.Notif;
 import com.iut.oneswitch.application.OneSwitchService;
 import com.iut.oneswitch.application.OneSwitchService.LocalBinder;
 /**
@@ -32,18 +31,17 @@ public class MainActivity extends Activity {
 	 */
 	OneSwitchService mService;
     boolean mBound = false;
-    
+    SharedPreferences sp;
+
     MainActivity mainActivity;
 	
 	Button play;
 	int button_status=1;
 	
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
 		final Button button = (Button) findViewById(R.id.button1);
 		
         button.setOnClickListener(new View.OnClickListener() {
@@ -55,7 +53,6 @@ public class MainActivity extends Activity {
             	else{
             		t.setText("BONJOUR");
             	}
-            
             }
         });
         mainActivity = this;
@@ -67,6 +64,7 @@ public class MainActivity extends Activity {
             	}
             }
         });
+        
         Button stop = (Button) findViewById(R.id.btStop);
         stop.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -75,10 +73,9 @@ public class MainActivity extends Activity {
             	}
             }
         });
-		
+        
 		Intent intent = new Intent(this, OneSwitchService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-
 	}
 
 	@Override
@@ -90,11 +87,10 @@ public class MainActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		if (id == R.id.action_settings) { //Display the preferences view
+			Intent i = new Intent(this, SettingsOS.class);
+        	startActivity(i);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -127,4 +123,3 @@ public class MainActivity extends Activity {
         }
     };
 }
-

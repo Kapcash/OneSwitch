@@ -3,9 +3,9 @@ package com.iut.oneswitch.application;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.WindowManager;
-import android.view.WindowManager.LayoutParams;
 
 import com.iut.oneswitch.view.HorizontalLine;
 /**
@@ -35,6 +35,12 @@ public class HorizontalLineCtrl extends LineController {
 		this.theLine = new HorizontalLine(service);
 		this.theLine.setId(200);
 		this.theService = service;
+		/*
+		 * Récupère la taille indiquée en paramètre
+		 * (3 en valeur par défaut si échec de récupération du paramètre)
+		 * Mettre lineThickness = 3 pour retrouver la valeur avant modification
+		 */
+		this.lineThickness = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(service).getString("lign_size","3"));
 	}
 
 	/**

@@ -5,6 +5,7 @@ import com.iut.oneswitch.view.VerticalLine;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
@@ -15,7 +16,7 @@ import android.view.WindowManager.LayoutParams;
  * @see com.iut.oneswitch.view.HorizontalLine
  */
 public class VerticalLineCtrl extends LineController{
-	private int lineThickness = 3;
+	private int lineThickness;
 	private int speed = 3;
 
 	private OneSwitchService theService;
@@ -34,9 +35,13 @@ public class VerticalLineCtrl extends LineController{
 	public VerticalLineCtrl(OneSwitchService service) {
 		this.theLine = new VerticalLine(service);
 		this.theLine.setId(201);
-
 		this.theService = service;
-		
+		/*
+		 * Récupère la taille indiquée en paramètre
+		 * (3 en valeur par défaut si échec de récupération du paramètre)
+		 * Mettre lineThickness = 3 pour retrouver la valeur avant modification
+		 */
+		this.lineThickness = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(service).getString("lign_size","3"));
 	}
 	
 	/**
