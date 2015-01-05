@@ -2,17 +2,17 @@ package com.iut.oneswitch.application;
 
 import android.graphics.PixelFormat;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
-import android.view.View.OnTouchListener;
-import android.view.WindowManager.LayoutParams;
+import android.widget.Toast;
 
 /**
  * @author OneSwitch B
  *Classe permettant de gèrer le panel attrapant le clic
  */
-public class ClickPanelCtrl implements OnTouchListener {
+public class ClickPanelCtrl implements OnClickListener, OnLongClickListener {
 	
 	private OneSwitchService theService;
 	private View thePanel;
@@ -46,7 +46,11 @@ public class ClickPanelCtrl implements OnTouchListener {
 		clickParams.height = theService.getScreenSize().y;
 		clickParams.width = theService.getScreenSize().x;
 			
-		thePanel.setOnTouchListener(this); 
+		//thePanel.setOnTouchListener(this); 
+		
+		thePanel.setOnClickListener(this);
+		thePanel.setOnLongClickListener(this);
+
 		
 		add();
 	}
@@ -75,12 +79,23 @@ public class ClickPanelCtrl implements OnTouchListener {
 		}
 	}
 	
+
+
+
 	@Override
-	public boolean onTouch(View v, MotionEvent event) {
-		if(event.getAction() == MotionEvent.ACTION_DOWN){
-			theHandler = new ClickHandler();
-			theHandler.handleClick(theService, this);
-		}
-		return false;
+	public void onClick(View v) {
+		theHandler = new ClickHandler();
+		theHandler.handleClick(theService, this);
 	}
+
+	@Override
+	public boolean onLongClick(View v) {
+		//AJOUT DU MENU DE RACCOURCIS
+		Toast.makeText(theService,"COUCOU LE LONG CLICK AU BOULOT YOANN", 
+                Toast.LENGTH_SHORT).show();
+		return true;
+	}
+	
+
+	
 }

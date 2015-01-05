@@ -9,10 +9,30 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.RectF;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager.LayoutParams;
+import android.widget.Button;
+import android.widget.GridLayout;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.TextView;
+
+import com.example.oneswitch.R;
+
 
 public class PopUpView extends View{
 	private ArrayList<PopUpPage> pages;
+	
+	
+	 PopupWindow popUp;
+	    GridLayout layout;
+	    TextView tv;
+	    LayoutParams params;
+	    LinearLayout mainLayout;
+	    Button but;
+	    boolean click = true;
 
 	public PopUpView(Context context) {
 		super(context);
@@ -26,8 +46,24 @@ public class PopUpView extends View{
 	@Override
 	public void onDraw(Canvas canvas) {
 		System.out.println("drawing popup view");
-		//canvas.drawARGB(128, 0, 0, 0);
 		
+		popUp = new PopupWindow(this.getContext());
+ 
+
+       // popUp.setContentView(layout);
+        LayoutInflater inflater = (LayoutInflater)getContext().getSystemService
+        		  (Context.LAYOUT_INFLATER_SERVICE);
+        
+        
+        View view = inflater.inflate(R.layout.popup,null);
+
+        popUp.setContentView(view);
+        
+        popUp.showAtLocation(this, Gravity.NO_GRAVITY, 0, 0);
+        popUp.update(0, 0, 300, 200);
+		
+		//canvas.drawARGB(128, 0, 0, 0);
+		/*
 		Paint paintCircle = new Paint();
 		paintCircle.setColor(Color.BLACK);
 		paintCircle.setAlpha(255);
@@ -93,14 +129,42 @@ public class PopUpView extends View{
 		textPaint.setTextSize(20);
 		textPaint.setColor(android.graphics.Color.WHITE);     
 		textPaint.setAntiAlias(true);
+		*/
 		
-		for(PopUpPage p : pages){
+		/*PopupMenu myPopup = new PopupMenu(this.getContext(), this);
+		myPopup.getMenu().add("test");
+		myPopup.getMenu().add("test2");
+		myPopup.getMenu().add("test3");
+	
+		myPopup.show();*/
+		
+		
+		
+        
+        
+        
+
+		
+
+		
+		
+		/*for(PopUpPage p : pages){
 			int index = 0;
 			for(PopUpItem i : p.getItems()){
+				Button test = new Button(theContext);
+				AbsoluteLayout.LayoutParams absParams = 
+		                (AbsoluteLayout.LayoutParams)test.getLayoutParams();
+		            absParams.x = 40;
+		            absParams.y = 40;
+		            test.setLayoutParams(absParams);
+				test.setText("test");
+				test.draw(canvas);
+				
+				
 				canvas.drawText(i.getName(), 20, 20+20*index, textPaint);
 				index++;
 			}
-		}
+		}*/
 		
 		
 

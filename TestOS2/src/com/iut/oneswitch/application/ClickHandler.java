@@ -59,6 +59,8 @@ public class ClickHandler {
 	        
 	        PopUpCtrl thePopup = new PopUpCtrl(service,realX, realY);
 			thePopup.display();
+	        
+	        
 		}
 		
 		else if(horizLine.isShown()&&verticalLine.isShown()&&!horizLine.isMoving()&&!verticalLine.isMoving()){ //quatrieme click : deux lignes affichées, aucun mouvement
