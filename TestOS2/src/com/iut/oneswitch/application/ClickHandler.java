@@ -58,7 +58,6 @@ public class ClickHandler {
 	        }, 500);
 	        
 	        PopUpCtrl thePopup = new PopUpCtrl(service,realX, realY);
-			thePopup.display();
 	        
 	        
 		}

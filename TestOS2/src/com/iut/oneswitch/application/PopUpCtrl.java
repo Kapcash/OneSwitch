@@ -1,11 +1,10 @@
 package com.iut.oneswitch.application;
 
 import android.graphics.PixelFormat;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.WindowManager;
 
-import com.iut.oneswitch.view.popup.PopUpItem;
-import com.iut.oneswitch.view.popup.PopUpPage;
 import com.iut.oneswitch.view.popup.PopUpView;
 
 public class PopUpCtrl {
@@ -13,6 +12,9 @@ public class PopUpCtrl {
 	private PopUpView thePopup;
 	private WindowManager.LayoutParams popupParams;
 	private int posX, posY;
+
+	private Handler handler;
+	private Runnable runnable;
 	
 	public PopUpCtrl(OneSwitchService service, int x, int y) {
 		this.theService = service;
@@ -20,21 +22,10 @@ public class PopUpCtrl {
 		this.posY = y;
 		init();
 	}
-	
+
 	private void init(){
-		thePopup = new PopUpView(theService);
-		PopUpPage popupPage1 = new PopUpPage();
-		PopUpItem popupItem1 = new PopUpItem("item1");
-		PopUpItem popupItem2 = new PopUpItem("item2");
-		PopUpItem popupItem3 = new PopUpItem("item3");
-		
-		popupPage1.addItem(popupItem1);
-		popupPage1.addItem(popupItem2);
-		popupPage1.addItem(popupItem3);
+		thePopup = new PopUpView(theService, this);
 
-
-		thePopup.addPage(popupPage1);
-		
 		popupParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,
 				theService.getStatusBarHeight(),
 				WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
@@ -52,11 +43,37 @@ public class PopUpCtrl {
 		popupParams.y = this.posY-76;
 		popupParams.height = 152;
 		popupParams.width = 178+28;
-		
+
 		theService.addView(thePopup, popupParams);
-	}
-	
-	public void display(){
 		
+		
+		
+		handler = new Handler();
+		runnable = new PopupRunnable();
+	}
+
+	public void startThread(){
+		handler.post(runnable);
+	}
+
+	/**
+	 * Permet la selection d'un bouton du menu popup
+	 * @author OneSwitch B
+	 *
+	 */
+	class PopupRunnable implements Runnable{
+
+		/**
+		 * Permet le défilement des boutons
+		 */
+		@Override
+		public void run() {
+			try {
+				thePopup.selectNext();
+				handler.postDelayed(this, 1000);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
 	}
 }
