@@ -3,6 +3,8 @@ package com.iut.oneswitch.application;
 import java.io.IOException;
 
 import android.os.Handler;
+
+import com.iut.oneswitch.view.popup.PopUpView;
 /**
  * Gère les actions à effectuer lors d'un clic sur le contacteur "oneswitch"
  * @author OneSwitch B
@@ -41,14 +43,22 @@ public class ClickHandler {
 		else if(horizLine.isShown()&&verticalLine.isShown()&&!horizLine.isMoving()&&verticalLine.isMoving()){ //troisieme click : deux lignes affichées
 			verticalLine.pause();							//pause de la ligne vertical
 			panel.remove();
-			ClickHandler.touchAsRoot(verticalLine.getX(), horizLine.getY(), 200); //click de 200ms
-
+			
+			int realX = verticalLine.getX() + verticalLine.getThickness();
+			int realY = horizLine.getY() + horizLine.getThickness()/2;
+			//SIMULATION DU CLICK
+			//ClickHandler.touchAsRoot(verticalLine.getX(), horizLine.getY(), 200); //click de 200ms
+			
+			//REAJOUT DU PANEL
 			Handler mHandler = new Handler();
 	        mHandler.postDelayed(new Runnable() {
 	            public void run() {
 	                panel.init();
 	            }
 	        }, 500);
+	        
+	        PopUpCtrl thePopup = new PopUpCtrl(service,realX, realY);
+			thePopup.display();
 		}
 		
 		else if(horizLine.isShown()&&verticalLine.isShown()&&!horizLine.isMoving()&&!verticalLine.isMoving()){ //quatrieme click : deux lignes affichées, aucun mouvement

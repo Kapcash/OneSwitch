@@ -123,6 +123,14 @@ public class VerticalLineCtrl extends LineController{
 	public int getY(){
 		return verticalParams.y;
 	}
+	
+	/**
+	 * Epaisseur de la ligne
+	 * @return epaisseur de la ligne
+	 */
+	public int getThickness(){
+		return lineThickness;
+	}
 
 
 

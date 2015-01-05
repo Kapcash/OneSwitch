@@ -26,7 +26,7 @@ public class HorizontalLineCtrl extends LineController {
 	private boolean isShown = false;
 	private boolean isMoving = false;
 	private boolean isMovingDown = true;
-	
+
 	/**
 	 * Constructeur de la ligne horizontale
 	 * @param service
@@ -132,8 +132,8 @@ public class HorizontalLineCtrl extends LineController {
 	public int getX(){
 		return horizParams.x;
 	}
-	
-	
+
+
 	/**
 	 * Position en Y sur l'écran
 	 * @return coordonée en ordonée de la ligne
@@ -142,6 +142,13 @@ public class HorizontalLineCtrl extends LineController {
 		return horizParams.y;
 	}
 
+	/**
+	 * Epaisseur de la ligne
+	 * @return epaisseur de la ligne
+	 */
+	public int getThickness(){
+		return lineThickness;
+	}
 
 	/**
 	 * Permet le déplacement automatique en tâche de fond

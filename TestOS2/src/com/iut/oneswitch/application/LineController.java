@@ -24,4 +24,5 @@ public abstract class LineController {
 	public boolean isMoving(){return isMoving;};
 	abstract public int getX();
 	abstract public int getY();
+	abstract public int getThickness();
 }
