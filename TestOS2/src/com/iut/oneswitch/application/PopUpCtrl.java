@@ -46,12 +46,12 @@ public class PopUpCtrl {
 
 
 		popupParams.gravity = Gravity.TOP | Gravity.LEFT;
-		//popupParams.x = this.posX-14; //14 = rayon du cercle (12) + largeur du trait (2)
-		popupParams.x = this.posX;
-		popupParams.y = this.posY;
-		//popupParams.y = this.posY-100;
-		popupParams.height = 200;
-		popupParams.width = 400;
+		popupParams.x = this.posX-14; //14 = rayon du cercle (12) + largeur du trait (2)
+		//popupParams.x = this.posX;
+		//popupParams.y = this.posY;
+		popupParams.y = this.posY-76;
+		popupParams.height = 152;
+		popupParams.width = 178+28;
 		
 		theService.addView(thePopup, popupParams);
 	}

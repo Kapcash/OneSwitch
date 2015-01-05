@@ -60,10 +60,10 @@ public class PopUpView extends View{
         popUp.setContentView(view);
         
         popUp.showAtLocation(this, Gravity.NO_GRAVITY, 0, 0);
-        popUp.update(0, 0, 300, 200);
+        popUp.update(28, 0, canvas.getWidth()-28, canvas.getHeight());
 		
 		//canvas.drawARGB(128, 0, 0, 0);
-		/*
+		
 		Paint paintCircle = new Paint();
 		paintCircle.setColor(Color.BLACK);
 		paintCircle.setAlpha(255);
@@ -77,7 +77,7 @@ public class PopUpView extends View{
 		paintCircle.setAlpha(64);
 		paintCircle.setStyle(Paint.Style.FILL);
 		canvas.drawCircle(14, (canvas.getHeight()/2), 12, paintCircle);
-		
+		/*
 		Paint paintRect = new Paint();
 		paintRect.setColor(Color.BLACK);
 		paintRect.setAlpha(150);
