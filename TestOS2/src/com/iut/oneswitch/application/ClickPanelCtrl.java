@@ -108,8 +108,11 @@ public class ClickPanelCtrl implements OnClickListener, OnLongClickListener {
 		View view = inflater.inflate(R.layout.contextpopup,null);
 		popUp.setContentView(view);
 
+		float density = theService.getResources().getDisplayMetrics().density;
+
+		
 		popUp.showAtLocation(thePanel, Gravity.CENTER, 0, 0);
-		popUp.update(28, 0, 400, 400);
+		popUp.update(28, 0, (int)(400*density), (int)(400*density));
 	    
 		return true;
 	}

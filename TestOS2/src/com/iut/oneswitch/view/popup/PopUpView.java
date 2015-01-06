@@ -14,6 +14,7 @@ import android.widget.PopupWindow;
 
 import com.example.oneswitch.R;
 import com.iut.oneswitch.application.PopUpCtrl;
+import com.iut.oneswitch.application.PopUpHandler;
 
 
 public class PopUpView extends View{
@@ -24,12 +25,17 @@ public class PopUpView extends View{
 	private Button selected;
 	private View view;
 	private PopUpCtrl theCtrl;
+	
 
 	public PopUpView(Context context, PopUpCtrl ctrl) {
 		super(context);
 		theCtrl = ctrl;
 	}
 
+	public Button getSelected(){
+		return selected;
+	}
+	
 	public void selectNext(){
 
 		Button butClic = (Button)view.findViewById(R.id.but_clic);
@@ -61,6 +67,7 @@ public class PopUpView extends View{
 	@Override
 	public void onDraw(Canvas canvas) {
 		theCanvas = canvas;
+		float density = getResources().getDisplayMetrics().density;
 
 
 		System.out.println("drawing popup view");
@@ -74,25 +81,34 @@ public class PopUpView extends View{
 		popUp.setContentView(view);
 
 		popUp.showAtLocation(this, Gravity.NO_GRAVITY, 0, 0);
-		popUp.update(28, 0, canvas.getWidth()-28, canvas.getHeight());
+		popUp.update((int)density*28, 0, (int)(canvas.getWidth()-(28*density)), canvas.getHeight());
 
 
 		Paint paintCircle = new Paint();
 		paintCircle.setColor(Color.BLACK);
 		paintCircle.setAlpha(255);
-		paintCircle.setStrokeWidth(2);
+		paintCircle.setStrokeWidth((int)(2*density));
 		paintCircle.setStyle(Paint.Style.STROKE);
 		paintCircle.setAntiAlias(true);
 
-		canvas.drawCircle(14, (canvas.getHeight()/2), 12, paintCircle);
-		canvas.drawCircle(14, (canvas.getHeight()/2), 1, paintCircle);
+		canvas.drawCircle(14*density, (canvas.getHeight()/2), 12*density, paintCircle);
+		canvas.drawCircle(14*density, (canvas.getHeight()/2), 1*density, paintCircle);
 
 		paintCircle.setAlpha(64);
 		paintCircle.setStyle(Paint.Style.FILL);
-		canvas.drawCircle(14, (canvas.getHeight()/2), 12, paintCircle);
+		canvas.drawCircle(14*density, (canvas.getHeight()/2), 12*density, paintCircle);
 
 		selected = (Button)view.findViewById(R.id.but_glisser);
 		theCtrl.startThread(); //select buttons l'un apres l'autre
+		
+		Button butClic = (Button)view.findViewById(R.id.but_clic);
+		Button butClicLong = (Button)view.findViewById(R.id.but_clic_long);
+		Button butGlisser = (Button)view.findViewById(R.id.but_glisser);
+		
+		butClic.setOnClickListener(new PopUpHandler());
+		butClicLong.setOnClickListener(new PopUpHandler());
+		butClicLong.setOnClickListener(new PopUpHandler());
+
 
 	}
 
