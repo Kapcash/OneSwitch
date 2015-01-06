@@ -3,7 +3,6 @@ package com.iut.oneswitch.view.popup;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.view.Gravity;
@@ -25,6 +24,18 @@ public class PopUpView extends View{
 	private Button selected;
 	private View view;
 	private PopUpCtrl theCtrl;
+	/**
+	 * Bouton "clic" de la popup
+	 */
+	private Button butClic;
+	/**
+	 * Bouton "clic long" de la popup
+	 */
+	private Button butClicLong;
+	/**
+	 * Bouton "glisser" de la popup
+	 */
+	private Button butGlisser;
 	
 
 	public PopUpView(Context context, PopUpCtrl ctrl) {
@@ -84,7 +95,7 @@ public class PopUpView extends View{
 		popUp.update((int)density*28, 0, (int)(canvas.getWidth()-(28*density)), canvas.getHeight());
 
 
-		Paint paintCircle = new Paint();
+		/*Paint paintCircle = new Paint();
 		paintCircle.setColor(Color.BLACK);
 		paintCircle.setAlpha(255);
 		paintCircle.setStrokeWidth((int)(2*density));
@@ -97,7 +108,7 @@ public class PopUpView extends View{
 		paintCircle.setAlpha(64);
 		paintCircle.setStyle(Paint.Style.FILL);
 		canvas.drawCircle(14*density, (canvas.getHeight()/2), 12*density, paintCircle);
-
+		 */
 		selected = (Button)view.findViewById(R.id.but_glisser);
 		theCtrl.startThread(); //select buttons l'un apres l'autre
 		
@@ -105,11 +116,34 @@ public class PopUpView extends View{
 		Button butClicLong = (Button)view.findViewById(R.id.but_clic_long);
 		Button butGlisser = (Button)view.findViewById(R.id.but_glisser);
 		
-		butClic.setOnClickListener(new PopUpHandler());
-		butClicLong.setOnClickListener(new PopUpHandler());
-		butClicLong.setOnClickListener(new PopUpHandler());
+		PopUpHandler handler = new PopUpHandler(this);
+		butClic.setOnClickListener(handler);
+		butClicLong.setOnClickListener(handler);
+		butGlisser.setOnClickListener(handler);;
 
 
 	}
 
+	public void removeView(){
+		theCtrl.removeView();
+	}
+
+	/**
+		* Stop le thread du défilement (via PopUpCtrl)	
+	 */
+	public void stopThread(){
+		theCtrl.stopThread();
+	}
+	public Button getButClic() {
+		return butClic;
+	}
+
+	public Button getButClicLong() {
+		return butClicLong;
+	}
+
+	public Button getButGlisser() {
+		return butGlisser;
+	}
+	
 }

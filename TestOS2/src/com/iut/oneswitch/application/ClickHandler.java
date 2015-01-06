@@ -85,6 +85,7 @@ public class ClickHandler {
 	 * @param y coordonée ordonnée
 	 * @param time le temps d'appui à simuler
 	 */
+	
 	private static void touchAsRoot(int x, int y, int time){
 		try {
 			//Runtime.getRuntime().exec("su -c input tap " + x + " " + y);
