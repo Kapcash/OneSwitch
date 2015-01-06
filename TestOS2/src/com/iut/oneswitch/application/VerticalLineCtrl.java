@@ -1,14 +1,13 @@
 package com.iut.oneswitch.application;
 
-import com.iut.oneswitch.view.VerticalLine;
-
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.WindowManager;
-import android.view.WindowManager.LayoutParams;
+
+import com.iut.oneswitch.view.VerticalLine;
 
 /**
  * Permet la gestion de la ligne horizontale

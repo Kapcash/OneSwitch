@@ -1,12 +1,16 @@
 package com.iut.oneswitch.application;
 
+import com.example.oneswitch.R;
+
+import android.content.Context;
 import android.graphics.PixelFormat;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
-import android.widget.Toast;
+import android.widget.PopupWindow;
 
 /**
  * @author OneSwitch B
@@ -22,6 +26,7 @@ public class ClickPanelCtrl implements OnClickListener, OnLongClickListener {
 	private boolean isShown = false;
 	
 	public ClickPanelCtrl(OneSwitchService service) {
+		//this.thePanel = new View(service);
 		this.thePanel = new View(service);
 		this.theService = service;
 		init();
@@ -91,8 +96,21 @@ public class ClickPanelCtrl implements OnClickListener, OnLongClickListener {
 	@Override
 	public boolean onLongClick(View v) {
 		//AJOUT DU MENU DE RACCOURCIS
-		Toast.makeText(theService,"COUCOU LE LONG CLICK AU BOULOT YOANN", 
-                Toast.LENGTH_SHORT).show();
+		//Toast.makeText(theService,"COUCOU LE LONG CLICK AU BOULOT YOANN", 
+        //        Toast.LENGTH_SHORT).show();
+		System.out.println("TEST");
+
+		PopupWindow popUp = new PopupWindow(theService);
+
+		LayoutInflater inflater = (LayoutInflater)theService.getSystemService
+				(Context.LAYOUT_INFLATER_SERVICE);
+
+		View view = inflater.inflate(R.layout.contextpopup,null);
+		popUp.setContentView(view);
+
+		popUp.showAtLocation(thePanel, Gravity.CENTER, 0, 0);
+		popUp.update(28, 0, 400, 400);
+	    
 		return true;
 	}
 	

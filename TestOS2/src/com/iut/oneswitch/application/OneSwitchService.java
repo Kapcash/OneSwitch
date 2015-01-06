@@ -2,7 +2,6 @@ package com.iut.oneswitch.application;
 
 import android.app.Service;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Point;
 import android.os.Binder;
 import android.os.IBinder;

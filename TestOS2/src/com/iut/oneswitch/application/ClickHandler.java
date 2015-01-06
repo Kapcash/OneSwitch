@@ -3,8 +3,6 @@ package com.iut.oneswitch.application;
 import java.io.IOException;
 
 import android.os.Handler;
-
-import com.iut.oneswitch.view.popup.PopUpView;
 /**
  * Gère les actions à effectuer lors d'un clic sur le contacteur "oneswitch"
  * @author OneSwitch B
