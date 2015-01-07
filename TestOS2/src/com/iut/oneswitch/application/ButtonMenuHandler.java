@@ -9,11 +9,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 import com.iut.oneswitch.view.MainActivity;
+import com.iut.oneswitch.view.popup.ShortcutMenuView;
 public class ButtonMenuHandler implements OnClickListener{
 
-	ButtonMenuCtrl view;
+	ShortcutMenuView view;
 	MainActivity theActi = MainActivity.getActivity();
-	public ButtonMenuHandler(ButtonMenuCtrl v){
+	public ButtonMenuHandler(ShortcutMenuView v){
 		view = v;
 	}
 	

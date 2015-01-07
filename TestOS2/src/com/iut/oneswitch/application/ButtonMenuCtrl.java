@@ -1,37 +1,35 @@
 package com.iut.oneswitch.application;
 
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
+import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.PopupWindow;
 
-import com.example.oneswitch.R;
+import com.iut.oneswitch.view.popup.ShortcutMenuView;
 
 public class ButtonMenuCtrl {
+	
+	private ShortcutMenuView theShortcutMenu;
+	
 	boolean isRunning = false;
 	
 	private Handler handler;
 	private Runnable runnable;
 	
-	private Button selected;
-	private int selectedIndex;
-	private View view;
-	private Button buttonList[];
-	
+	private WindowManager.LayoutParams shortcutMenuParams;
+	private int posX, posY;
+
 	private OneSwitchService theService;
 	
-	private PopupWindow popUp;
-	
-	
-	public ButtonMenuCtrl(OneSwitchService service, View panel) {
-		theService = service;
-		buttonList = new Button[7];
+	public ButtonMenuCtrl(OneSwitchService service) {
+		this.theService = service;
+
+		isRunning = false;
+		init();
+		
+/*		buttonList = new Button[7];
 		popUp = new PopupWindow(service);
 
 		LayoutInflater inflater = (LayoutInflater)service.getSystemService
@@ -48,38 +46,47 @@ public class ButtonMenuCtrl {
 		handler = new Handler();
 		runnable = new PopupMenuRunnable();
 		
-		startThread();
+		startThread();*/
 	}
 	
-	public Button getSelected(){
-		return selected;
-	}
 	
-	public Button getButton(int index){
-		if(index < 0 || index > 7) throw new IllegalArgumentException("Mauvais index");
-		return buttonList[index];
-	}
-	
-	public void selectNext(){
-		selectedIndex=(selectedIndex+1)%7;
-		selected = buttonList[selectedIndex];
-		
-		buttonList[selectedIndex].getBackground().setColorFilter(new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP));
+	private void init(){
+		float density = theService.getResources().getDisplayMetrics().density;
 
-		for(int i = 0; i<buttonList.length;i++){
-			if(i != selectedIndex){
-				buttonList[i].getBackground().clearColorFilter();
-			}
-		}
-		
-	
-		popUp.setContentView(view);
+			
+		/* Drawing Popup */
+			theShortcutMenu = new ShortcutMenuView(theService, this);
+			shortcutMenuParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,
+					theService.getStatusBarHeight(),
+					WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
+					WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|
+					WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL|
+					WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
+					PixelFormat.TRANSLUCENT);
+			shortcutMenuParams.gravity = Gravity.TOP | Gravity.LEFT;
+			
+			shortcutMenuParams.x = 0;
+			shortcutMenuParams.y = 0;
+			shortcutMenuParams.height = theService.getScreenSize().y;
+			shortcutMenuParams.width = theService.getScreenSize().x;
+			theService.addView(theShortcutMenu, shortcutMenuParams);
+		/*End Drawing Popup*/
+			
+		handler = new Handler();
+		runnable = new PopupMenuRunnable();
 	}
-	
-	
+
 	public void startThread(){
 		isRunning = true;
-		
+		handler.postDelayed(runnable, 1000);
+	}
+	
+	public void removeView() {
+		theService.removeView(theShortcutMenu);
+
+	}
+	/*public void startThread(){
+		isRunning = true;
 		
 		Button butBack = (Button)view.findViewById(R.id.but_back);
 		Button butHome = (Button)view.findViewById(R.id.but_home);
@@ -108,7 +115,6 @@ public class ButtonMenuCtrl {
 			}
 		}
 		
-	
 		popUp.setContentView(view);
 		
 		ButtonMenuHandler handle = new ButtonMenuHandler(this);
@@ -117,14 +123,24 @@ public class ButtonMenuCtrl {
 		}
 		handler.postDelayed(runnable, 1000);
 	}
+	*/
 	
 	public void stopThread(){
 		isRunning = false;
 	}
 	
-	public void removeView(){
-		popUp.dismiss();
+	
+	public Button getSelected() {
+		return theShortcutMenu.getSelected();
 	}
+
+	public View getButton(int i) {
+		return theShortcutMenu.getButton(i);
+	}
+	
+	/*public void removeView(){
+		popUp.dismiss();
+	}*/
 	
 	/**
 	 * Permet la selection d'un bouton du menu
@@ -140,8 +156,7 @@ public class ButtonMenuCtrl {
 		public void run() {
 			try {
 				if(isRunning){ 
-					selectNext();
-
+					theShortcutMenu.selectNext();
 					handler.postDelayed(this, 1000);
 				}
 			} catch (Exception e) {
@@ -149,4 +164,11 @@ public class ButtonMenuCtrl {
 			}
 		}
 	}
+
+
+
+
+
+
+	
 }

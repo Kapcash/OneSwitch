@@ -16,7 +16,7 @@ import com.iut.oneswitch.view.VerticalLine;
  */
 public class VerticalLineCtrl extends LineController{
 	private int lineThickness;
-	private int speed = 3;
+	private float speed;
 
 	private OneSwitchService theService;
 	private Handler handler;
@@ -38,9 +38,10 @@ public class VerticalLineCtrl extends LineController{
 		/*
 		 * Récupère la taille indiquée en paramètre
 		 * (3 en valeur par défaut si échec de récupération du paramètre)
-		 * Mettre lineThickness = 3 pour retrouver la valeur avant modification
 		 */
 		this.lineThickness = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(service).getString("lign_size","3"));
+		this.lineThickness *= theLine.getResources().getDisplayMetrics().density;
+		this.speed = 3 * theLine.getResources().getDisplayMetrics().density;
 	}
 	
 	/**
@@ -55,8 +56,6 @@ public class VerticalLineCtrl extends LineController{
 				WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL|
 				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
 				PixelFormat.TRANSLUCENT);
-
-
 
 		verticalParams.gravity = Gravity.TOP | Gravity.LEFT;
 		verticalParams.x = 0;

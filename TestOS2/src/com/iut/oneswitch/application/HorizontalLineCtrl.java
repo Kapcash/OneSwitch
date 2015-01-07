@@ -14,8 +14,8 @@ import com.iut.oneswitch.view.HorizontalLine;
  * @see com.iut.oneswitch.view.HorizontalLine
  */
 public class HorizontalLineCtrl extends LineController {
-	private int lineThickness = 3;
-	private int speed = 3;
+	private int lineThickness;
+	private float speed;
 
 	private OneSwitchService theService;
 	private Handler handler;
@@ -41,6 +41,8 @@ public class HorizontalLineCtrl extends LineController {
 		 * Mettre lineThickness = 3 pour retrouver la valeur avant modification
 		 */
 		this.lineThickness = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(service).getString("lign_size","3"));
+		this.lineThickness*= theLine.getResources().getDisplayMetrics().density;
+		this.speed = 3 * theLine.getResources().getDisplayMetrics().density;
 	}
 
 	/**

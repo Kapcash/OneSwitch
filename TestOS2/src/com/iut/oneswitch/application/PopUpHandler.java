@@ -7,14 +7,11 @@ import android.view.View.OnClickListener;
 import com.iut.oneswitch.view.popup.PopUpView;
 public class PopUpHandler implements OnClickListener{
 
-	PopUpView view;
+	private PopUpView view;
 	private Point pos;
-	
-	
 
 	public PopUpHandler(View v){
 		view = (PopUpView) v;
-		
 	}
 	
 	/**

@@ -92,7 +92,6 @@ public class ClickHandler {
 			Button theSelected = theButtonMenu.getSelected();
 			theSelected.performClick();
 			isInContextMenu = false;
-
 		}
 
 	}
@@ -134,10 +133,7 @@ public class ClickHandler {
 				}
 			}, 900);
 			thePopup.getService().getClickPanelCtrl().setForSwipe(false);
-		
-		
 		}
-
 		else if(horizLine.isShown()&&verticalLine.isShown()&&!horizLine.isMoving()&&!verticalLine.isMoving()){ //quatrieme click : deux lignes affichées, aucun mouvement
 
 		}
@@ -146,10 +142,18 @@ public class ClickHandler {
 	
 	
 	public void handleLongClick(OneSwitchService service, final ClickPanelCtrl panel){
-		
-		theButtonMenu = new ButtonMenuCtrl(service, panel.getView());
-		isInContextMenu = true;
-		
+		//Rend impossible l'affichage de la popup si les lignes sont actives.
+		panel.remove();
+		if((horizLine == null || !horizLine.isMoving()) && (verticalLine == null || !verticalLine.isMoving())&& !isInPopupMenu){
+			theButtonMenu = new ButtonMenuCtrl(service);
+			isInContextMenu = true;
+		}
+		Handler mHandler = new Handler();
+		mHandler.postDelayed(new Runnable() {
+			public void run() {
+				panel.init();
+			}
+		}, 200);
 	}
 	
 

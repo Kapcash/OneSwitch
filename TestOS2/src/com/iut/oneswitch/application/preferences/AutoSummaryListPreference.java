@@ -1,4 +1,4 @@
-package com.iut.oneswitch.application;
+package com.iut.oneswitch.application.preferences;
 
 import android.content.Context;
 import android.preference.ListPreference;

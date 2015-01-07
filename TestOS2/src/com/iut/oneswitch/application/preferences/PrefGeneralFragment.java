@@ -1,4 +1,4 @@
-package com.iut.oneswitch.application;
+package com.iut.oneswitch.application.preferences;
 
 import com.example.oneswitch.R;
 

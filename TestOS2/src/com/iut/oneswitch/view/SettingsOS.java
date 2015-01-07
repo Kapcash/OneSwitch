@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.view.MenuItem;
 
-import com.iut.oneswitch.application.PrefGeneralFragment;
+import com.iut.oneswitch.application.preferences.PrefGeneralFragment;
 
 /**
  * Page de préférences contenant les différents fragments définis
