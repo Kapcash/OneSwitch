@@ -77,7 +77,6 @@ public class VerticalLineCtrl extends LineController{
 			isShown = true;
 			start();
 		}
-
 	}
 
 	/**
@@ -88,7 +87,6 @@ public class VerticalLineCtrl extends LineController{
 			theService.removeView(theLine);
 			isShown = false;
 		}
-
 	}
 	
 	/**
@@ -130,15 +128,12 @@ public class VerticalLineCtrl extends LineController{
 		return lineThickness;
 	}
 
-
-
 	/**
 	 * Permet le déplacement automatique en tâche de fond
 	 * @author OneSwitch B
 	 *
 	 */
 	class VerticalLineRunnable implements Runnable{
-
 		/**
 		 * Permet le défilement de la ligne
 		 */
@@ -163,12 +158,8 @@ public class VerticalLineCtrl extends LineController{
 				if(isMoving)
 					handler.postDelayed(this, 10);
 			} catch (Exception e) {
-				// TODO: handle exception
+				e.printStackTrace();
 			}
-
 		}
-
 	}
 }
-
-

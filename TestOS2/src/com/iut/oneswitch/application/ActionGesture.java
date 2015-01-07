@@ -7,12 +7,8 @@ import android.os.Handler;
 
 public class ActionGesture {
 
-	Point pos1, pos2;
-
-	public ActionGesture(){
-		
-	}
-
+	private Point pos1, pos2;
+	
 	public void touchAsRoot(Point pos){
 		pos1 = pos;
 		Handler mHandler = new Handler();
@@ -25,14 +21,11 @@ public class ActionGesture {
 				}
 			}
 		}, 10);
-		//Runtime.getRuntime().exec("su -c input tap " + x + " " + y);
-
 	}
 	
 	public void swipeAsRoot(Point posUn, Point posDeux){
 		pos1 = posUn;
 		pos2 = posDeux;
-		
 		
 		Handler mHandler = new Handler();
 		mHandler.postDelayed(new Runnable() {
@@ -45,9 +38,9 @@ public class ActionGesture {
 			}
 		}, 10);
 	}
+	
 	public void longTouchAsRoot(Point posUn){
 		pos1 = posUn;
-		
 		
 		Handler mHandler = new Handler();
 		mHandler.postDelayed(new Runnable() {
@@ -59,8 +52,5 @@ public class ActionGesture {
 				}
 			}
 		}, 10);
-		
-		
 	}
-
 }

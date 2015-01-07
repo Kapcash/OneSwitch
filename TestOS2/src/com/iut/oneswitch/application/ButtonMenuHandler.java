@@ -24,20 +24,18 @@ public class ButtonMenuHandler implements OnClickListener{
 		view.stopThread();
 		//Enlève la popup
 		view.removeView();
-		
 
+	//Retour
 		if(v == view.getButton(0)){
 			System.out.println("Retour");
 			try {
 				Runtime.getRuntime().exec("su -c input keyevent 4");
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			//TODO:Action
 		}
 		
+	//Accueil
 		else if(v == view.getButton(1)){
 			System.out.println("Accueil");
 
@@ -45,16 +43,17 @@ public class ButtonMenuHandler implements OnClickListener{
 			i.addCategory(Intent.CATEGORY_HOME);
 			theActi.startActivity(i);
 		}
+	//Menu
 		else if(v == view.getButton(2)){
 			System.out.println("Menu");
 			
 			try {
 				Runtime.getRuntime().exec("su -c input keyevent 82");
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+	//Volume +
 		else if(v == view.getButton(3)){
 			System.out.println("Volume+");
 
@@ -62,25 +61,24 @@ public class ButtonMenuHandler implements OnClickListener{
             	myAudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC,
                         AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI);		
         }
-		
+	//Volume -
 		else if(v == view.getButton(4)){
 			System.out.println("Volume-");
 			AudioManager myAudioManager = (AudioManager)theActi.getSystemService(Context.AUDIO_SERVICE); 
         	myAudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC,
                     AudioManager.ADJUST_LOWER, AudioManager.FLAG_SHOW_UI);		
         }
-		
+	//Verrouiller	
 		else if(v == view.getButton(5)){
-			System.out.println("Verouiller");
+			System.out.println("Verrouiller");
 			try {
 				Runtime.getRuntime().exec("su -c input keyevent 26");
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 				
 		}
-		
+	//Eteindre	
 		else if(v == view.getButton(6)){
 			System.out.println("Eteindre");
 			//TODO:Action

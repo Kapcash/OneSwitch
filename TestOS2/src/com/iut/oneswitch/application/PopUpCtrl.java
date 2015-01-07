@@ -22,7 +22,6 @@ public class PopUpCtrl {
 	private Handler handler;
 	private Runnable runnable;
 	
-	
 	public PopUpCtrl(OneSwitchService service, int x, int y) {
 		this.theService = service;
 		this.posX = x;
@@ -53,7 +52,6 @@ public class PopUpCtrl {
 			theService.addView(circle, circleParams);
 		/*End Drawing Circle*/
 			
-			
 		/* Drawing Popup */
 			thePopup = new PopUpView(theService, this);
 			popupParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,
@@ -73,14 +71,10 @@ public class PopUpCtrl {
 			popupParams.width  = (int)density*152;
 			theService.addView(thePopup, popupParams);
 		/*End Drawing Popup*/
-			
-		
 		
 		handler = new Handler();
 		runnable = new PopupRunnable();
 	}
-	
-	
 	
 	public void removeView(){
 		theService.removeView(thePopup);

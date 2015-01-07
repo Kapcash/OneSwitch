@@ -35,11 +35,8 @@ public class HorizontalLineCtrl extends LineController {
 		this.theLine = new HorizontalLine(service);
 		this.theLine.setId(200);
 		this.theService = service;
-		/*
-		 * Récupère la taille indiquée en paramètre
-		 * (3 en valeur par défaut si échec de récupération du paramètre)
-		 * Mettre lineThickness = 3 pour retrouver la valeur avant modification
-		 */
+		/* Récupère la taille indiquée en paramètre
+		 * (3 en valeur par défaut si échec de récupération du paramètre) */
 		this.lineThickness = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(service).getString("lign_size","3"));
 		this.lineThickness*= theLine.getResources().getDisplayMetrics().density;
 		this.speed = 3 * theLine.getResources().getDisplayMetrics().density;
@@ -66,9 +63,7 @@ public class HorizontalLineCtrl extends LineController {
 
 		handler = new Handler();
 		runnable = new HorizLineRunnable();
-
 	}
-
 
 	/**
 	 * Ajoute la vue de la ligne sur l'écran
@@ -81,7 +76,6 @@ public class HorizontalLineCtrl extends LineController {
 			isShown = true;
 			start();
 		}
-
 	}
 
 	/**
@@ -92,7 +86,6 @@ public class HorizontalLineCtrl extends LineController {
 			theService.removeView(theLine);
 			isShown = false;
 		}
-
 	}
 
 	/**
@@ -109,7 +102,6 @@ public class HorizontalLineCtrl extends LineController {
 	public void pause(){
 		isMoving = false;
 	}
-
 
 	/**
 	 * Ligne affichée sur l'écran ?
@@ -134,7 +126,6 @@ public class HorizontalLineCtrl extends LineController {
 	public int getX(){
 		return horizParams.x;
 	}
-
 
 	/**
 	 * Position en Y sur l'écran
@@ -188,5 +179,3 @@ public class HorizontalLineCtrl extends LineController {
 		}
 	}
 }
-
-

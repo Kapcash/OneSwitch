@@ -20,7 +20,7 @@ public class SettingsOS extends PreferenceActivity{
 		  super.onCreate(savedInstanceState);
 		  
 		  getFragmentManager().beginTransaction().replace(android.R.id.content,new PrefGeneralFragment()).commit();
-		  //Button back on the top icon bar
+		  //Bouton "retour" sur l'icon en haut à gauche (icone)
 		  ActionBar actionBar = getActionBar();
 		  actionBar.setDisplayHomeAsUpEnabled(true);
 	}
@@ -34,5 +34,4 @@ public class SettingsOS extends PreferenceActivity{
 	    startActivityForResult(myIntent, 0);
 	    return true;
 	}
-	
 }

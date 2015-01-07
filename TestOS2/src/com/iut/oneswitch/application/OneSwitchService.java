@@ -63,11 +63,11 @@ public class OneSwitchService extends Service{
 	 */
 	public void startService(){
 		System.out.println("SERVICE STARTED");
-		//Disable auto rotation
+		//Désactive l'auto rotation
 		Settings.System.putInt(this.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 0);
 		clickCtrl = new ClickPanelCtrl(this); //click panel to incercept click anywhere on the display
 		
-		//Add running Notification
+		//Ajoute "running Notification"
 		Notif.getInstance(this).createRunningNotification();
 	}
 
@@ -111,7 +111,6 @@ public class OneSwitchService extends Service{
 	}
 
 
-	//windowsManager utils
 	/**
 	 * Permet de faire ajouter une vue par le windowManager
 	 * @param view la vue
@@ -137,10 +136,4 @@ public class OneSwitchService extends Service{
 	public void updateViewLayout(View view, LayoutParams params) {
 		windowManager.updateViewLayout(view, params);
 	}
-
-	
-
-
-
 }
-

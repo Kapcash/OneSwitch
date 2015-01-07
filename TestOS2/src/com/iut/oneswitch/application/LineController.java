@@ -11,10 +11,8 @@ public abstract class LineController {
 	abstract public void pause();
 	
 	/**
-	 * Ligne affichée sur l'écran ?
-	 * @return vrai ou faux
+	 * @return Retourne vrai si la ligne est affichée
 	 */
-	
 	public boolean isShown(){return isShown;};
 	/**
 	 * Ligne en déplacement sur l'écran

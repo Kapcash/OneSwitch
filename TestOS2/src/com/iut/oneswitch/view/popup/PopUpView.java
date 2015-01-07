@@ -16,14 +16,13 @@ import com.example.oneswitch.R;
 import com.iut.oneswitch.application.PopUpCtrl;
 import com.iut.oneswitch.application.PopUpHandler;
 
-
 public class PopUpView extends View{
 
 	private PopupWindow popUp;
-	private Canvas theCanvas;
 	private Button selected;
 	private View view;
 	private PopUpCtrl theCtrl;
+	private PopUpHandler handler;
 	
 	public PopUpCtrl getCtrl(){
 		return theCtrl;
@@ -40,11 +39,12 @@ public class PopUpView extends View{
 	 * Bouton "glisser" de la popup
 	 */
 	private Button butGlisser;
-	
 
 	public PopUpView(Context context, PopUpCtrl ctrl) {
 		super(context);
 		theCtrl = ctrl;
+		popUp = new PopupWindow(this.getContext());
+		handler = new PopUpHandler(this);
 	}
 
 	public Button getSelected(){
@@ -52,7 +52,6 @@ public class PopUpView extends View{
 	}
 	
 	public void selectNext(){
-
 		Button butClic = (Button)view.findViewById(R.id.but_clic);
 		Button butClicLong = (Button)view.findViewById(R.id.but_clic_long);
 		Button butGlisser = (Button)view.findViewById(R.id.but_glisser);
@@ -75,19 +74,14 @@ public class PopUpView extends View{
 			butGlisser.getBackground().setColorFilter(new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP));
 			selected = butGlisser;
 		}	
-
 		popUp.setContentView(view);
 	}
 
 	@Override
 	public void onDraw(Canvas canvas) {
-		theCanvas = canvas;
 		float density = getResources().getDisplayMetrics().density;
 
-
-		System.out.println("drawing popup view");
-
-		popUp = new PopupWindow(this.getContext());
+		System.out.println("Drawing popup view");
 
 		LayoutInflater inflater = (LayoutInflater)getContext().getSystemService
 				(Context.LAYOUT_INFLATER_SERVICE);
@@ -98,8 +92,6 @@ public class PopUpView extends View{
 		popUp.showAtLocation(this, Gravity.NO_GRAVITY, 0, 0);
 		popUp.update((int)density*28, 0, (int)(canvas.getWidth()-(28*density)), canvas.getHeight());
 
-		
-		
 		butClic = (Button)view.findViewById(R.id.but_clic);
 		butClicLong = (Button)view.findViewById(R.id.but_clic_long);
 		butGlisser = (Button)view.findViewById(R.id.but_glisser);
@@ -107,9 +99,6 @@ public class PopUpView extends View{
 		selected = butGlisser;
 		theCtrl.startThread(); //select buttons l'un apres l'autre
 		
-		
-		
-		PopUpHandler handler = new PopUpHandler(this);
 		butClic.setOnClickListener(handler);
 		butClicLong.setOnClickListener(handler);
 		butGlisser.setOnClickListener(handler);
@@ -120,7 +109,7 @@ public class PopUpView extends View{
 	}
 
 	/**
-		* Stop le thread du défilement (via PopUpCtrl)	
+	 * Stop le thread du défilement (via PopUpCtrl)	
 	 */
 	public void stopThread(){
 		theCtrl.stopThread();

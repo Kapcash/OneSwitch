@@ -4,10 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 /**
- * Non utilisée pour l'instant
- * En prévision d'un prochain sprint
+ * Non utilisé pour l'instant
+ * En prévision du sprint 4
  * @author OneSwitch B
- *
  */
 public class BootUpReceiver extends BroadcastReceiver{
 
@@ -18,5 +17,4 @@ public class BootUpReceiver extends BroadcastReceiver{
                context.startService(serviceIntent);
            }
     }
-
 }

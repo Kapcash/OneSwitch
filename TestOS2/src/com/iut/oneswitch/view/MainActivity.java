@@ -1,12 +1,10 @@
 package com.iut.oneswitch.view;
 
-
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.Menu;
@@ -28,11 +26,10 @@ public class MainActivity extends Activity {
 	/**
 	 * Service de l'application
 	 */
-	OneSwitchService mService;
-    boolean mBound = false;
-    SharedPreferences sp;
+	private OneSwitchService mService;
+    private boolean mBound = false;
 
-    static MainActivity mainActivity;
+    private static MainActivity mainActivity;
 	
 	Button play;
 	int button_status=1;
@@ -46,11 +43,11 @@ public class MainActivity extends Activity {
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
             	TextView t = (TextView) findViewById(R.id.textView1);
-            	if(t.getText() == "BONJOUR"){
-            		t.setText("AUREVOIR");
+            	if(t.getText() == "Click me again"){
+            		t.setText("Click Me");
             	}
             	else{
-            		t.setText("BONJOUR");
+            		t.setText("Click me again");
             	}
             }
         });
@@ -79,7 +76,6 @@ public class MainActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
@@ -90,7 +86,7 @@ public class MainActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-		if (id == R.id.action_settings) { //Display the preferences view
+		if (id == R.id.action_settings) { //Affiche les préférences (paramètres)
 			Intent i = new Intent(this, SettingsOS.class);
         	startActivity(i);
 			return true;

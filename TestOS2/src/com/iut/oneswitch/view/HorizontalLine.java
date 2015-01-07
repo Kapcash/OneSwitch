@@ -30,5 +30,4 @@ public class HorizontalLine extends View {
         paint.setStrokeWidth(canvas.getHeight()*2);
         canvas.drawLine(0, 0, canvas.getWidth(), 0, paint);
     }
-
 }

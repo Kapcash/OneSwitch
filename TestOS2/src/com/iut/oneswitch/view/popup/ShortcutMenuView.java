@@ -18,9 +18,7 @@ import com.iut.oneswitch.application.ButtonMenuHandler;
 
 public class ShortcutMenuView extends View{
 
-
 	private PopupWindow popUp;
-	private Canvas theCanvas;
 
 	private ButtonMenuCtrl theCtrl;
 
@@ -28,11 +26,13 @@ public class ShortcutMenuView extends View{
 	private int selectedIndex;
 	private View view;
 	private Button buttonList[];
-	
+	private ButtonMenuHandler handle;
 
 	public ShortcutMenuView(Context context, ButtonMenuCtrl ctrl) {
 		super(context);
 		theCtrl = ctrl;
+		popUp = new PopupWindow(this.getContext());
+		handle = new ButtonMenuHandler(this);
 	}
 
 	public Button getSelected(){
@@ -55,19 +55,14 @@ public class ShortcutMenuView extends View{
 				buttonList[i].getBackground().clearColorFilter();
 			}
 		}
-		
-	
 		popUp.setContentView(view);
 	}
 
 	@Override
 	public void onDraw(Canvas canvas) {
-		theCanvas = canvas;
 		float density = getResources().getDisplayMetrics().density;
 
-
 		buttonList = new Button[7];
-		popUp = new PopupWindow(this.getContext());
 
 		LayoutInflater inflater = (LayoutInflater)this.getContext().getSystemService
 				(Context.LAYOUT_INFLATER_SERVICE);
@@ -75,10 +70,8 @@ public class ShortcutMenuView extends View{
 		view = inflater.inflate(R.layout.contextpopup,null);
 		popUp.setContentView(view);
 
-
 		popUp.showAtLocation(this, Gravity.CENTER, 0, 0);
 		popUp.update(28, 0, (int)(300*density), (int)(370*density));
-		
 		
 		Button butBack = (Button)view.findViewById(R.id.but_back);
 		Button butHome = (Button)view.findViewById(R.id.but_home);
@@ -106,17 +99,12 @@ public class ShortcutMenuView extends View{
 				buttonList[i].getBackground().clearColorFilter();
 			}
 		}
-		
-	
 		popUp.setContentView(view);
 		
-		ButtonMenuHandler handle = new ButtonMenuHandler(this);
 		for(int i=0;i<=6;i++){
 			buttonList[i].setOnClickListener(handle);
 		}
-		
 		theCtrl.startThread();
-
 	}
 
 	public void removeView(){
@@ -124,11 +112,9 @@ public class ShortcutMenuView extends View{
 	}
 
 	/**
-		* Stop le thread du défilement	
+	 * Stop le thread du défilement	
 	 */
 	public void stopThread(){
 		theCtrl.stopThread();
 	}
-
-	
 }

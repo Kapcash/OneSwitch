@@ -1,18 +1,12 @@
 package com.iut.oneswitch.application;
 
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
-import android.widget.PopupWindow;
-
-import com.example.oneswitch.R;
 
 /**
  * @author OneSwitch B
@@ -29,7 +23,6 @@ public class ClickPanelCtrl implements OnClickListener, OnLongClickListener {
 	private boolean isShown = false;
 	
 	public ClickPanelCtrl(OneSwitchService service) {
-		//this.thePanel = new View(service);
 		this.thePanel = new View(service);
 		this.theService = service;
 		init();
@@ -39,7 +32,6 @@ public class ClickPanelCtrl implements OnClickListener, OnLongClickListener {
 	 * création du panel prenant en compte la surface de l'écran
 	 */
 	public void init(){
-
 		clickParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,
 				theService.getStatusBarHeight(),
 				WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
@@ -54,12 +46,8 @@ public class ClickPanelCtrl implements OnClickListener, OnLongClickListener {
 		clickParams.height = theService.getScreenSize().y;
 		clickParams.width = theService.getScreenSize().x;
 			
-		//thePanel.setOnTouchListener(this); 
 		thePanel.setOnLongClickListener(this);
 		thePanel.setOnClickListener(this);
-		
-
-		
 		add();
 	}
 	
@@ -71,7 +59,6 @@ public class ClickPanelCtrl implements OnClickListener, OnLongClickListener {
 			theService.addView(thePanel, clickParams);
 			isShown = true;
 		}
-	
 	}
 	
 	/**
@@ -86,7 +73,6 @@ public class ClickPanelCtrl implements OnClickListener, OnLongClickListener {
 			isShown = false;
 		}
 	}
-	
 	
 	public View getView(){
 		return thePanel;
@@ -112,7 +98,6 @@ public class ClickPanelCtrl implements OnClickListener, OnLongClickListener {
 		thePanel.bringToFront();
 	}
 
-
 	@Override
 	public void onClick(View v) {
 		theHandler = new ClickHandler();
@@ -134,7 +119,4 @@ public class ClickPanelCtrl implements OnClickListener, OnLongClickListener {
 		theHandler.handleLongClick(theService, this);
 		return true;
 	}
-	
-
-	
 }

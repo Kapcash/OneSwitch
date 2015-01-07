@@ -1,6 +1,5 @@
 package com.iut.oneswitch.application;
 
-import android.graphics.Point;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -8,7 +7,6 @@ import com.iut.oneswitch.view.popup.PopUpView;
 public class PopUpHandler implements OnClickListener{
 
 	private PopUpView view;
-	private Point pos;
 
 	public PopUpHandler(View v){
 		view = (PopUpView) v;
@@ -17,7 +15,6 @@ public class PopUpHandler implements OnClickListener{
 	/**
 	 * Lors d'un clic sur la popup, clic sur le bouton actuellement sélectionné
 	 */
-
 	@Override
 	public void onClick(View v) {
 		//Stop le thread de défilement
@@ -39,5 +36,4 @@ public class PopUpHandler implements OnClickListener{
 			view.getCtrl().getService().getClickPanelCtrl().setForSwipe(true);
 		}
 	}
-
 }
