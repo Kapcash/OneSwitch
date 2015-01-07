@@ -32,7 +32,7 @@ public class MainActivity extends Activity {
     boolean mBound = false;
     SharedPreferences sp;
 
-    MainActivity mainActivity;
+    static MainActivity mainActivity;
 	
 	Button play;
 	int button_status=1;
@@ -82,6 +82,9 @@ public class MainActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
+	}
+	public static MainActivity getActivity(){
+		return mainActivity;
 	}
 
 	@Override

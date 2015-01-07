@@ -3,6 +3,7 @@ package com.iut.oneswitch.view.popup;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.view.Gravity;
@@ -18,12 +19,15 @@ import com.iut.oneswitch.application.PopUpHandler;
 
 public class PopUpView extends View{
 
-
 	private PopupWindow popUp;
 	private Canvas theCanvas;
 	private Button selected;
 	private View view;
 	private PopUpCtrl theCtrl;
+	
+	public PopUpCtrl getCtrl(){
+		return theCtrl;
+	}
 	/**
 	 * Bouton "clic" de la popup
 	 */
@@ -94,34 +98,21 @@ public class PopUpView extends View{
 		popUp.showAtLocation(this, Gravity.NO_GRAVITY, 0, 0);
 		popUp.update((int)density*28, 0, (int)(canvas.getWidth()-(28*density)), canvas.getHeight());
 
-
-		/*Paint paintCircle = new Paint();
-		paintCircle.setColor(Color.BLACK);
-		paintCircle.setAlpha(255);
-		paintCircle.setStrokeWidth((int)(2*density));
-		paintCircle.setStyle(Paint.Style.STROKE);
-		paintCircle.setAntiAlias(true);
-
-		canvas.drawCircle(14*density, (canvas.getHeight()/2), 12*density, paintCircle);
-		canvas.drawCircle(14*density, (canvas.getHeight()/2), 1*density, paintCircle);
-
-		paintCircle.setAlpha(64);
-		paintCircle.setStyle(Paint.Style.FILL);
-		canvas.drawCircle(14*density, (canvas.getHeight()/2), 12*density, paintCircle);
-		 */
-		selected = (Button)view.findViewById(R.id.but_glisser);
+		
+		
+		butClic = (Button)view.findViewById(R.id.but_clic);
+		butClicLong = (Button)view.findViewById(R.id.but_clic_long);
+		butGlisser = (Button)view.findViewById(R.id.but_glisser);
+		
+		selected = butGlisser;
 		theCtrl.startThread(); //select buttons l'un apres l'autre
 		
-		Button butClic = (Button)view.findViewById(R.id.but_clic);
-		Button butClicLong = (Button)view.findViewById(R.id.but_clic_long);
-		Button butGlisser = (Button)view.findViewById(R.id.but_glisser);
+		
 		
 		PopUpHandler handler = new PopUpHandler(this);
 		butClic.setOnClickListener(handler);
 		butClicLong.setOnClickListener(handler);
-		butGlisser.setOnClickListener(handler);;
-
-
+		butGlisser.setOnClickListener(handler);
 	}
 
 	public void removeView(){
@@ -146,4 +137,7 @@ public class PopUpView extends View{
 		return butGlisser;
 	}
 	
+	public Point getPos(){
+		return theCtrl.getPos();
+	}
 }

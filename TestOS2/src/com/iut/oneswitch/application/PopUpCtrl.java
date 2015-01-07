@@ -1,6 +1,7 @@
 package com.iut.oneswitch.application;
 
 import android.graphics.PixelFormat;
+import android.graphics.Point;
 import android.os.Handler;
 import android.view.Gravity;
 import android.view.WindowManager;
@@ -29,7 +30,9 @@ public class PopUpCtrl {
 		isRunning = false;
 		init();
 	}
-
+	public OneSwitchService getService(){
+		return theService;
+	}
 	private void init(){
 		float density = theService.getResources().getDisplayMetrics().density;
 		
@@ -77,6 +80,8 @@ public class PopUpCtrl {
 		runnable = new PopupRunnable();
 	}
 	
+	
+	
 	public void removeView(){
 		theService.removeView(thePopup);
 		theService.removeView(circle);
@@ -93,6 +98,10 @@ public class PopUpCtrl {
 	
 	public Button getSelected(){
 		return thePopup.getSelected();
+	}
+	
+	public Point getPos(){
+		return new Point(posX,posY);
 	}
 
 	/**

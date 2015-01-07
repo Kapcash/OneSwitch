@@ -1,9 +1,9 @@
 package com.iut.oneswitch.application;
 
-import com.example.oneswitch.R;
-
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +11,8 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
 import android.widget.PopupWindow;
+
+import com.example.oneswitch.R;
 
 /**
  * @author OneSwitch B
@@ -22,6 +24,7 @@ public class ClickPanelCtrl implements OnClickListener, OnLongClickListener {
 	private View thePanel;
 	private WindowManager.LayoutParams clickParams;
 	private ClickHandler theHandler;
+	private boolean forSwipe = false;
 	
 	private boolean isShown = false;
 	
@@ -52,9 +55,9 @@ public class ClickPanelCtrl implements OnClickListener, OnLongClickListener {
 		clickParams.width = theService.getScreenSize().x;
 			
 		//thePanel.setOnTouchListener(this); 
-		
-		thePanel.setOnClickListener(this);
 		thePanel.setOnLongClickListener(this);
+		thePanel.setOnClickListener(this);
+		
 
 		
 		add();
@@ -84,36 +87,51 @@ public class ClickPanelCtrl implements OnClickListener, OnLongClickListener {
 		}
 	}
 	
+	
+	public View getView(){
+		return thePanel;
+	}
+	
+	public void removeService(){
+		Handler mHandler = new Handler();
+		mHandler.postDelayed(new Runnable() {
+			public void run() {
+				if((isShown)){
+					if(theHandler != null){
+						theHandler.stop();
+					}
+					theService.removeView(thePanel);
+					isShown = false;
+				}
+			}
+		}, 900);
 
+	}
+	
+	public void bringToFront(){
+		thePanel.bringToFront();
+	}
 
 
 	@Override
 	public void onClick(View v) {
 		theHandler = new ClickHandler();
-		theHandler.handleClick(theService, this);
+		if(!forSwipe){
+			theHandler.handleClick(theService, this);
+		}
+		else{
+			theHandler.handleSwipe(theService, this);
+		}
+	}
+	
+	public void setForSwipe(boolean res){
+		forSwipe = res;
 	}
 
 	@Override
 	public boolean onLongClick(View v) {
-		//AJOUT DU MENU DE RACCOURCIS
-		//Toast.makeText(theService,"COUCOU LE LONG CLICK AU BOULOT YOANN", 
-        //        Toast.LENGTH_SHORT).show();
-		System.out.println("TEST");
-
-		PopupWindow popUp = new PopupWindow(theService);
-
-		LayoutInflater inflater = (LayoutInflater)theService.getSystemService
-				(Context.LAYOUT_INFLATER_SERVICE);
-
-		View view = inflater.inflate(R.layout.contextpopup,null);
-		popUp.setContentView(view);
-
-		float density = theService.getResources().getDisplayMetrics().density;
-
-		
-		popUp.showAtLocation(thePanel, Gravity.CENTER, 0, 0);
-		popUp.update(28, 0, (int)(400*density), (int)(400*density));
-	    
+		theHandler = new ClickHandler();
+		theHandler.handleLongClick(theService, this);
 		return true;
 	}
 	

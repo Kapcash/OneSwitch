@@ -1,8 +1,8 @@
 package com.iut.oneswitch.application;
 
-import java.io.IOException;
-
+import android.graphics.Point;
 import android.os.Handler;
+import android.view.View;
 import android.widget.Button;
 /**
  * Gère les actions à effectuer lors d'un clic sur le contacteur "oneswitch"
@@ -16,6 +16,8 @@ public class ClickHandler {
 	private static boolean isInPopupMenu = false;
 	private static boolean isInContextMenu = false;
 	private static PopUpCtrl thePopup;
+	private static ButtonMenuCtrl theButtonMenu;
+	
 	/**
 	 * 1) demarre la ligne horizontale
 	 * 2) met en pause la ligne horizontale et demarre la ligne verticale
@@ -43,23 +45,26 @@ public class ClickHandler {
 
 			else if(horizLine.isShown()&&verticalLine.isShown()&&!horizLine.isMoving()&&verticalLine.isMoving()){ //troisieme click : deux lignes affichées
 				verticalLine.pause();							//pause de la ligne vertical
-				panel.remove();
+
 
 				int realX = verticalLine.getX() + verticalLine.getThickness();
 				int realY = horizLine.getY() + horizLine.getThickness()/2;
 				//SIMULATION DU CLICK
 				//ClickHandler.touchAsRoot(verticalLine.getX(), horizLine.getY(), 200); //click de 200ms
 
-				//REAJOUT DU PANEL
+				panel.remove();
+				
+				thePopup = new PopUpCtrl(service,realX, realY);
+				isInPopupMenu = true;
+				
 				Handler mHandler = new Handler();
 				mHandler.postDelayed(new Runnable() {
 					public void run() {
 						panel.init();
 					}
-				}, 500);
-
-				thePopup = new PopUpCtrl(service,realX, realY);
-				isInPopupMenu = true;
+				}, 200);
+				
+				
 
 			}
 
@@ -68,34 +73,86 @@ public class ClickHandler {
 				horizLine.remove();							//suppression des lignes
 			}
 
-
 		}
-		else if(isInPopupMenu && !isInContextMenu){
+		else if(isInPopupMenu && !isInContextMenu){ //PopUp Cliquer/Glisser/Glisser
 			Button theSelected = thePopup.getSelected();
+			panel.remove();
 			theSelected.performClick();
 			isInPopupMenu = false;
+
+			Handler mHandler = new Handler();
+			mHandler.postDelayed(new Runnable() {
+				public void run() {
+					panel.init();
+				}
+			}, 900);
+
+		}
+		else if(!isInPopupMenu && isInContextMenu){ //PopUp d'appuie long
+			Button theSelected = theButtonMenu.getSelected();
+			theSelected.performClick();
+			isInContextMenu = false;
+
 		}
 
 	}
 
-	/**
-	 * Simulation du clic sur l'écran via le "input swipe"
-	 * ROOT nécessaire
-	 * @param x coordonée abscisse
-	 * @param y coordonée ordonnée
-	 * @param time le temps d'appui à simuler
-	 */
+
+	public void handleSwipe(OneSwitchService service, final ClickPanelCtrl panel){
+		if(horizLine == null)
+			horizLine = new HorizontalLineCtrl(service);
+
+		if(verticalLine == null)
+			verticalLine = new VerticalLineCtrl(service);
+
+		if((!horizLine.isShown())&&(!verticalLine.isShown())&&(!horizLine.isMoving())&&(!verticalLine.isMoving())){ //aucune ligne affichée et aucun mouvement : premier click
+			horizLine.add();								//demarrage ligne horizontale
+		}
+
+		else if(horizLine.isShown()&&!verticalLine.isShown()&&horizLine.isMoving()&&!verticalLine.isMoving()){ //deuxieme click : ligne horizontale affichée
+			horizLine.pause();							//pause de la ligne horizontale
+			verticalLine.add();							//ajout ligne verticale
+		}
+
+		else if(horizLine.isShown()&&verticalLine.isShown()&&!horizLine.isMoving()&&verticalLine.isMoving()){ //troisieme click : deux lignes affichées
+			verticalLine.pause();							//pause de la ligne vertical
+
+
+			int realX = verticalLine.getX() + verticalLine.getThickness();
+			int realY = horizLine.getY() + horizLine.getThickness()/2;
+			verticalLine.remove();							//suppression des lignes
+			horizLine.remove();	
+			panel.remove();
+			Point pos1 = thePopup.getPos();
+			Point pos2 = new Point(realX, realY);
+			ActionGesture actionGesture = new ActionGesture();
+			actionGesture.swipeAsRoot(pos1, pos2);
+			Handler mHandler = new Handler();
+			mHandler.postDelayed(new Runnable() {
+				public void run() {
+					panel.init();
+				}
+			}, 900);
+			thePopup.getService().getClickPanelCtrl().setForSwipe(false);
+		
+		
+		}
+
+		else if(horizLine.isShown()&&verticalLine.isShown()&&!horizLine.isMoving()&&!verticalLine.isMoving()){ //quatrieme click : deux lignes affichées, aucun mouvement
+
+		}
+
+	}
 	
-	private static void touchAsRoot(int x, int y, int time){
-		try {
-			//Runtime.getRuntime().exec("su -c input tap " + x + " " + y);
-
-			Runtime.getRuntime().exec("su -c input swipe " + x + " " + y + " " + x + " " + y + " " + time);
-			System.out.println("su -c input swipe " + x + " " + y + " " + x + " " + y + " " + time);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	
+	public void handleLongClick(OneSwitchService service, final ClickPanelCtrl panel){
+		
+		theButtonMenu = new ButtonMenuCtrl(service, panel.getView());
+		isInContextMenu = true;
+		
 	}
+	
+
 
 	/**
 	 * supprime les deux lignes

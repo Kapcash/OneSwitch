@@ -1,19 +1,20 @@
 package com.iut.oneswitch.application;
 
-import java.io.IOException;
-
+import android.graphics.Point;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 
 import com.iut.oneswitch.view.popup.PopUpView;
 public class PopUpHandler implements OnClickListener{
 
 	PopUpView view;
+	private Point pos;
+	
 	
 
 	public PopUpHandler(View v){
 		view = (PopUpView) v;
+		
 	}
 	
 	/**
@@ -27,16 +28,18 @@ public class PopUpHandler implements OnClickListener{
 		//Enlève la popup
 		view.removeView();
 		if(v == view.getButClic()){
-			System.out.println("Clic");
 			//TODO:Action
+			ActionGesture actionGesture = new ActionGesture();
+			actionGesture.touchAsRoot(view.getPos());
 		}
 		if(v == view.getButClicLong()){
-			System.out.println("ClicLong");
 			//TODO:Action
+			ActionGesture actionGesture = new ActionGesture();
+			actionGesture.longTouchAsRoot(view.getPos());
 		}
 		if(v == view.getButGlisser()){
-			System.out.println("Glisser");
 			//TODO:Action
+			view.getCtrl().getService().getClickPanelCtrl().setForSwipe(true);
 		}
 	}
 

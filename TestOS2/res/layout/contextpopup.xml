@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Accès aux touches physiques"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Button
         android:id="@+id/but_back"
@@ -40,5 +40,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Volume -" />
+
+    <Button
+        android:id="@+id/but_lock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Verrouiler" />
+
+    <Button
+        android:id="@+id/but_shutdown"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Eteindre" />
 
 </LinearLayout>

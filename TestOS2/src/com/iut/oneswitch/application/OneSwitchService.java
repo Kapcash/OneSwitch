@@ -21,7 +21,10 @@ public class OneSwitchService extends Service{
 	private WindowManager windowManager;
 
 	private static ClickPanelCtrl clickCtrl;
-
+	
+	public ClickPanelCtrl getClickPanelCtrl(){
+		return clickCtrl;
+	}
 	/**
 	 * Permet l'accès au service depuis d'autres classes
 	 * @author OneSwitch B
@@ -73,7 +76,7 @@ public class OneSwitchService extends Service{
 	 */
 	public void stopService(){
 		if(clickCtrl != null){
-			clickCtrl.remove();
+			clickCtrl.removeService();
 			//Enable auto rotation
 			Settings.System.putInt(this.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 1);
 			System.out.println("SERVICE STOPPED");
