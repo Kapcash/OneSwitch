@@ -16,7 +16,7 @@ public class ClickHandler {
 	private static boolean isInContextMenu = false;
 	private static PopUpCtrl thePopup;
 	private static ButtonMenuCtrl theButtonMenu;
-	
+
 	/**
 	 * 1) demarre la ligne horizontale
 	 * 2) met en pause la ligne horizontale et demarre la ligne verticale
@@ -26,7 +26,7 @@ public class ClickHandler {
 	 * @param panel la vue interceptant le touch
 	 */
 	public void handleClick(OneSwitchService service, final ClickPanelCtrl panel){
-		if(!isInPopupMenu && !isInContextMenu){
+		if(!isInPopupMenu && !isInContextMenu && panel.isClickable()){
 			if(horizLine == null)
 				horizLine = new HorizontalLineCtrl(service);
 
@@ -51,10 +51,10 @@ public class ClickHandler {
 				//ClickHandler.touchAsRoot(verticalLine.getX(), horizLine.getY(), 200); //click de 200ms
 
 				panel.remove();
-				
+
 				thePopup = new PopUpCtrl(service,realX, realY);
 				isInPopupMenu = true;
-				
+
 				Handler mHandler = new Handler();
 				mHandler.postDelayed(new Runnable() {
 					public void run() {
@@ -134,20 +134,22 @@ public class ClickHandler {
 
 		}
 	}
-	
+
 	public void handleLongClick(OneSwitchService service, final ClickPanelCtrl panel){
-		panel.remove();
-		//Rend impossible l'affichage de la popup si les lignes sont actives.
 		if((horizLine == null || !horizLine.isMoving()) && (verticalLine == null || !verticalLine.isMoving())&& !isInPopupMenu){
+			panel.remove();
+			//Rend impossible l'affichage de la popup si les lignes sont actives.
 			theButtonMenu = new ButtonMenuCtrl(service);
 			isInContextMenu = true;
+
+			Handler mHandler = new Handler();
+			mHandler.postDelayed(new Runnable() {
+				public void run() {
+					panel.init();
+				}
+			}, 200);
 		}
-		Handler mHandler = new Handler();
-		mHandler.postDelayed(new Runnable() {
-			public void run() {
-				panel.init();
-			}
-		}, 200);
+
 	}
 
 	/**
@@ -159,15 +161,15 @@ public class ClickHandler {
 		if(verticalLine != null)
 			verticalLine.remove();	
 	}
-	
+
 	public static HorizontalLineCtrl getHorizontalLineCtrl(){
 		return horizLine;
 	}
-	
+
 	public static void notifyPopupClosed(){
 		isInPopupMenu = false;
 	}
-	
+
 	public static void notifyContextMenuClosed(){
 		isInContextMenu = false;
 	}

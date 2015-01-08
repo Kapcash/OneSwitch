@@ -39,7 +39,7 @@ public class HorizontalLineCtrl extends LineController {
 		 * (3 en valeur par défaut si échec de récupération du paramètre) */
 		this.lineThickness = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(service).getString("lign_size","3"));
 		this.lineThickness*= theLine.getResources().getDisplayMetrics().density;
-		this.speed = 3 * theLine.getResources().getDisplayMetrics().density;
+		this.speed = 2 * theLine.getResources().getDisplayMetrics().density;
 	}
 
 	/**

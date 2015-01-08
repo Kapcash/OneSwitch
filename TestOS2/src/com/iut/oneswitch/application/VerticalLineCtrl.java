@@ -41,7 +41,7 @@ public class VerticalLineCtrl extends LineController{
 		 */
 		this.lineThickness = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(service).getString("lign_size","3"));
 		this.lineThickness *= theLine.getResources().getDisplayMetrics().density;
-		this.speed = 5 * theLine.getResources().getDisplayMetrics().density;
+		this.speed = 2 * theLine.getResources().getDisplayMetrics().density;
 	}
 	
 	/**

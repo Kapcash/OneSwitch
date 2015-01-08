@@ -21,6 +21,7 @@ public class OneSwitchService extends Service{
 	private WindowManager windowManager;
 
 	private static ClickPanelCtrl clickCtrl;
+	private boolean isStarted = false;
 	
 	public ClickPanelCtrl getClickPanelCtrl(){
 		return clickCtrl;
@@ -62,13 +63,18 @@ public class OneSwitchService extends Service{
 	 * Démarrage du service de détection du clic et balayage
 	 */
 	public void startService(){
-		System.out.println("SERVICE STARTED");
-		//Désactive l'auto rotation
-		Settings.System.putInt(this.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 0);
-		clickCtrl = new ClickPanelCtrl(this); //click panel to incercept click anywhere on the display
+		if(!isStarted){
+			isStarted = true;
+			System.out.println("SERVICE STARTED");
+			//Désactive l'auto rotation
+			Settings.System.putInt(this.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 0);
+			clickCtrl = new ClickPanelCtrl(this); //click panel to incercept click anywhere on the display
+			
+			//Ajoute "running Notification"
+			Notif.getInstance(this).createRunningNotification();
+		}
+		else System.out.println("SERVICE ALREADY STARTED");
 		
-		//Ajoute "running Notification"
-		Notif.getInstance(this).createRunningNotification();
 	}
 
 	/**

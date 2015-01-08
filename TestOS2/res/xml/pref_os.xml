@@ -7,7 +7,7 @@
         List de type AutoSummaryListPreference,
         Permet une mise à jour automatique du summary
          -->
-	    <com.iut.oneswitch.application.AutoSummaryListPreference
+	    <com.iut.oneswitch.application.preferences.AutoSummaryListPreference
 	        android:defaultValue="3"
 	        android:entries="@array/pref_lign_size_entries"
 	        android:entryValues="@array/pref_lign_size_values"

@@ -19,6 +19,7 @@ public class ClickPanelCtrl implements OnClickListener, OnLongClickListener {
 	private WindowManager.LayoutParams clickParams;
 	private ClickHandler theHandler;
 	private boolean forSwipe = false;
+	private boolean clickable = true;
 	
 	private boolean isShown = false;
 	
@@ -77,8 +78,11 @@ public class ClickPanelCtrl implements OnClickListener, OnLongClickListener {
 	public View getView(){
 		return thePanel;
 	}
-	
+	public boolean isClickable(){
+		return clickable;
+	}
 	public void removeService(){
+		clickable = false;
 		Handler mHandler = new Handler();
 		mHandler.postDelayed(new Runnable() {
 			public void run() {
@@ -88,15 +92,13 @@ public class ClickPanelCtrl implements OnClickListener, OnLongClickListener {
 					}
 					theService.removeView(thePanel);
 					isShown = false;
+					clickable = true;
 				}
 			}
 		}, 900);
 
 	}
 	
-	public void bringToFront(){
-		thePanel.bringToFront();
-	}
 
 	@Override
 	public void onClick(View v) {
@@ -108,6 +110,7 @@ public class ClickPanelCtrl implements OnClickListener, OnLongClickListener {
 			theHandler.handleSwipe(theService, this);
 		}
 	}
+	
 	
 	public void setForSwipe(boolean res){
 		forSwipe = res;
