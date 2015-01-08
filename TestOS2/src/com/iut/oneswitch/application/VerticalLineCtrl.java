@@ -41,7 +41,7 @@ public class VerticalLineCtrl extends LineController{
 		 */
 		this.lineThickness = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(service).getString("lign_size","3"));
 		this.lineThickness *= theLine.getResources().getDisplayMetrics().density;
-		this.speed = 3 * theLine.getResources().getDisplayMetrics().density;
+		this.speed = 5 * theLine.getResources().getDisplayMetrics().density;
 	}
 	
 	/**
@@ -95,6 +95,7 @@ public class VerticalLineCtrl extends LineController{
 	protected void start(){	
 		isMoving = true;
 		handler.postDelayed(runnable, 1000); //start après 1 seconde
+		iterations=0;
 	}
 
 	/**
@@ -140,6 +141,12 @@ public class VerticalLineCtrl extends LineController{
 		@Override
 		public void run() {
 			try {
+				if(getIterations()==3){
+					pause();
+					remove();
+					ClickHandler.getHorizontalLineCtrl().pause();
+					ClickHandler.getHorizontalLineCtrl().remove();
+				}
 				Point size = theService.getScreenSize();
 				if((verticalParams.x <= size.x)&&(isMovingRight == true)){
 					verticalParams.x += speed;
@@ -152,8 +159,10 @@ public class VerticalLineCtrl extends LineController{
 					verticalParams.x -= speed;
 
 					theService.updateViewLayout(theLine, verticalParams);
-					if(verticalParams.x <= (0+speed))
+					if(verticalParams.x <= (0+speed)){
 						isMovingRight = true;
+						addIterations();
+					}
 				}
 				if(isMoving)
 					handler.postDelayed(this, 10);

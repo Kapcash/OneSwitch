@@ -94,6 +94,7 @@ public class HorizontalLineCtrl extends LineController {
 	protected void start(){	
 		isMoving = true;
 		handler.postDelayed(runnable, 1000); //start après 1 seconde
+		iterations=0;
 	}
 
 	/**
@@ -156,6 +157,10 @@ public class HorizontalLineCtrl extends LineController {
 		@Override
 		public void run() {
 			try {
+				if(getIterations()==3){
+					pause();
+					remove();
+				}
 				Point size = theService.getScreenSize();
 				if((horizParams.y <= size.y)&&(isMovingDown == true)){
 					horizParams.y += speed;
@@ -168,8 +173,10 @@ public class HorizontalLineCtrl extends LineController {
 				{
 					horizParams.y -= speed;
 					theService.updateViewLayout(theLine, horizParams);
-					if(horizParams.y <= (0+speed))
+					if(horizParams.y <= (0+speed)){
 						isMovingDown = true;
+						addIterations();
+					}
 				}
 				if(isMoving) //si elle doit continuer de bouger, alors on planifie le prochain mouvement
 					handler.postDelayed(this, 10);

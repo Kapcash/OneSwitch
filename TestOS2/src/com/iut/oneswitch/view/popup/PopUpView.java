@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.PopupWindow;
 
 import com.example.oneswitch.R;
+import com.iut.oneswitch.application.ClickHandler;
 import com.iut.oneswitch.application.PopUpCtrl;
 import com.iut.oneswitch.application.PopUpHandler;
 
@@ -23,6 +24,7 @@ public class PopUpView extends View{
 	private View view;
 	private PopUpCtrl theCtrl;
 	private PopUpHandler handler;
+	private int iterations;
 	
 	public PopUpCtrl getCtrl(){
 		return theCtrl;
@@ -52,29 +54,37 @@ public class PopUpView extends View{
 	}
 	
 	public void selectNext(){
-		Button butClic = (Button)view.findViewById(R.id.but_clic);
-		Button butClicLong = (Button)view.findViewById(R.id.but_clic_long);
-		Button butGlisser = (Button)view.findViewById(R.id.but_glisser);
-
-		if(selected == butGlisser){
-			butClic.getBackground().setColorFilter(new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP));
-			butClicLong.getBackground().clearColorFilter();
-			butGlisser.getBackground().clearColorFilter();
-			selected = butClic;
-		}	
-		else if(selected == butClic){
-			butClic.getBackground().clearColorFilter();
-			butClicLong.getBackground().setColorFilter(new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP));
-			butGlisser.getBackground().clearColorFilter();
-			selected = butClicLong;
-		}	
-		else if(selected == butClicLong){
-			butClic.getBackground().clearColorFilter();
-			butClicLong.getBackground().clearColorFilter();
-			butGlisser.getBackground().setColorFilter(new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP));
-			selected = butGlisser;
-		}	
-		popUp.setContentView(view);
+		if(iterations==3){
+			stopThread();
+			removeView();
+			ClickHandler.notifyPopupClosed();
+		}
+		else{
+			Button butClic = (Button)view.findViewById(R.id.but_clic);
+			Button butClicLong = (Button)view.findViewById(R.id.but_clic_long);
+			Button butGlisser = (Button)view.findViewById(R.id.but_glisser);
+	
+			if(selected == butGlisser){
+				butClic.getBackground().setColorFilter(new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP));
+				butClicLong.getBackground().clearColorFilter();
+				butGlisser.getBackground().clearColorFilter();
+				selected = butClic;
+			}	
+			else if(selected == butClic){
+				butClic.getBackground().clearColorFilter();
+				butClicLong.getBackground().setColorFilter(new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP));
+				butGlisser.getBackground().clearColorFilter();
+				selected = butClicLong;
+			}	
+			else if(selected == butClicLong){
+				butClic.getBackground().clearColorFilter();
+				butClicLong.getBackground().clearColorFilter();
+				butGlisser.getBackground().setColorFilter(new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP));
+				selected = butGlisser;
+				iterations++;
+			}	
+			popUp.setContentView(view);
+		}
 	}
 
 	@Override
@@ -98,6 +108,7 @@ public class PopUpView extends View{
 		
 		selected = butGlisser;
 		theCtrl.startThread(); //select buttons l'un apres l'autre
+		iterations=0;
 		
 		butClic.setOnClickListener(handler);
 		butClicLong.setOnClickListener(handler);

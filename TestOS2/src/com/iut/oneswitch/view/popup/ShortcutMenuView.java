@@ -14,7 +14,7 @@ import android.widget.PopupWindow;
 import com.example.oneswitch.R;
 import com.iut.oneswitch.application.ButtonMenuCtrl;
 import com.iut.oneswitch.application.ButtonMenuHandler;
-
+import com.iut.oneswitch.application.ClickHandler;
 
 public class ShortcutMenuView extends View{
 
@@ -27,6 +27,7 @@ public class ShortcutMenuView extends View{
 	private View view;
 	private Button buttonList[];
 	private ButtonMenuHandler handle;
+	private int iterations;
 
 	public ShortcutMenuView(Context context, ButtonMenuCtrl ctrl) {
 		super(context);
@@ -45,17 +46,27 @@ public class ShortcutMenuView extends View{
 	}
 	
 	public void selectNext(){
-		selectedIndex=(selectedIndex+1)%7;
-		selected = buttonList[selectedIndex];
-		
-		buttonList[selectedIndex].getBackground().setColorFilter(new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP));
-
-		for(int i = 0; i<buttonList.length;i++){
-			if(i != selectedIndex){
-				buttonList[i].getBackground().clearColorFilter();
-			}
+		if(iterations==3){
+			stopThread();
+			removeView();
+			ClickHandler.notifyContextMenuClosed();
 		}
-		popUp.setContentView(view);
+		else{
+			selectedIndex=(selectedIndex+1)%7;
+			selected = buttonList[selectedIndex];
+			
+			buttonList[selectedIndex].getBackground().setColorFilter(new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP));
+	
+			for(int i = 0; i<buttonList.length;i++){
+				if(i != selectedIndex){
+					buttonList[i].getBackground().clearColorFilter();
+				}
+			}
+			if(selectedIndex == buttonList.length-1){
+				iterations++;
+			}
+			popUp.setContentView(view);
+		}
 	}
 
 	@Override

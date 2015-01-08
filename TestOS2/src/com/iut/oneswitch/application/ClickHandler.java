@@ -159,4 +159,16 @@ public class ClickHandler {
 		if(verticalLine != null)
 			verticalLine.remove();	
 	}
+	
+	public static HorizontalLineCtrl getHorizontalLineCtrl(){
+		return horizLine;
+	}
+	
+	public static void notifyPopupClosed(){
+		isInPopupMenu = false;
+	}
+	
+	public static void notifyContextMenuClosed(){
+		isInContextMenu = false;
+	}
 }
