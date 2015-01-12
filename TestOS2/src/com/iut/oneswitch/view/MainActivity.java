@@ -11,7 +11,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.ToggleButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import com.example.oneswitch.R;
 import com.iut.oneswitch.application.OneSwitchService;
@@ -38,9 +41,9 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		final Button button = (Button) findViewById(R.id.button1);
 		
-        button.setOnClickListener(new View.OnClickListener() {
+		final Button buttonTest = (Button) findViewById(R.id.btTest);
+		buttonTest.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
             	TextView t = (TextView) findViewById(R.id.textView1);
             	if(t.getText() == "Click me again"){
@@ -52,7 +55,24 @@ public class MainActivity extends Activity {
             }
         });
         mainActivity = this;
-        Button start = (Button) findViewById(R.id.btStart);
+        
+        /* A commenter pour enlever le bouton on/off */
+        ToggleButton button = (ToggleButton) findViewById(R.id.toggleOnOff);
+        button.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+         	@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+	            if(isChecked){ 
+	            	if(mService!=null)mService.startService();
+	            }
+	            else {
+	            	if(mService!=null) mService.stopService();
+	            }
+			}
+        });
+        /* ---------------------------------------- */
+        
+        /*Button start = (Button) findViewById(R.id.btStart);
         start.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
             	if(mService!=null){
@@ -68,7 +88,7 @@ public class MainActivity extends Activity {
             		mService.stopService();
             	}
             }
-        });
+        });*/
         
 		Intent intent = new Intent(this, OneSwitchService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);

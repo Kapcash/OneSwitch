@@ -31,16 +31,7 @@
         <service
             android:name="com.iut.oneswitch.application.OneSwitchService"
             android:exported="false" />
-        <!--
-<receiver android:enabled="true" android:name="com.iut.oneswitch.model.BootUpReceiver"
-        android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
 
-        <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <category android:name="android.intent.category.DEFAULT" />
-        </intent-filter>
-</receiver>
-        -->
         <activity
             android:name="com.iut.oneswitch.view.SettingsOS"
             android:label="@string/title_activity_settings_os" >

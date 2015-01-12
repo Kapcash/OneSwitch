@@ -6,51 +6,53 @@
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Accès aux touches physiques"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:text="@string/header_popup_meca"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Button
         android:id="@+id/but_back"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Retour" />
+        android:text="@string/back_button" />
 
     <Button
         android:id="@+id/but_home"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Accueil" />
+        android:text="@string/home_button" />
 
     <Button
         android:id="@+id/but_menu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Menu" />
+        android:text="@string/menu_button" />
 
     <Button
         android:id="@+id/but_volup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Volume +" />
+        android:text="@string/volup_button" />
 
     <Button
         android:id="@+id/but_voldown"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Volume -" />
+        android:text="@string/voldown_button" />
 
     <Button
         android:id="@+id/but_lock"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Verrouiler" />
+        android:text="@string/lock_button" />
 
     <Button
         android:id="@+id/but_shutdown"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Eteindre" />
+        android:text="@string/shutdown_button" />
 
 </LinearLayout>

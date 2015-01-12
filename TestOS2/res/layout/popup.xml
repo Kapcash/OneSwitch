@@ -7,15 +7,15 @@
         android:id="@+id/but_clic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Clic" />
+        android:text="@string/clic_button" />
     <Button
         android:id="@+id/but_clic_long"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Clic long" />
+        android:text="@string/clic_long_button" />
     <Button
         android:id="@+id/but_glisser"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Glisser" />
+        android:text="@string/glisser_button" />
 </LinearLayout>

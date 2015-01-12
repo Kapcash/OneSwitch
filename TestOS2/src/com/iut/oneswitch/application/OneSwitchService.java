@@ -13,11 +13,11 @@ import android.view.WindowManager.LayoutParams;
  * Cette classe représente le service de l'application
  * Il s'exécute en tâche de fond et permet de gérer les différentes actions possibles
  * @author OneSwitch B
- *
  */
 public class OneSwitchService extends Service{
 
 	private final IBinder mBinder = new LocalBinder();
+	
 	private WindowManager windowManager;
 
 	private static ClickPanelCtrl clickCtrl;

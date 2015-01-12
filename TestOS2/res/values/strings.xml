@@ -11,6 +11,8 @@
     <string name="button_start">Start</string>
     <string name="button_stop">Stop</string>
     <string name="button_glisser">Glisser</string>
+    <string name="toggle_on">Started</string>
+    <string name="toggle_off">Stoped</string>
     
     <!-- Notifications -->
     
