@@ -3,6 +3,7 @@ package com.iut.oneswitch.application;
 import android.graphics.Point;
 import android.os.Handler;
 import android.widget.Button;
+import android.widget.Toast;
 /**
  * Gère les actions à effectuer lors d'un clic sur le contacteur "oneswitch"
  * @author OneSwitch B

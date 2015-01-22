@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">OneSwitch</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="hello_world">One Switch</string>
     <string name="action_settings">Settings</string>
     <string name="button_service">TEST</string>
     

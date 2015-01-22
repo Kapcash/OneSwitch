@@ -2,6 +2,7 @@ package com.iut.oneswitch.application;
 
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Toast;
 
 import com.iut.oneswitch.view.popup.PopUpView;
 public class PopUpHandler implements OnClickListener{
@@ -22,17 +23,15 @@ public class PopUpHandler implements OnClickListener{
 		//Enlève la popup
 		view.removeView();
 		if(v == view.getButClic()){
-			//TODO:Action
 			ActionGesture actionGesture = new ActionGesture();
 			actionGesture.touchAsRoot(view.getPos());
 		}
 		if(v == view.getButClicLong()){
-			//TODO:Action
 			ActionGesture actionGesture = new ActionGesture();
 			actionGesture.longTouchAsRoot(view.getPos());
 		}
 		if(v == view.getButGlisser()){
-			//TODO:Action
+			Toast.makeText(view.getContext(), "Choisissez un second point", Toast.LENGTH_LONG).show();
 			view.getCtrl().getService().getClickPanelCtrl().setForSwipe(true);
 		}
 	}

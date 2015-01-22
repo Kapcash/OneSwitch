@@ -12,9 +12,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 import android.widget.ToggleButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import com.example.oneswitch.R;
 import com.iut.oneswitch.application.OneSwitchService;
@@ -22,7 +22,6 @@ import com.iut.oneswitch.application.OneSwitchService.LocalBinder;
 /**
  * Classe principale permettant le lancement de l'aplication.
  * @author OneSwitch B
- *
  */
 public class MainActivity extends Activity {
  
@@ -47,7 +46,7 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
             	TextView t = (TextView) findViewById(R.id.textView1);
             	if(t.getText() == "Click me again"){
-            		t.setText("Click Me");
+            		t.setText("Click me");
             	}
             	else{
             		t.setText("Click me again");
@@ -56,7 +55,6 @@ public class MainActivity extends Activity {
         });
         mainActivity = this;
         
-        /* A commenter pour enlever le bouton on/off */
         ToggleButton button = (ToggleButton) findViewById(R.id.toggleOnOff);
         button.setOnCheckedChangeListener(new OnCheckedChangeListener() {
          	@Override

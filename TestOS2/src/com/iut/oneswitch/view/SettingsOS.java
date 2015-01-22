@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
 import android.view.MenuItem;
 
 import com.iut.oneswitch.application.preferences.PrefGeneralFragment;
@@ -33,5 +34,11 @@ public class SettingsOS extends PreferenceActivity{
 	    Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
 	    startActivityForResult(myIntent, 0);
 	    return true;
+	}
+	
+	@Override
+	protected void onPause(){
+		super.onPause();
+		PreferenceManager.getDefaultSharedPreferences(this).edit().apply();
 	}
 }

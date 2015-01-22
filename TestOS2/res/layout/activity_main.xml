@@ -42,6 +42,7 @@
 		-->
 		
 		<!-- A commenter pour supprimer le bouton on/off -->
+
 	    <ToggleButton
 	        android:id="@+id/toggleOnOff"
 	        android:layout_width="wrap_content"
@@ -49,7 +50,7 @@
 	        android:layout_alignBaseline="@+id/btTest"
 	        android:layout_alignBottom="@+id/btTest"
 	        android:layout_centerHorizontal="true"
-	        android:textOn="@string/toggle_on"
-	        android:textOff="@string/toggle_off" />
+	        android:textOff="@string/toggle_off"
+	        android:textOn="@string/toggle_on" />
 
 </RelativeLayout>
