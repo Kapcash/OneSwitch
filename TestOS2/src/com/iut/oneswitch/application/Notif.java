@@ -7,26 +7,29 @@ import android.support.v4.app.NotificationCompat;
 import com.example.oneswitch.R;
 
 /**
- * Classe gérant les notifications de l'application OneSwitch
- * Est de type Singleton
- * @author Florent
+ * Classe gérant les notifications de l'application OneSwitch.
+ * Cette classe implémente le pattern Singleton.
+ * @author OneSwitch B
  */
 public class Notif{
 	
 	/**
-	 * ID de la notification indiquant que le service est en cours
+	 * ID de la notification indiquant que le service est en cours.
 	 */
 	private final int ID_RUNNING_NOTIF = 1;
+	
 	/**
-	 * Attribut du singleton
+	 * Attribut du singleton.
 	 */
 	private static Notif notif;
+	
 	/**
-	 * Objet de l'API gérant les créations et destructions de notifications
+	 * Objet de l'API gérant les créations et destructions de notifications.
 	 */
 	private NotificationManager nManager;
+	
 	/**
-	 * Context de l'application nécessaire au NotificationManager
+	 * Contexte de l'application nécessaire au NotificationManager.
 	 */
 	private Context os;
 	
@@ -40,9 +43,9 @@ public class Notif{
 	}
 	
 	/**
-	 * Méthode du pattern Singleton
-	 * @param os Context de l'application
-	 * @return Retourne l'instance de la classe Notif
+	 * Méthode du pattern Singleton.
+	 * @param os Context de l'application.
+	 * @return Retourne l'instance de la classe Notif.
 	 */
 	public static Notif getInstance(Context os){
 		if(notif == null){
@@ -52,7 +55,7 @@ public class Notif{
 	}
 	
 	/**
-	 * Créer la notification indiquant que le service est en cours.
+	 * Créer une notification indiquant que le service est en cours.
 	 */
 	public void createRunningNotification(){ 
 		NotificationCompat.Builder nBuild = new NotificationCompat.Builder(os);

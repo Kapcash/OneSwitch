@@ -4,27 +4,57 @@ import android.graphics.Point;
 import android.os.Handler;
 import android.widget.Button;
 import android.widget.Toast;
+
 /**
- * Gère les actions à effectuer lors d'un clic sur le contacteur "oneswitch"
+ * Gère les actions à effectuer lors d'un clic sur le contacteur telles que :
+ * <ul>
+ * <li>Clique simple</li>
+ * <li>Clique long</li>
+ * <li>Glisser ("Swipe")</li>
+ * </ul>
  * @author OneSwitch B
  *
  */
 public class ClickHandler {
 
+	/**
+	 * Variable de type HorizontalLineCtrl.
+	 * Lorsqu'elle sera initialisée, l'utilisateur pourra observer une ligne horizontale à l'écran.
+	 * Elle constituera le curseur permettant de gérer le clic du contacteur.
+	 */
 	private static HorizontalLineCtrl horizLine;
+	
+	/**
+	 * Variable de type HorizontalLineCtrl.
+	 * Lorsqu'elle sera initialisée, l'utilisateur pourra observer une ligne verticale à l'écran.
+	 * Elle constituera le curseur permettant de gérer le clic du contacteur.
+	 */
 	private static VerticalLineCtrl verticalLine;
+	
+	/**
+	 * 
+	 */
 	private static boolean isInPopupMenu = false;
+	
+	/**
+	 * Permet de savoir l'état du menu de boutons physique. S'il est affiché ou non.
+	 */
 	private static boolean isInContextMenu = false;
+	
+	/**
+	 * 
+	 */
 	private static PopUpCtrl thePopup;
+	
+	/**
+	 * 
+	 */
 	private static ButtonMenuCtrl theButtonMenu;
 
 	/**
-	 * 1) demarre la ligne horizontale
-	 * 2) met en pause la ligne horizontale et demarre la ligne verticale
-	 * 3) met en pause la ligne verticale et effectue le click
-	 * 4) supprime les deux lignes, et retour en 1
-	 * @param service le service de l'application
-	 * @param panel la vue interceptant le touch
+	 * Permet la gestion d'un clic simple sur l'écran.
+	 * @param service Le service de l'application.
+	 * @param panel La vue interceptant le "touch".
 	 */
 	public void handleClick(OneSwitchService service, final ClickPanelCtrl panel){
 		if(!isInPopupMenu && !isInContextMenu && panel.isClickable()){
@@ -92,7 +122,12 @@ public class ClickHandler {
 			isInContextMenu = false;
 		}
 	}
-
+	
+	/**
+	 * Permet la gestion du "Swipe".
+	 * @param service Le service de l'application.
+	 * @param panel La vue interceptant le "touch".
+	 */
 	public void handleSwipe(OneSwitchService service, final ClickPanelCtrl panel){
 		if(horizLine == null)
 			horizLine = new HorizontalLineCtrl(service);
@@ -135,7 +170,12 @@ public class ClickHandler {
 
 		}
 	}
-
+	
+	/**
+	 * Permet la gestion d'un clic long.
+	 * @param service Le service de l'application.
+	 * @param panel La vue interceptant le "touch".
+	 */
 	public void handleLongClick(OneSwitchService service, final ClickPanelCtrl panel){
 		if((horizLine == null || !horizLine.isMoving()) && (verticalLine == null || !verticalLine.isMoving())&& !isInPopupMenu){
 			panel.remove();
@@ -154,7 +194,7 @@ public class ClickHandler {
 	}
 
 	/**
-	 * supprime les deux lignes
+	 * Efface les deux lignes (horizontalLine et verticalLine) de l'écran.
 	 */
 	public void stop(){
 		if(horizLine != null)
@@ -162,15 +202,23 @@ public class ClickHandler {
 		if(verticalLine != null)
 			verticalLine.remove();	
 	}
-
+	 /**
+	  * Pourquoi il n'y a pas de méthode pour verticalLine ??
+	  * @return
+	  */
 	public static HorizontalLineCtrl getHorizontalLineCtrl(){
 		return horizLine;
 	}
-
+	
+	/**
+	 * Passe l'attribut isInPopupMenu à faux.
+	 */
 	public static void notifyPopupClosed(){
 		isInPopupMenu = false;
 	}
-
+	/**
+	 * Passe l'attribut isInContextMenu à faux. Signifie que le menu des boutons physiques n'est plus à l'écran.
+	 */
 	public static void notifyContextMenuClosed(){
 		isInContextMenu = false;
 	}

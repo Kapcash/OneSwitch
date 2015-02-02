@@ -16,6 +16,12 @@ import com.iut.oneswitch.application.ButtonMenuCtrl;
 import com.iut.oneswitch.application.ButtonMenuHandler;
 import com.iut.oneswitch.application.ClickHandler;
 
+/**
+ * ShortcutMenuView permet la création d'un menu.
+ * Ce dernier regroupe les boutons dit "physiques" (Boutons de volumes, retour en avant etc.).
+ * @author OneSwitch B
+ *
+ */
 public class ShortcutMenuView extends View{
 
 	private PopupWindow popUp;
@@ -28,23 +34,42 @@ public class ShortcutMenuView extends View{
 	private Button buttonList[];
 	private ButtonMenuHandler handle;
 	private int iterations;
-
+	
+	/**
+	 * Constructeur de ShortcutMenuView.
+	 * @param context Le contexte de l'application.
+	 * @param ctrl Une instance du contrôleur ButtonMenuCtrl permettant la gestion et l'implémentation de la popUp allant être initialisée dans cette méthode.
+	 */
 	public ShortcutMenuView(Context context, ButtonMenuCtrl ctrl) {
 		super(context);
 		theCtrl = ctrl;
 		popUp = new PopupWindow(this.getContext());
 		handle = new ButtonMenuHandler(this);
 	}
-
+	
+	/**
+	 * 
+	 * @return L'attribut contenant le bouton actuel en surbrillance.
+	 */
 	public Button getSelected(){
 		return selected;
 	}
 	
+	/**
+	 * 
+	 * @param index Un index du tableau de boutons "ButtonList".
+	 * @return Le bouton stocké dans le tableau "ButtonList" à l'index renseigné.
+	 */
 	public Button getButton(int index){
 		if(index < 0 || index > 7) throw new IllegalArgumentException("Mauvais index");
 		return buttonList[index];
 	}
 	
+	/**
+	 * Cette méthode permet de mettre le prochain bouton du menu en surbrillance.
+	 * Le bouton en surbrillance est mémorisé dans l'attribut selected.
+	 * Après avoir parcouru le menu trois fois sans clic de la part de l'utilisateur, la liste disparaît.
+	 */
 	public void selectNext(){
 		if(iterations==3){
 			stopThread();
@@ -117,13 +142,19 @@ public class ShortcutMenuView extends View{
 		}
 		theCtrl.startThread();
 	}
-
+	
+	/**
+	 * Retire la vue du service par l'intermédiaire de la classe ButtonMenuCtrl.
+	 * En résulte la disparition du menu.
+	 * @see ButtonMenuCtrl#removeView()
+	 */
 	public void removeView(){
 		theCtrl.removeView();
 	}
 
 	/**
-	 * Stop le thread du défilement	
+	 * Stop le fil d'exécution chargé du défilement	des boutons par l'intermédiaire de la classe ButtonMenuCtrl.
+	 * @see ButtonMenuCtrl#stopThread()
 	 */
 	public void stopThread(){
 		theCtrl.stopThread();

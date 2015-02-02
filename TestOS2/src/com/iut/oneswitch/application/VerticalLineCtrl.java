@@ -10,26 +10,55 @@ import android.view.WindowManager;
 import com.iut.oneswitch.view.VerticalLine;
 
 /**
- * Permet la gestion de la ligne horizontale
+ * Permet la gestion d'une ligne verticale (paramètres et mouvements).
  * @author OneSwitch B
- * @see com.iut.oneswitch.view.HorizontalLine
+ * @see VerticalLine#VerticalLine(android.content.Context)
  */
 public class VerticalLineCtrl extends LineController{
+	
+	/**
+	 * Epaisseur de la ligne.
+	 */
 	private int lineThickness;
+	
+	/**
+	 * Rapidité du mouvement de la ligne.
+	 */
 	private float speed;
 
+	/**
+	 * Le service de notre application.
+	 */
 	private OneSwitchService theService;
+	
+	/**
+	 * 
+	 */
 	private Handler handler;
+	
+	/**
+	 * 
+	 */
 	private Runnable runnable;
-
+	
+	/**
+	 * La ligne allant être gérée.
+	 */
 	private VerticalLine theLine;
+	
+	/**
+	 * Les paramètres d'affichage de la ligne.
+	 */
 	private WindowManager.LayoutParams verticalParams;
-
+	
+	/**
+	 * Booléen indiquant si la ligne est en mouvement.
+	 */
 	private boolean isMovingRight = true;
 	
 	/**
-	 * Constructeur de la ligne horizontale
-	 * @param service
+	 * Constructeur du contrôleur de la ligne verticale.
+	 * @param service Le service de notre application.
 	 */
 	public VerticalLineCtrl(OneSwitchService service) {
 		this.theLine = new VerticalLine(service);
@@ -45,8 +74,8 @@ public class VerticalLineCtrl extends LineController{
 	}
 	
 	/**
-	 * Initialise la ligne sans l'afficher
-	 * Mise en place des paramètres (taille, position initiale)
+	 * Initialise la ligne sans l'afficher.
+	 * Mise en place des paramètres (taille, position initiale).
 	 */
 	public void init(){
 		verticalParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,
@@ -68,7 +97,7 @@ public class VerticalLineCtrl extends LineController{
 	}
 	
 	/**
-	 * Ajoute la vue de la ligne sur l'écran
+	 * Ajout de la vue (la ligne) à notre service. Ceci permet l'affichage à l'écran.
 	 */
 	public void add(){
 		init();
@@ -80,7 +109,7 @@ public class VerticalLineCtrl extends LineController{
 	}
 
 	/**
-	 * Supprime la vue de la ligne de l'écran
+	 * Supprime la vue (la ligne) de notre service. Ceci permet l'effaçage de la ligne.
 	 */
 	public void remove(){
 		if((isShown)&&(!isMoving)){
@@ -90,7 +119,7 @@ public class VerticalLineCtrl extends LineController{
 	}
 	
 	/**
-	 * Démarre le mouvement de la ligne
+	 * Démarre le mouvement de la ligne à l'aide d'un fil d'exécution ("Thread").
 	 */
 	protected void start(){	
 		isMoving = true;
@@ -99,45 +128,43 @@ public class VerticalLineCtrl extends LineController{
 	}
 
 	/**
-	 * Met en pause le déplacement de la ligne
+	 * Met en pause le déplacement de la ligne.
 	 */
 	public void pause(){
 		isMoving = false;
 	}
 
 	/**
-	 * Position en X sur l'écran
-	 * @return coordonée en abscisse de la ligne
+	 * 
+	 * @return Coordonée en abscisse de la ligne.
 	 */
 	public int getX(){
 		return verticalParams.x;
 	}
 	
 	/**
-	 * Position en Y sur l'écran
-	 * @return coordonée en ordonée de la ligne
+	 * 
+	 * @return Coordonée en ordonée de la ligne.
 	 */
 	public int getY(){
 		return verticalParams.y;
 	}
 	
 	/**
-	 * Epaisseur de la ligne
-	 * @return epaisseur de la ligne
+	 * 
+	 * @return L'épaisseur de la ligne.
 	 */
 	public int getThickness(){
 		return lineThickness;
 	}
 
 	/**
-	 * Permet le déplacement automatique en tâche de fond
+	 * Permet le déplacement automatique de la ligne en tâche de fond.
 	 * @author OneSwitch B
 	 *
 	 */
 	class VerticalLineRunnable implements Runnable{
-		/**
-		 * Permet le défilement de la ligne
-		 */
+
 		@Override
 		public void run() {
 			try {

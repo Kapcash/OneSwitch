@@ -9,20 +9,51 @@ import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
 
 /**
+ * Classe permettant de gèrer le panel (la vue) attrapant le clic.
  * @author OneSwitch B
- *Classe permettant de gèrer le panel attrapant le clic
  */
 public class ClickPanelCtrl implements OnClickListener, OnLongClickListener {
 	
+	/**
+	 * Cet attribut stockera le service de notre application.
+	 */
 	private OneSwitchService theService;
+	
+	/**
+	 * 
+	 */
 	private View thePanel;
+	
+	/**
+	 * 
+	 */
 	private WindowManager.LayoutParams clickParams;
+	
+	/**
+	 * 
+	 */
 	private ClickHandler theHandler;
+	
+	/**
+	 * 
+	 */
 	private boolean forSwipe = false;
+	
+	/**
+	 * 
+	 */
 	private boolean clickable = true;
 	
+	/**
+	 * 
+	 */
 	private boolean isShown = false;
 	
+	/**
+	 * Constructeur de ClickPanelCtrl.
+	 * Initialise la vue thePanel et le service avec celui de l'application.
+	 * @param service Le service de l'application.
+	 */
 	public ClickPanelCtrl(OneSwitchService service) {
 		this.thePanel = new View(service);
 		this.theService = service;
@@ -30,7 +61,8 @@ public class ClickPanelCtrl implements OnClickListener, OnLongClickListener {
 	}
 	
 	/**
-	 * création du panel prenant en compte la surface de l'écran
+	 * Création du panel prenant en compte la surface de l'écran.
+	 * Met sur écoute la vue "thePanel" dans le but de gérer les clic.
 	 */
 	public void init(){
 		clickParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,
@@ -53,7 +85,7 @@ public class ClickPanelCtrl implements OnClickListener, OnLongClickListener {
 	}
 	
 	/**
-	 * Ajout du panel
+	 * Cette méthode permet d'ajouter "thePanel" à notre service afin de le faire apparâitre à l'écran.
 	 */
 	private void add(){
 		if(!isShown){
@@ -63,7 +95,7 @@ public class ClickPanelCtrl implements OnClickListener, OnLongClickListener {
 	}
 	
 	/**
-	 * Enleve le panel de l'écran
+	 * Retire "thePanel" du service le faisant disparaître de l'écran.
 	 */
 	public void remove(){
 		if((isShown)){
@@ -75,12 +107,26 @@ public class ClickPanelCtrl implements OnClickListener, OnLongClickListener {
 		}
 	}
 	
+	/**
+	 * 
+	 * @return La vue "thePanel" prenant la surface de l'écran.
+	 */
 	public View getView(){
 		return thePanel;
 	}
+	
+	/**
+	 * 
+	 * @return Vrai si la vue "thePanel" à été effacée de l'écran et que le clic est de nouveau disponible.
+	 */
 	public boolean isClickable(){
 		return clickable;
 	}
+	
+	/**
+	 * Retire "thePanel" du service le faisant disparaître de l'écran.
+	 * Indique, au travers du booléen clickable, que le clic est de nouveau disponible.
+	 */
 	public void removeService(){
 		clickable = false;
 		Handler mHandler = new Handler();
@@ -111,7 +157,10 @@ public class ClickPanelCtrl implements OnClickListener, OnLongClickListener {
 		}
 	}
 	
-	
+	/**
+	 * Donne à l'attribut "forSwipe" la même valeur que l'attribut passé en paramètre.
+	 * @param res La valeur à attribuer à forSwipe.
+	 */
 	public void setForSwipe(boolean res){
 		forSwipe = res;
 	}

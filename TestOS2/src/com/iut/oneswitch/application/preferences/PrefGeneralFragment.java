@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.preference.PreferenceFragment;
 
 /**
- * Class créant le fragment de préférences d'après le pref_os.xml
- * @author Florent
+ * Classe créant le fragment de préférences d'après le pref_os.xml.
+ * @author OneSwitch B
  */
 public class PrefGeneralFragment extends PreferenceFragment {
 	

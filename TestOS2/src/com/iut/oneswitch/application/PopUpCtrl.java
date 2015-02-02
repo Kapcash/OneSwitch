@@ -10,18 +10,60 @@ import android.widget.Button;
 import com.iut.oneswitch.view.popup.CircleView;
 import com.iut.oneswitch.view.popup.PopUpView;
 
+/**
+ * 
+ * @author OneSwitch B
+ *
+ */
 public class PopUpCtrl {
+	
+	/**
+	 * Le service de notre application.
+	 */
 	private OneSwitchService theService;
+	
+	/**
+	 * La popUp qui sera manipulée.
+	 */
 	private PopUpView thePopup;
+	
+	/**
+	 * Un cercle désignant la zone où le clic à été effectué.
+	 */
 	private CircleView circle;
+	
+	/**
+	 * Les paramètres de la popUp.
+	 */
 	private WindowManager.LayoutParams popupParams;
+	
+	/**
+	 * Les paramètres du cercle.
+	 */
 	private WindowManager.LayoutParams circleParams;
+	
+	/**
+	 * Position en abscisse et ordonnée de la popUp. Sera utilisé afin de définir "circleParams".
+	 */
 	private int posX, posY;
+	
+	/**
+	 * Ce booléen atteste de la visibilité de la popUp.
+	 */
 	private boolean isRunning;
 
+	
 	private Handler handler;
+	
+	
 	private Runnable runnable;
 	
+	/**
+	 * 
+	 * @param service Le service de notre application.
+	 * @param x Un entier désignant la position en abscisse du clic.
+	 * @param y Un entier désignant la position en ordonnée du clic.
+	 */
 	public PopUpCtrl(OneSwitchService service, int x, int y) {
 		this.theService = service;
 		this.posX = x;
@@ -29,9 +71,19 @@ public class PopUpCtrl {
 		isRunning = false;
 		init();
 	}
+	
+	/**
+	 * 
+	 * @return L'attribut service et donc le service de notre application.
+	 */
 	public OneSwitchService getService(){
 		return theService;
 	}
+	
+	/**
+	 * Cette méthode permet l'affichage de la popUp ainsi que le cercle désignant la zone du clic à l'origine du déclenchement de la popUp.
+	 * Nous utilisons les attributs de paramètres afin de définir l'affichage de la popUp et du cercle.
+	 */
 	private void init(){
 		float density = theService.getResources().getDisplayMetrics().density;
 		
@@ -76,38 +128,57 @@ public class PopUpCtrl {
 		runnable = new PopupRunnable();
 	}
 	
+	/**
+	 * Efface la popUp et le cercle de la vue. On utilise la méthode removeView de la classe OneSwitchService.
+	 * @see OneSwitchService#removeView(android.view.View)
+	 */
 	public void removeView(){
 		theService.removeView(thePopup);
 		theService.removeView(circle);
 	}
 
+	/**
+	 * Déclenche le défilement des boutons du menu popup en passe isRunning à vrai.
+	 * @see PopupRunnable#run()
+	 */
 	public void startThread(){
 		isRunning = true;
 		handler.post(runnable);
 	}
 	
+	/**
+	 * Arrête le défilement des boutons en passant isRunning à faux.
+	 * @see PopupRunnable#run()
+	 */
 	public void stopThread(){
 		isRunning = false;
 	}
 	
+	/**
+	 * La méthode getSelected() de la classe PopUpView est appelée.
+	 * @see PopUpView#getSelected()
+	 * @return Le bouton de la popUp sélectionné.
+	 */
 	public Button getSelected(){
 		return thePopup.getSelected();
 	}
 	
+	/**
+	 * 
+	 * @return La zone (le point) de clic ayant provoqué l'affiche de la popUp.
+	 */
 	public Point getPos(){
 		return new Point(posX,posY);
 	}
 
 	/**
-	 * Permet la selection d'un bouton du menu popup
+	 * La méthode run permet de sélectionner le bouton suivant du menu toutes les secondes.
+	 * La sélection se fait en boucle tant que l'attribut isRunning "est vrai".
 	 * @author OneSwitch B
 	 *
 	 */
 	class PopupRunnable implements Runnable{
 
-		/**
-		 * Permet le défilement des boutons
-		 */
 		@Override
 		public void run() {
 			try {

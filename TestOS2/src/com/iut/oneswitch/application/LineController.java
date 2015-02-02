@@ -1,51 +1,101 @@
 package com.iut.oneswitch.application;
 
+/**
+ * 
+ * @author OneSwitch B
+ *
+ */
 public abstract class LineController {
+	
+	/**
+	 * 
+	 */
 	protected boolean isShown;
+	
+	/**
+	 * 
+	 */
 	protected boolean isMoving;
+	
+	/**
+	 * 
+	 */
 	protected int iterations;
 	
+	/**
+	 * 
+	 */
 	abstract public void init();
+	
+	/**
+	 * 
+	 */
 	abstract public void add();
+	
+	/**
+	 * 
+	 */
 	abstract public void remove();
+	
+	/**
+	 * 
+	 */
 	abstract protected void start();
+	
+	/**
+	 * 
+	 */
 	abstract public void pause();
 	
 	/**
-	 * Ligne affichée sur l'écran ?
-	 * @return vrai ou faux
+	 * 
+	 * @return Vrai si la ligne est affichée.
 	 */
 	public boolean isShown(){return isShown;};
-	/**
-	 * Ligne en déplacement sur l'écran
-	 * @return vrai ou faux
-	 */
 	
+	/**
+	 *
+	 * @return Vrai si la ligne est en mouvement.
+	 */
 	public boolean isMoving(){return isMoving;};
 	
 	/**
-	 * Ajoute une itération au compteur
+	 * Ajoute une itération à la variable permettant de compter le nombre de "tour" d'une ligne.
 	 */
 	protected void addIterations(){
 		iterations+=1;
 	}
 	
 	/**
-	 * remet a zero le nombre d'iterations
+	 * Remet à zéro l'attribut iterations.
 	 */
 	public void resetIterations(){
 		iterations=0;
 	}
 	
 	/**
-	 * retourne le nombre d'iterations effectuées
-	 * @return nombre d'iterations
+	 * Acesseur de l'attribut iterations.
+	 * @return Le nombre de "tour" à l'écran d'une ligne.
 	 */
 	public int getIterations(){
 		return iterations;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	abstract public int getX();
+	
+	/**
+	 * 
+	 * @return
+	 */
 	abstract public int getY();
+	
+	/**
+	 * 
+	 * @return
+	 */
 	abstract public int getThickness();
 }

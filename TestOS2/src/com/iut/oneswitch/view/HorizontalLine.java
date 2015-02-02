@@ -5,8 +5,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.View;
+
 /**
- * Représente une ligne horizontale faisant la largeur de l'écran
+ * Représente une ligne horizontale couvrant la largeur totale de l'écran.
  * @author OneSwitch B
  *
  */
@@ -14,16 +15,15 @@ public class HorizontalLine extends View {
     Paint paint = new Paint();
 
     /**
-     * Constructeur par défaut
-     * @param context le contexte
+     * Construit une vue à l'aide du constucteur de la classe View.
+     * Pour plus d'informations sur l'affichage de la ligne :
+     * @see HorizontalLine#onDraw(Canvas)
+     * @param context Le contexte de notre application.
      */
     public HorizontalLine(Context context) {
         super(context);            
     }
 
-    /**
-     * Dessine le composant qui remplira la largeur de son parent (canvas)
-     */
     @Override
     public void onDraw(Canvas canvas) {
         paint.setColor(Color.CYAN);

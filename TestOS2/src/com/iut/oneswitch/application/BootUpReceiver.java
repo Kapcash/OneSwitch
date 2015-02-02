@@ -3,6 +3,7 @@ package com.iut.oneswitch.application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
 /**
  * Non utilisé pour l'instant
  * En prévision du sprint 4

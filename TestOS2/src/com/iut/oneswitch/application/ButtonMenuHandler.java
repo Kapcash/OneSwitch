@@ -10,10 +10,30 @@ import android.view.View.OnClickListener;
 
 import com.iut.oneswitch.view.MainActivity;
 import com.iut.oneswitch.view.popup.ShortcutMenuView;
-public class ButtonMenuHandler implements OnClickListener{
 
+/**
+ * Cette classe est étroitement lié à la classe ButtonMenuCtrl.
+ * Elle permet l'écoute des boutons du menu implémentée via la classe ButtonMenuCtrl.
+ * @author OneSwitch B
+ *
+ */
+public class ButtonMenuHandler implements OnClickListener{
+	
+	/**
+	 * Le menu devant être mis sur écoute.
+	 */
 	ShortcutMenuView view;
+	
+	/**
+	 * Variable nous permettant d'effectuer un lien avec l'activité de notre application.
+	 */
 	MainActivity theActi = MainActivity.getActivity();
+	
+	/**
+	 * Constructeur de la classe ButtonMenuHandler.
+	 * Il instancie l'attribut ButtonMenuCtrl avec une vue passée en paramètre.
+	 * @param v L'objet de type ShortcutMenuView devant être mis sur écoute.
+	 */
 	public ButtonMenuHandler(ShortcutMenuView v){
 		view = v;
 	}

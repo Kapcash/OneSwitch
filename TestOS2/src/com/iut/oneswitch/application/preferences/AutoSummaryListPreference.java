@@ -5,26 +5,25 @@ import android.preference.ListPreference;
 import android.util.AttributeSet;
 
 /**
- * Class redéfinissant la class ListPreference.
- * Permet une mise à jour automatique du "summary" d'une liste
- * en fonction de la valeur choisie.
- * ! Uniquement utilisée dans les .xml de preferences. !
- * @author Florent
+ * Classe redéfinissant la classe "ListPreference".
+ * Permet une mise à jour automatique du "summary" d'une liste en fonction de la valeur choisie.
+ * <b>Uniquement utilisée dans les .xml de preferences.</b>
+ * @author OneSwitch B
  */
 public class AutoSummaryListPreference extends ListPreference {
 	 
 	/**
 	 * Constructeur appelant le second constructeur
-	 * @param context Context de l'application, 
+	 * @param context Le contexte de l'application. 
 	 */
 	public AutoSummaryListPreference(Context context) {
         this(context, null);
     }
  
 	/**
-	 * Constructeur appelant le constructeur de la superclass
-	 * @param context Context de l'application
-	 * @param attrs List des attributs
+	 * Constructeur appelant le constructeur de la super classe "ListPreference".
+	 * @param context Le contexte de l'application.
+	 * @param attrs Liste des attributs.
 	 */
     public AutoSummaryListPreference(Context context, AttributeSet attrs) {
         super(context, attrs);

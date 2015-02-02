@@ -19,20 +19,30 @@ import android.widget.ToggleButton;
 import com.example.oneswitch.R;
 import com.iut.oneswitch.application.OneSwitchService;
 import com.iut.oneswitch.application.OneSwitchService.LocalBinder;
+
 /**
  * Classe principale permettant le lancement de l'aplication.
  * @author OneSwitch B
+ *
  */
 public class MainActivity extends Activity {
  
 	/**
-	 * Service de l'application
+	 * Le service de l'application
 	 */
 	private OneSwitchService mService;
+	
+	/**
+	 * 
+	 */
     private boolean mBound = false;
-
+    
+    /**
+     * 
+     */
     private static MainActivity mainActivity;
 	
+    
 	Button play;
 	int button_status=1;
 	
@@ -121,7 +131,9 @@ public class MainActivity extends Activity {
         }
 	}
 	
-	/** Defines callbacks for service binding, passed to bindService() */
+	/** 
+	 * Defines callbacks for service binding, passed to bindService()
+	 */
     private ServiceConnection mConnection = new ServiceConnection() {
 
     	@Override

@@ -17,42 +17,91 @@ import com.iut.oneswitch.application.ClickHandler;
 import com.iut.oneswitch.application.PopUpCtrl;
 import com.iut.oneswitch.application.PopUpHandler;
 
+
+/**
+ * 
+ * @author OneSwitch B
+ *
+ */
 public class PopUpView extends View{
 
+	/**
+	 * La popUp devant être affichée.
+	 */
 	private PopupWindow popUp;
+	
+	/**
+	 * Le bouton de liste en surbrillance.
+	 */
 	private Button selected;
+	
+	/**
+	 * 
+	 */
 	private View view;
+	
+	/**
+	 * Le contrôleur de la popUp.
+	 */
 	private PopUpCtrl theCtrl;
+	
+	/**
+	 * 
+	 */
 	private PopUpHandler handler;
+	
+	/**
+	 * Le compteur de tour de liste.
+	 */
 	private int iterations;
 	
+	/**
+	 * Acesseur de l'attribut de contrôle de la popUp.
+	 * @return Le contrôleur de la popUp à savoir theCtrl.
+	 */
 	public PopUpCtrl getCtrl(){
 		return theCtrl;
 	}
+	
 	/**
-	 * Bouton "clic" de la popup
+	 * Bouton "Clic" de la popup.
 	 */
 	private Button butClic;
+	
 	/**
-	 * Bouton "clic long" de la popup
+	 * Bouton "Clic long" de la popup
 	 */
 	private Button butClicLong;
+	
 	/**
-	 * Bouton "glisser" de la popup
+	 * Bouton "Glisser" de la popup
 	 */
 	private Button butGlisser;
 
+	/**
+	 * Constructeur de popUpView.
+	 * @param context Le contexte de l'application
+	 * @param ctrl Le contrôleur de la popUp.
+	 */
 	public PopUpView(Context context, PopUpCtrl ctrl) {
 		super(context);
 		theCtrl = ctrl;
 		popUp = new PopupWindow(this.getContext());
 		handler = new PopUpHandler(this);
 	}
-
+	
+	/**
+	 * Acesseur de l'attribut selected.
+	 * @return Le bouton de la popUp sélectionné / en surbrillance.
+	 */
 	public Button getSelected(){
 		return selected;
 	}
 	
+	/**
+	 * Sélectionne le prochain bouton de la popUp et le met en surbrillance.
+	 * Au bout de trois tours de liste, la popUp disparaît.
+	 */
 	public void selectNext(){
 		if(iterations==3){
 			stopThread();
@@ -120,23 +169,40 @@ public class PopUpView extends View{
 	}
 
 	/**
-	 * Stop le thread du défilement (via PopUpCtrl)	
+	 * Stop le thread du défilement (via PopUpCtrl).	
 	 */
 	public void stopThread(){
 		theCtrl.stopThread();
 	}
+	
+	/**
+	 * Accesseur de l'attribut butClic.
+	 * @return Le bouton "clic" de la popUp.
+	 */
 	public Button getButClic() {
 		return butClic;
 	}
-
+	
+	/**
+	 * Accesseur de butClicLong.
+	 * @return Le bouton "clic long" de la popUp.
+	 */
 	public Button getButClicLong() {
 		return butClicLong;
 	}
-
+	
+	/**
+	 * Le bouton "glisser" de la popUp.
+	 * @return
+	 */
 	public Button getButGlisser() {
 		return butGlisser;
 	}
 	
+	/**
+	 * 
+	 * @return La position de la popUp.
+	 */
 	public Point getPos(){
 		return theCtrl.getPos();
 	}

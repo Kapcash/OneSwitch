@@ -10,9 +10,8 @@ import android.view.MenuItem;
 import com.iut.oneswitch.application.preferences.PrefGeneralFragment;
 
 /**
- * Page de préférences contenant les différents fragments définis
- * dans les classes Pref***Fragment
- * @author Florent
+ * Page de préférences contenant les différents fragments définis dans les classes PrefGeneralFragment.
+ * @author OneSwtich B
  */
 public class SettingsOS extends PreferenceActivity{
 
@@ -27,8 +26,7 @@ public class SettingsOS extends PreferenceActivity{
 	}
 	
 	/**
-	 * Retourne sur la vue précédente lors d'un clic sur l'icone
-	 * en haut à gauche
+	 * Retourne sur la vue précédente lors d'un clic sur l'icone figurant en haut à gauche de l'écran.
 	 */
 	public boolean onOptionsItemSelected(MenuItem item){
 	    Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
