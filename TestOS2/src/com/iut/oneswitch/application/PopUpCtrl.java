@@ -99,8 +99,8 @@ public class PopUpCtrl {
 			circleParams.gravity = Gravity.TOP | Gravity.LEFT;
 			circleParams.x = (int) (this.posX-(14*density)); //14 = rayon du cercle (12) + largeur du trait (2)
 			circleParams.y = (int) (this.posY-(14*density));
-			circleParams.height = ((int)density*28);
-			circleParams.width  = ((int)density*28);
+			circleParams.height = (int) (density*28);
+			circleParams.width  = (int) (density*28);
 			theService.addView(circle, circleParams);
 		/*End Drawing Circle*/
 			
@@ -119,8 +119,8 @@ public class PopUpCtrl {
 			if(rightPadding>(140*density)) popupParams.x = (int) (this.posX-(14*density)); //14 = rayon du cercle (12) + largeur du trait (2)
 			else  popupParams.x = (int) (this.posX-(166*density));
 			popupParams.y = (int) (this.posY-(76*density));
-			popupParams.height = (int)density*152;
-			popupParams.width  = (int)density*152;
+			popupParams.height = (int) (density*152);
+			popupParams.width  = (int) (density*152);
 			theService.addView(thePopup, popupParams);
 		/*End Drawing Popup*/
 		
