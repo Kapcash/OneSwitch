@@ -96,6 +96,7 @@ public class OneSwitchService extends Service{
 	 */
 	public void stopService(){
 		if(clickCtrl != null){
+			isStarted = false;
 			clickCtrl.removeService();
 			//Enable auto rotation
 			Settings.System.putInt(this.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 1);
