@@ -33,6 +33,7 @@ public class PopUpHandler implements OnClickListener{
 		//Enlève la popup
 		view.removeView();
 		if(v == view.getButClic()){
+
 			ActionGesture actionGesture = new ActionGesture();
 			actionGesture.touchAsRoot(view.getPos());
 		}

@@ -1,5 +1,7 @@
 package com.iut.oneswitch.application;
 
+import java.io.IOException;
+
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.Point;
@@ -80,6 +82,10 @@ public class OneSwitchService extends Service{
 		if(!isStarted){
 			isStarted = true;
 			System.out.println("SERVICE STARTED");
+			
+			
+			
+			
 			//Désactive l'auto rotation
 			Settings.System.putInt(this.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 0);
 			clickCtrl = new ClickPanelCtrl(this); //click panel to incercept click anywhere on the display
@@ -88,7 +94,6 @@ public class OneSwitchService extends Service{
 			Notif.getInstance(this).createRunningNotification();
 		}
 		else System.out.println("SERVICE ALREADY STARTED");
-		
 	}
 
 	/**

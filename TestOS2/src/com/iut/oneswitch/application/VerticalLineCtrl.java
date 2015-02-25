@@ -70,7 +70,10 @@ public class VerticalLineCtrl extends LineController{
 		 */
 		this.lineThickness = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(service).getString("lign_size","3"));
 		this.lineThickness *= theLine.getResources().getDisplayMetrics().density;
-		this.speed = 2 * theLine.getResources().getDisplayMetrics().density;
+        this.speed = 2 * theLine.getResources().getDisplayMetrics().density;
+        
+		this.speed = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(service).getString("lign_speed","2"));
+		this.speed *= theLine.getResources().getDisplayMetrics().density;
 	}
 	
 	/**
@@ -100,6 +103,12 @@ public class VerticalLineCtrl extends LineController{
 	 * Ajout de la vue (la ligne) à notre service. Ceci permet l'affichage à l'écran.
 	 */
 	public void add(){
+		this.lineThickness = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(theService).getString("lign_size","3"));
+		this.lineThickness*= theLine.getResources().getDisplayMetrics().density;
+		this.speed = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(theService).getString("lign_speed","2"));
+		this.speed *= theLine.getResources().getDisplayMetrics().density;
+		
+		
 		init();
 		if(!isShown){
 			theService.addView(theLine, verticalParams);
@@ -168,6 +177,7 @@ public class VerticalLineCtrl extends LineController{
 		@Override
 		public void run() {
 			try {
+
 				if(getIterations()==3){
 					pause();
 					remove();

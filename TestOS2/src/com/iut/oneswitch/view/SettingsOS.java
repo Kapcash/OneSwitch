@@ -37,6 +37,7 @@ public class SettingsOS extends PreferenceActivity{
 	@Override
 	protected void onPause(){
 		super.onPause();
+
 		PreferenceManager.getDefaultSharedPreferences(this).edit().apply();
 	}
 }

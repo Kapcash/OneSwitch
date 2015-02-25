@@ -11,6 +11,7 @@ import android.preference.PreferenceFragment;
  */
 public class PrefGeneralFragment extends PreferenceFragment {
 	
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

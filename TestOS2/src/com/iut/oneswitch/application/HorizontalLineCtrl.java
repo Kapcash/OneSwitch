@@ -4,10 +4,12 @@ import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.WindowManager;
 
 import com.iut.oneswitch.view.HorizontalLine;
+
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.Handler;
@@ -87,7 +89,9 @@ public class HorizontalLineCtrl extends LineController {
 		 * (3 en valeur par défaut si échec de récupération du paramètre) */
 		this.lineThickness = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(service).getString("lign_size","3"));
 		this.lineThickness*= theLine.getResources().getDisplayMetrics().density;
-		this.speed = 2 * theLine.getResources().getDisplayMetrics().density;
+		this.speed = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(service).getString("lign_speed","2"));
+		this.speed *= theLine.getResources().getDisplayMetrics().density;
+
 	}
 
 	/**
@@ -121,6 +125,13 @@ public class HorizontalLineCtrl extends LineController {
 	public void add(){
 		init();
 		if(!isShown){
+			this.lineThickness = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(theService).getString("lign_size","3"));
+			this.lineThickness*= theLine.getResources().getDisplayMetrics().density;
+			this.speed = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(theService).getString("lign_speed","2"));
+			this.speed *= theLine.getResources().getDisplayMetrics().density;
+			
+			init();
+			
 			System.out.println("horiz added");
 			theService.addView(theLine, horizParams);
 			isShown = true;
@@ -233,6 +244,7 @@ public class HorizontalLineCtrl extends LineController {
 					handler.postDelayed(this, 10);
 			} catch (Exception e) {
 				// TODO: handle exception
+				
 			}
 		}
 	}

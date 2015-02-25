@@ -60,6 +60,7 @@ public class ClickHandler {
 		if(!isInPopupMenu && !isInContextMenu && panel.isClickable()){
 			if(horizLine == null)
 				horizLine = new HorizontalLineCtrl(service);
+			
 
 			if(verticalLine == null)
 				verticalLine = new VerticalLineCtrl(service);

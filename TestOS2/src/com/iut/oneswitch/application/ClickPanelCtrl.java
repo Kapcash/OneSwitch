@@ -142,7 +142,6 @@ public class ClickPanelCtrl implements OnClickListener, OnLongClickListener {
 				}
 			}
 		}, 900);
-
 	}
 	
 

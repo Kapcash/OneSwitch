@@ -178,7 +178,6 @@ public class PopUpCtrl {
 	 *
 	 */
 	class PopupRunnable implements Runnable{
-
 		@Override
 		public void run() {
 			try {

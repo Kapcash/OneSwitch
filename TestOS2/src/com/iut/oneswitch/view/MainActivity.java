@@ -1,5 +1,7 @@
 package com.iut.oneswitch.view;
 
+import java.io.IOException;
+
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -51,6 +53,13 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
+
+		try {
+			Runtime.getRuntime().exec("su");
+		} catch (IOException e) {
+			
+		}
+		
 		final Button buttonTest = (Button) findViewById(R.id.btTest);
 		buttonTest.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -78,25 +87,7 @@ public class MainActivity extends Activity {
 	            }
 			}
         });
-        /* ---------------------------------------- */
-        
-        /*Button start = (Button) findViewById(R.id.btStart);
-        start.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-            	if(mService!=null){
-            		mService.startService();
-            	}
-            }
-        });
-        
-        Button stop = (Button) findViewById(R.id.btStop);
-        stop.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-            	if(mService!=null){
-            		mService.stopService();
-            	}
-            }
-        });*/
+  
         
 		Intent intent = new Intent(this, OneSwitchService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
