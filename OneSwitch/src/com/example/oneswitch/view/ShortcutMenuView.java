@@ -1,6 +1,5 @@
 package com.example.oneswitch.view;
 
-
 import java.io.IOException;
 
 import android.content.Context;
@@ -9,7 +8,6 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -19,86 +17,120 @@ import com.example.oneswitch.R;
 import com.example.oneswitch.control.ClickPanelCtrl;
 import com.example.oneswitch.control.ShortcutMenuCtrl;
 
-/**
- * ShortcutMenuView permet la création d'un menu.
- * Ce dernier regroupe les boutons dit "physiques" (Boutons de volumes, retour en avant etc.).
- * @author OneSwitch B
- *
- */
 public class ShortcutMenuView extends View{
-
+	private Button[] buttonList;
+	private int iterations;
 	private PopupWindow popUp;
-
-	private ShortcutMenuCtrl theCtrl;
-
 	private Button selected;
 	private int selectedIndex;
+	private ShortcutMenuCtrl theCtrl;
 	private View view;
-	private Button buttonList[];
-	private int iterations;
 
-	/**
-	 * Constructeur de ShortcutMenuView.
-	 * @param context Le contexte de l'application.
-	 * @param ctrl Une instance du contrôleur ButtonMenuCtrl permettant la gestion et l'implémentation de la popUp allant être initialisée dans cette méthode.
-	 */
-	public ShortcutMenuView(Context context, ShortcutMenuCtrl ctrl) {
-		super(context);
-		theCtrl = ctrl;
-		popUp = new PopupWindow(this.getContext());
+	public ShortcutMenuView(Context paramContext, ShortcutMenuCtrl paramShortcutMenuCtrl){
+		super(paramContext);
+		theCtrl = paramShortcutMenuCtrl;
+		popUp = new PopupWindow(getContext());
 	}
 
-	/**
-	 * 
-	 * @return L'attribut contenant le bouton actuel en surbrillance.
-	 */
-	public Button getSelected(){
-		return selected;
+	private void listener(){
+		buttonList[0].setOnClickListener(new View.OnClickListener(){
+			@Override
+			public void onClick(View view){
+				try{
+					Runtime.getRuntime().exec("su -c input keyevent 4");
+				}
+				catch (IOException e){
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		buttonList[1].setOnClickListener(new View.OnClickListener(){
+			@Override
+			public void onClick(View view){
+				try{
+					Runtime.getRuntime().exec("su -c input keyevent 3");
+				}
+				catch (IOException e){
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		buttonList[2].setOnClickListener(new View.OnClickListener(){
+			@Override
+			public void onClick(View view){
+				try
+				{
+					Runtime.getRuntime().exec("su -c input keyevent 82");
+				}
+				catch (IOException e){
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		buttonList[3].setOnClickListener(new View.OnClickListener(){
+			@Override
+			public void onClick(View view){
+				try{
+					Runtime.getRuntime().exec("su -c input keyevent 24");
+				}
+				catch (IOException e){
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		buttonList[4].setOnClickListener(new View.OnClickListener(){
+			@Override
+			public void onClick(View view){
+				try{
+					Runtime.getRuntime().exec("su -c input keyevent 25");
+				}
+				catch (IOException e){
+					e.printStackTrace();
+				}
+			}
+		});
+		buttonList[5].setOnClickListener(new View.OnClickListener(){
+			@Override
+			public void onClick(View view){
+				try{
+					Runtime.getRuntime().exec("su -c input keyevent 26");
+				}
+				catch (IOException e){
+					e.printStackTrace();
+				}
+			}
+		});
+		buttonList[6].setOnClickListener(new View.OnClickListener(){
+			@Override
+			public void onClick(View view){
+				try{
+					Runtime.getRuntime().exec("su -c shutdown");
+				}
+				catch (IOException e){
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 
-	/**
-	 * 
-	 * @param index Un index du tableau de boutons "ButtonList".
-	 * @return Le bouton stocké dans le tableau "ButtonList" à l'index renseigné.
-	 */
-	public Button getButton(int index){
-		if(index < 0 || index > 7) throw new IllegalArgumentException("Mauvais index");
-		return buttonList[index];
-	}
-	
 	public ClickPanelCtrl clickPanel(){
 		return theCtrl.getService().getClickPanelCtrl();
 	}
 
-	/**
-	 * Cette méthode permet de mettre le prochain bouton du menu en surbrillance.
-	 * Le bouton en surbrillance est mémorisé dans l'attribut selected.
-	 * Après avoir parcouru le menu trois fois sans clic de la part de l'utilisateur, la liste disparaît.
-	 */
-	public void selectNext(){
-		if(iterations==3){
-			clickPanel().closeShortcutMenu();
-		}
-		else{
-			selectedIndex=(selectedIndex+1)%7;
-			selected = buttonList[selectedIndex];
-
-			buttonList[selectedIndex].getBackground().setColorFilter(new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP));
-
-			for(int i = 0; i<buttonList.length;i++){
-				if(i != selectedIndex){
-					buttonList[i].getBackground().clearColorFilter();
-				}
-			}
-			if(selectedIndex == buttonList.length-1){
-				iterations++;
-			}
-			popUp.setContentView(view);
-		}
+	public Button getButton(int index){
+		if(index < 0 || index > 7) throw new IllegalArgumentException("Mauvais index");
+		return buttonList[index];
 	}
 
-	@Override
-	public void onDraw(Canvas canvas) {
+	public Button getSelected(){
+		return selected;
+	}
+
+	public void onDraw(Canvas paramCanvas){
 		float density = getResources().getDisplayMetrics().density;
 
 		buttonList = new Button[7];
@@ -106,12 +138,12 @@ public class ShortcutMenuView extends View{
 		LayoutInflater inflater = (LayoutInflater)this.getContext().getSystemService
 				(Context.LAYOUT_INFLATER_SERVICE);
 
-		view = inflater.inflate(R.layout.shortcut_menu,null);
+		view = inflater.inflate(R.layout.shortcutlayout,null);
 		popUp.setContentView(view);
 
 		popUp.showAtLocation(this, Gravity.CENTER, 0, 0);
 		popUp.update(28, 0, (int)(300*density), (int)(370*density));
-
+		
 		Button butBack = (Button)view.findViewById(R.id.but_back);
 		Button butHome = (Button)view.findViewById(R.id.but_home);
 		Button butMenu = (Button)view.findViewById(R.id.but_menu);
@@ -119,7 +151,7 @@ public class ShortcutMenuView extends View{
 		Button butVoldown = (Button)view.findViewById(R.id.but_voldown);
 		Button butLock = (Button)view.findViewById(R.id.but_lock);
 		Button butShut = (Button)view.findViewById(R.id.but_shutdown);
-
+		
 		selected = butBack;
 		selectedIndex = 0;
 
@@ -130,7 +162,7 @@ public class ShortcutMenuView extends View{
 		buttonList[4] = butVoldown;
 		buttonList[5] = butLock;
 		buttonList[6] = butShut;
-
+		
 		buttonList[selectedIndex].getBackground().setColorFilter(new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP));
 
 		for(int i = 0; i<buttonList.length;i++){
@@ -139,97 +171,33 @@ public class ShortcutMenuView extends View{
 			}
 		}
 		popUp.setContentView(view);
-
 		listener();
 		theCtrl.startThread();
 	}
 
-	private void listener(){
-		//BOUTON RETOUR
-		buttonList[0].setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				try {
-					Runtime.getRuntime().exec("su -c input keyevent " + KeyEvent.KEYCODE_BACK);
-				} catch (IOException e) {
-					e.printStackTrace();
+	public void selectNext()
+	{
+		if (iterations == 3)
+		{
+			clickPanel().closeShortcutMenu();
+			return;
+		}
+		selectedIndex = ((1 + selectedIndex) % 7);
+		selected = buttonList[selectedIndex];
+		buttonList[selectedIndex].getBackground().setColorFilter(new PorterDuffColorFilter(-1, PorterDuff.Mode.SRC_ATOP));
+		for (int i = 0;; i++)
+		{
+			if (i >= buttonList.length)
+			{
+				if (selectedIndex == -1 + buttonList.length) {
+					iterations = (1 + iterations);
 				}
+				popUp.setContentView(view);
+				return;
 			}
-		});
-
-		//BOUTON HOME
-		buttonList[1].setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				try {
-					Runtime.getRuntime().exec("su -c input keyevent " + KeyEvent.KEYCODE_HOME);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+			if (i != selectedIndex) {
+				buttonList[i].getBackground().clearColorFilter();
 			}
-		});
-
-		//BOUTON MENU
-		buttonList[2].setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				try {
-					Runtime.getRuntime().exec("su -c input keyevent " + KeyEvent.KEYCODE_MENU);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		});
-
-		//BOUTON VOLUME +
-		buttonList[3].setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				try {
-					Runtime.getRuntime().exec("su -c input keyevent " + KeyEvent.KEYCODE_VOLUME_UP);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		});
-
-		//BOUTON VOLUME -
-		buttonList[4].setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				try {
-					Runtime.getRuntime().exec("su -c input keyevent " + KeyEvent.KEYCODE_VOLUME_DOWN);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		});
-
-		//BOUTON VERROUILLER
-		buttonList[5].setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				try {
-					Runtime.getRuntime().exec("su -c input keyevent " + KeyEvent.KEYCODE_POWER);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-
-		});
-
-		//BOUTON ETEINDRE
-		buttonList[6].setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				try {
-					Runtime.getRuntime().exec("su -c shutdown");
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-
-		});
+		}
 	}
-
 }

@@ -10,6 +10,11 @@ import android.view.View;
 import com.example.oneswitch.R;
 import com.example.oneswitch.control.PopupCtrl;
 
+/**
+ * Cette classe permet l'implémentation d'un cercle dans une vue afin de distinguer clairement une zone de clic.
+ * @author OneSwitch B
+ *
+ */
 public class CircleView extends View{
 	
 	/**

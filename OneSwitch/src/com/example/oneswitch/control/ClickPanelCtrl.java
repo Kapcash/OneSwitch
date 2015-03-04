@@ -5,35 +5,38 @@ import java.io.IOException;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
+import android.view.View.OnKeyListener;
 import android.view.WindowManager;
-import android.widget.Button;
+import android.widget.Toast;
 
-import com.example.oneswitch.appliction.OneSwitchService;
+import com.example.oneswitch.app.OneSwitchService;
 
-public class ClickPanelCtrl {
-
-	private OneSwitchService theService;
-	private View thePanel;
+public class ClickPanelCtrl
+{
 	private WindowManager.LayoutParams clickParams;
-	private int posX=0;
-	private int posY=0;
-	private int posX2=0;
-	private int posY2 = 0;
 	private boolean forSwipe = false;
-	private boolean popupVisible = false;
-	private boolean shortcutMenuVisible = false;
 	private PopupCtrl popupCtrl;
-	private ShortcutMenuCtrl shortcutMenuCtrl;
+	private boolean popupVisible = false;
+	private int posX = 0;
+	private int posX2 = 0;
+	private int posY = 0;
+	private int posY2 = 0;
 	private ScreenTouchDetectorCtrl screenTouch;
+	private ShortcutMenuCtrl shortcutMenuCtrl;
+	private boolean shortcutMenuVisible = false;
+	private View thePanel;
+	private OneSwitchService theService;
 
 	public ClickPanelCtrl(OneSwitchService service){
 		theService = service;
-
 		init();
 		listener();
+	}
+
+	private HorizontalLineCtrl horizLine(){
+		return theService.getHorizontalLineCtrl();
 	}
 
 	private void init(){
@@ -45,46 +48,46 @@ public class ClickPanelCtrl {
 				WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL|
 				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
 				PixelFormat.TRANSLUCENT); 
-
 		clickParams.gravity = Gravity.TOP | Gravity.LEFT;
 		clickParams.x = 0;
 		clickParams.y = 0;
 		clickParams.height = theService.getScreenSize().y;
 		clickParams.width = theService.getScreenSize().x;
 		theService.addView(thePanel, clickParams);
-
-	}
-
-	private HorizontalLineCtrl horizLine(){
-		return theService.getHorizontalLineCtrl();
-	}
-
-	private VerticalLineCtrl verticalLine(){
-		return theService.getVerticalLineCtrl();
 	}
 
 	private void listener(){
-		//LORS D'UN SIMPLE CLICK SUR LE PANEL
-		thePanel.setOnClickListener(new OnClickListener(){
+		thePanel.setOnKeyListener(new OnKeyListener(){
+
 			@Override
-			public void onClick(View v) {
-				if(!shortcutMenuVisible){
-					//TOUT PREMIER CLIC
-					if(!horizLine().isMoving() && !verticalLine().isMoving() && !popupVisible){
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				System.out.println("RFHERUHVDKHVDRH");
+				if(keyCode == 62){
+					Toast.makeText(theService, "button pressed", Toast.LENGTH_LONG).show();
+				}
+				return false;
+			}
+			
+		});
+		thePanel.setOnClickListener(new View.OnClickListener(){
+			public void onClick(View paramAnonymousView){
+				if (!shortcutMenuVisible){
+					//PREMIER CLICK
+					if ((!horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)){
 						screenTouch = new ScreenTouchDetectorCtrl(theService);
 						horizLine().start();
 					}
-					//DEUXIEME CLIC, QUAND LA LIGNE HORIZ BOUGE
-					else if(horizLine().isMoving() && !verticalLine().isMoving() && !popupVisible){
+					//DEUXIEME CLICK, QUAND LA LIGNE HORIZONTALE BOUGE
+					else if ((horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)){
 						horizLine().pause();
 						verticalLine().start();
-						if(!forSwipe) posY = horizLine().getY();
+						if (!forSwipe) posY = horizLine().getY();
 						else posY2 = horizLine().getY();
 					}
-					//TROISIEME CLIC, QUAND LA LIGNE VERTICALE BOUGE
-					else if(!horizLine().isMoving() && verticalLine().isMoving() && !popupVisible){
+					//TROISIEME CLICK QUAND LA LIGNE VERTICAL BOUGE
+					else if ((!horizLine().isMoving()) && (verticalLine().isMoving()) && (!popupVisible)){
 						verticalLine().pause();
-						if(!forSwipe){
+						if (!forSwipe){
 							posX = verticalLine().getX();
 							openPopupCtrl();
 						}
@@ -92,17 +95,20 @@ public class ClickPanelCtrl {
 							setVisible(false);
 							posX2 = verticalLine().getX();
 							forSwipe = false;
+							popupCtrl.removeCircle();
 							removeLines();
-							try {
+							try{
 								Runtime.getRuntime().exec("su -c input swipe " + posX + " " + posY + " " + posX2 + " " + posY2 + " 300");
-							} catch (IOException e) {}
+							}
+							catch (IOException e){}
 						}
 					}
-					//QUATRIEME CLIC, QUAND LA POPUP EST AFFICHEE
-					else if(!horizLine().isMoving() && !verticalLine().isMoving() && popupVisible){
-						Button btClicked = (Button) popupCtrl.getSelected();
-						closePopupCtrl();
-						if(btClicked!=null) btClicked.performClick();
+					//QUATRIEME CLICK QUAND LA POPUP EST AFFICHEE
+					else if((!horizLine().isMoving()) && (!verticalLine().isMoving()) && (popupVisible)){
+						//closePopupCtrl();
+						popupVisible = false;
+						removeLines();
+						popupCtrl.getSelected().performClick();
 					}
 				}
 				else{
@@ -111,13 +117,9 @@ public class ClickPanelCtrl {
 				}
 			}
 		});
-
-
-		//LORS D'UN LONG CLICK SUR LE PANEL
-		thePanel.setOnLongClickListener(new OnLongClickListener(){
-			@Override
-			public boolean onLongClick(View v) {
-				if(!horizLine().isMoving() && !verticalLine().isMoving() && !popupVisible){
+		thePanel.setOnLongClickListener(new View.OnLongClickListener(){
+			public boolean onLongClick(View paramAnonymousView){
+				if ((!horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)) {
 					openShortcutMenu();
 				}
 				return false;
@@ -125,27 +127,16 @@ public class ClickPanelCtrl {
 		});
 	}
 	
-	public void clickDone(){
-		setVisible(true);
-		if(screenTouch!=null) screenTouch.removeView();
-	}
-
-	public void setForSwipe(boolean bool){
-		forSwipe = bool;
-	}
-
-	public Point getPos(){
-		return new Point(posX, posY);
-	}
-
-	public void setVisible(boolean bool){
-		if(bool) thePanel.setVisibility(View.VISIBLE);
-		else thePanel.setVisibility(View.INVISIBLE);
-	}
-
-	public void reloadPanel(){
-		theService.removeView(thePanel);
-		theService.addView(thePanel, clickParams);
+	
+	
+	public void stopAll(){
+		removeLines();
+		if(popupVisible){
+			closePopupCtrl();
+		}
+		if(shortcutMenuVisible){
+			closeShortcutMenu();
+		}
 	}
 
 	private void openPopupCtrl(){
@@ -154,21 +145,44 @@ public class ClickPanelCtrl {
 		reloadPanel();
 	}
 
-	public void closePopupCtrl(){
-		if(popupCtrl!=null)popupCtrl.removeView();
-		popupVisible = false;
-		removeLines();
-	}
-
 	private void openShortcutMenu(){
 		shortcutMenuCtrl = new ShortcutMenuCtrl(theService);
 		shortcutMenuVisible = true;
 		reloadPanel();
 	}
 
+	private VerticalLineCtrl verticalLine(){
+		return theService.getVerticalLineCtrl();
+	}
+
+	public void clickDone(){
+		setVisible(true);
+	}
+
+	public void closePopupCtrl(){
+		if (popupCtrl != null) {
+			popupCtrl.removeAllViews();
+			popupCtrl = null;
+		}
+		popupVisible = false;
+		removeLines();
+	}
+
 	public void closeShortcutMenu(){
-		if(shortcutMenuCtrl!=null) shortcutMenuCtrl.removeView();
+		if (shortcutMenuCtrl != null) {
+			shortcutMenuCtrl.removeView();
+			shortcutMenuCtrl = null;
+		}
 		shortcutMenuVisible = false;
+	}
+
+	public Point getPos(){
+		return new Point(posX, posY);
+	}
+
+	public void reloadPanel(){
+		theService.removeView(thePanel);
+		theService.addView(thePanel, clickParams);
 	}
 
 	public void removeLines(){
@@ -177,9 +191,20 @@ public class ClickPanelCtrl {
 	}
 
 	public void removeView(){
-		if(thePanel != null) theService.removeView(thePanel);
+		if (thePanel != null) {
+			theService.removeView(thePanel);
+		}
 	}
 
+	public void setForSwipe(boolean paramBoolean){
+		forSwipe = paramBoolean;
+	}
 
-
+	public void setVisible(boolean paramBoolean){
+		if (paramBoolean){
+			thePanel.setVisibility(View.VISIBLE);
+			return;
+		}
+		thePanel.setVisibility(View.INVISIBLE);
+	}
 }

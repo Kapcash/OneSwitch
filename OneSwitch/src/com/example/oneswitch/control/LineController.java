@@ -1,96 +1,49 @@
 package com.example.oneswitch.control;
 
-public abstract class LineController {
-	
-	/**
-	 * 
-	 */
-	protected boolean isShown;
-	
-	/**
-	 * 
-	 */
-	protected boolean isMoving;
-	
-	/**
-	 * 
-	 */
-	protected int iterations;
-	
-	/**
-	 * 
-	 */
-	abstract public void init();
-	
-	/**
-	 * 
-	 */
-	abstract public void add();
-	
-	/**
-	 * 
-	 */
-	abstract public void remove();
-	
-	/**
-	 * 
-	 */
-	abstract protected void start();
-	
-	/**
-	 * 
-	 */
-	abstract public void pause();
-	
-	/**
-	 * 
-	 * @return Vrai si la ligne est affichée.
-	 */
-	public boolean isShown(){return isShown;};
-	
-	/**
-	 *
-	 * @return Vrai si la ligne est en mouvement.
-	 */
-	public boolean isMoving(){return isMoving;};
-	
-	/**
-	 * Ajoute une itération à la variable permettant de compter le nombre de "tour" d'une ligne.
-	 */
-	protected void addIterations(){
-		iterations+=1;
-	}
-	
-	/**
-	 * Remet à zéro l'attribut iterations.
-	 */
-	public void resetIterations(){
-		iterations=0;
-	}
-	
-	/**
-	 * Acesseur de l'attribut iterations.
-	 * @return Le nombre de "tour" à l'écran d'une ligne.
-	 */
-	public int getIterations(){
-		return iterations;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	abstract public int getX();
-	
-	/**
-	 * 
-	 * @return
-	 */
-	abstract public int getY();
-	
-	/**
-	 * 
-	 * @return
-	 */
-	abstract public int getThickness();
+public abstract class LineController
+{
+  protected boolean isMoving;
+  protected boolean isShown;
+  protected int iterations;
+  
+  public abstract void add();
+  
+  protected void addIterations()
+  {
+    this.iterations = (1 + this.iterations);
+  }
+  
+  public int getIterations()
+  {
+    return this.iterations;
+  }
+  
+  public abstract int getThickness();
+  
+  public abstract int getX();
+  
+  public abstract int getY();
+  
+  public abstract void init();
+  
+  public boolean isMoving()
+  {
+    return this.isMoving;
+  }
+  
+  public boolean isShown()
+  {
+    return this.isShown;
+  }
+  
+  public abstract void pause();
+  
+  public abstract void remove();
+  
+  public void resetIterations()
+  {
+    this.iterations = 0;
+  }
+  
+  protected abstract void start();
 }

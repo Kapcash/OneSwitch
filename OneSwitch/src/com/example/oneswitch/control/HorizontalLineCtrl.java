@@ -7,39 +7,55 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.example.oneswitch.appliction.OneSwitchService;
+import com.example.oneswitch.app.OneSwitchService;
 import com.example.oneswitch.view.HorizontalLine;
 
-public class HorizontalLineCtrl{
-	
-	private int lineThickness;
-	private float speed;
-	private OneSwitchService theService;
+public class HorizontalLineCtrl
+{
 	private Handler handler;
-	private Runnable runnable;
-	private HorizontalLine theLine;
 	private WindowManager.LayoutParams horizParams;
-	private boolean isShown = false;
 	private boolean isMoving = false;
 	private boolean isMovingDown = true;
+	private boolean isShown = false;
 	private int iterations;
-	
-	public HorizontalLineCtrl(OneSwitchService service) {
-		this.theService = service;
-		init();
-		
+	private int lineThickness;
+	private Runnable runnable;
+	private float speed;
+	private HorizontalLine theLine;
+	private OneSwitchService theService;
 
+	public HorizontalLineCtrl(OneSwitchService paramOneSwitchService){
+		theService = paramOneSwitchService;
+		init();
+	}
+
+	public void addIterations(){
+		iterations++;
+	}
+
+	public int getIterations(){
+		return iterations;
+	}
+
+	public int getThickness(){
+		return lineThickness;
+	}
+
+	public int getX(){
+		return horizParams.x;
+	}
+
+	public int getY(){
+		return horizParams.y;
 	}
 
 	public void init(){
 		theLine = new HorizontalLine(theService);
-		theLine.setVisibility(View.INVISIBLE);
+		theLine.setVisibility(4);
 		theLine.setId(200);
-		
 		speed = 3;
-		this.speed *= theLine.getResources().getDisplayMetrics().density;
+		speed *= theLine.getResources().getDisplayMetrics().density;
 		lineThickness = 5;
-		
 		horizParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,
 				theService.getStatusBarHeight(),
 				WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
@@ -53,62 +69,36 @@ public class HorizontalLineCtrl{
 		horizParams.y = 0;
 		horizParams.height = lineThickness;
 		horizParams.width = theService.getScreenSize().x;
-		
-		
-		
 		theService.addView(theLine, horizParams);
-		
-
 		handler = new Handler();
 		runnable = new HorizLineRunnable();
 	}
 
-
-	public void removeView(){
-		if(theLine!=null){
-			theService.removeView(theLine);
-		}
+	public boolean isMoving(){
+		return isMoving;
 	}
 
-	protected void start(){	
-		isMoving = true;
-		theLine.setVisibility(View.VISIBLE);
-		handler.postDelayed(runnable, 1000); //start après 1 seconde
-		iterations=0;
+	public boolean isShown(){
+		return isShown;
 	}
 
 	public void pause(){
 		isMoving = false;
 	}
 
-	public boolean isShown() {
-		return isShown;
+	public void removeView(){
+		if (theLine != null) {
+			theService.removeView(theLine);
+		}
 	}
 
-	public boolean isMoving() {
-		return isMoving;
+	protected void start(){
+		isMoving = true;
+		theLine.setVisibility(View.VISIBLE);
+		handler.postDelayed(runnable, 1000);
+		iterations = 0;
 	}
 
-	public int getX(){
-		return horizParams.x;
-	}
-
-	public int getY(){
-		return horizParams.y;
-	}
-
-	public int getThickness(){
-		return lineThickness;
-	}
-	
-	public int getIterations(){
-		return iterations;
-	}
-	
-	public void addIterations(){
-		iterations++;
-	}
-	
 	public void stop(){
 		isMoving = false;
 		theLine.setVisibility(View.INVISIBLE);
@@ -118,24 +108,20 @@ public class HorizontalLineCtrl{
 	}
 
 	class HorizLineRunnable implements Runnable{
-
-		@Override
-		public void run() {
-			try {
-				if(getIterations()==3){
+		public void run(){
+			try{
+				if (getIterations()== 3){
 					pause();
 					stop();
 				}
 				Point size = theService.getScreenSize();
-				if((horizParams.y <= size.y)&&(isMovingDown == true)){
+				if((horizParams.y <= size.y)&&(isMovingDown)){
 					horizParams.y += speed;
-
 					theService.updateViewLayout(theLine, horizParams);
 					if(horizParams.y >= (size.y-speed))
 						isMovingDown = false;
 				}
-				else
-				{
+				else{
 					horizParams.y -= speed;
 					theService.updateViewLayout(theLine, horizParams);
 					if(horizParams.y <= (0+speed)){
@@ -145,10 +131,8 @@ public class HorizontalLineCtrl{
 				}
 				if(isMoving) //si elle doit continuer de bouger, alors on planifie le prochain mouvement
 					handler.postDelayed(this, 10);
-			} catch (Exception e) {
-				// TODO: handle exception
-				
 			}
+			catch (Exception localException) {}
 		}
 	}
 }

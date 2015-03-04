@@ -19,70 +19,94 @@ import com.example.oneswitch.control.ClickPanelCtrl;
 import com.example.oneswitch.control.PopupCtrl;
 
 public class PopupView extends View{
-
-	private PopupWindow popUp;
-	private Button selected;
-	private View view;
-	private PopupCtrl theCtrl;
-	private int iterations;
-	public PopupCtrl getCtrl(){
-		return theCtrl;
-	}
 	private Button butClic;
 	private Button butClicLong;
 	private Button butGlisser;
+	private int iterations;
+	private PopupWindow popUp;
+	private Button selected;
+	private PopupCtrl theCtrl;
+	private View view;
 
-	public PopupView(Context context, PopupCtrl ctrl) {
-		super(context);
-		theCtrl = ctrl;
-		popUp = new PopupWindow(this.getContext());
+	public PopupView(Context paramContext, PopupCtrl paramPopupCtrl){
+		super(paramContext);
+		theCtrl = paramPopupCtrl;
+		popUp = new PopupWindow(getContext());
 	}
-	
+
+	private void listener(){
+		butClic.setOnClickListener(new View.OnClickListener(){
+			@Override
+			public void onClick(View v){
+				clickPanel().setVisible(false);
+				theCtrl.removeAllViews();
+				int x = clickPanel().getPos().x;
+				int y = clickPanel().getPos().y;
+				try{
+					Runtime.getRuntime().exec("su -c input tap " + x + " " + y);
+				}
+				catch (IOException e){
+					e.printStackTrace();
+				}
+			}
+		});
+		butClicLong.setOnClickListener(new View.OnClickListener(){
+			@Override
+			public void onClick(View v){
+				clickPanel().setVisible(false);
+				theCtrl.removeAllViews();
+				int x = clickPanel().getPos().x;
+				int y = clickPanel().getPos().y;
+				try{
+					Runtime.getRuntime().exec("su -c input swipe " + x + " " + y + " " + x + " " + y + " 800");
+					return;
+				}
+				catch (IOException localIOException){
+					localIOException.printStackTrace();
+				}
+			}
+		});
+		butGlisser.setOnClickListener(new View.OnClickListener(){
+			@Override
+			public void onClick(View v){
+				theCtrl.closePopup();
+				clickPanel().setForSwipe(true);
+			}
+		});
+	}
+
+	public ClickPanelCtrl clickPanel(){
+		return theCtrl.getService().getClickPanelCtrl();
+	}
+
+	public Button getButClic(){
+		return butClic;
+	}
+
+	public Button getButClicLong(){
+		return butClicLong;
+	}
+
+	public Button getButGlisser(){
+		return butGlisser;
+	}
+
+	public PopupCtrl getCtrl(){
+		return theCtrl;
+	}
+
+	public Point getPos(){
+		return theCtrl.getPos();
+	}
+
 	public Button getSelected(){
 		return selected;
 	}
-	
-	public void selectNext(){
-		if(iterations==3){
-			clickPanel().closePopupCtrl();
-		}
-		else{
-			Button butClic = (Button)view.findViewById(R.id.but_clic);
-			Button butClicLong = (Button)view.findViewById(R.id.but_clic_long);
-			Button butGlisser = (Button)view.findViewById(R.id.but_glisser);
-	
-			if(selected == butGlisser){
-				butClic.getBackground().setColorFilter(new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP));
-				butClicLong.getBackground().clearColorFilter();
-				butGlisser.getBackground().clearColorFilter();
-				selected = butClic;
-			}	
-			else if(selected == butClic){
-				butClic.getBackground().clearColorFilter();
-				butClicLong.getBackground().setColorFilter(new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP));
-				butGlisser.getBackground().clearColorFilter();
-				selected = butClicLong;
-			}	
-			else if(selected == butClicLong){
-				butClic.getBackground().clearColorFilter();
-				butClicLong.getBackground().clearColorFilter();
-				butGlisser.getBackground().setColorFilter(new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP));
-				selected = butGlisser;
-				iterations++;
-			}	
-			popUp.setContentView(view);
-		}
-	}
 
-	@Override
-	public void onDraw(Canvas canvas) {
+	public void onDraw(Canvas canvas){
 		float density = getResources().getDisplayMetrics().density;
-
-		System.out.println("Drawing popup view");
-
 		LayoutInflater inflater = (LayoutInflater)getContext().getSystemService
 				(Context.LAYOUT_INFLATER_SERVICE);
-
 		view = inflater.inflate(R.layout.popup,null);
 		popUp.setContentView(view);
 
@@ -94,86 +118,49 @@ public class PopupView extends View{
 		butGlisser = (Button)view.findViewById(R.id.but_glisser);
 		
 		selected = butGlisser;
-		theCtrl.start(); //select buttons l'un apres l'autre
-		iterations=0;
-		
+		theCtrl.start();
+		iterations = 0;
 		listener();
 	}
-	
-	private void listener(){
-		butClic.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				clickPanel().setVisible(false);
-				int x = clickPanel().getPos().x;
-				int y = clickPanel().getPos().y;
-				try {
-					Runtime.getRuntime().exec("su -c input tap " + x + " " + y);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-		
-		butClicLong.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				clickPanel().setVisible(false);
-				int x = clickPanel().getPos().x;
-				int y = clickPanel().getPos().y;
-				try {
-					Runtime.getRuntime().exec("su -c input swipe " + x + " " + y + " " + x + " " + y + " 800");
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-		
-		butGlisser.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View v) {
-				clickPanel().setForSwipe(true);
-				
-			}
-		});
-	}
-	
-	public ClickPanelCtrl clickPanel(){
-		return theCtrl.getService().getClickPanelCtrl();
-	}
 
-	
-	/**
-	 * Accesseur de l'attribut butClic.
-	 * @return Le bouton "clic" de la popUp.
-	 */
-	public Button getButClic() {
-		return butClic;
-	}
-	
-	/**
-	 * Accesseur de butClicLong.
-	 * @return Le bouton "clic long" de la popUp.
-	 */
-	public Button getButClicLong() {
-		return butClicLong;
-	}
-	
-	/**
-	 * Le bouton "glisser" de la popUp.
-	 * @return
-	 */
-	public Button getButGlisser() {
-		return butGlisser;
-	}
-	
-	/**
-	 * 
-	 * @return La position de la popUp.
-	 */
-	public Point getPos(){
-		return theCtrl.getPos();
+	public void selectNext(){
+		if (iterations == 3){
+			clickPanel().closePopupCtrl();
+		}
+		else{
+			Button butClic = (Button)view.findViewById(R.id.but_clic);
+			Button butClicLong = (Button)view.findViewById(R.id.but_clic_long);
+			Button butGlisser = (Button)view.findViewById(R.id.but_glisser);
+
+			if(selected == butGlisser){
+				butClic.getBackground().setColorFilter(new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP));
+				butClic.setTextColor(Color.BLACK);
+				butClicLong.setTextColor(Color.WHITE);
+				butGlisser.setTextColor(Color.WHITE);
+				butClicLong.getBackground().clearColorFilter();
+				butGlisser.getBackground().clearColorFilter();
+				selected = butClic;
+			}	
+			else if(selected == butClic){
+				butClic.getBackground().clearColorFilter();
+				butClicLong.getBackground().setColorFilter(new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP));
+				butClicLong.setTextColor(Color.BLACK);
+				butClic.setTextColor(Color.WHITE);
+				butGlisser.setTextColor(Color.WHITE);
+				butGlisser.getBackground().clearColorFilter();
+				selected = butClicLong;
+			}	
+			else if(selected == butClicLong){
+				butClic.getBackground().clearColorFilter();
+				butClicLong.getBackground().clearColorFilter();
+				butGlisser.getBackground().setColorFilter(new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP));
+				butGlisser.setTextColor(Color.BLACK);
+				butClicLong.setTextColor(Color.WHITE);
+				butClic.setTextColor(Color.WHITE);
+				selected = butGlisser;
+				iterations++;
+			}	
+			popUp.setContentView(view);
+		}
 	}
 }
