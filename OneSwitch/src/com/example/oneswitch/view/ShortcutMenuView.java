@@ -8,12 +8,14 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.PopupWindow;
 
 import com.example.oneswitch.R;
+import com.example.oneswitch.action.ActionButton;
 import com.example.oneswitch.control.ClickPanelCtrl;
 import com.example.oneswitch.control.ShortcutMenuCtrl;
 
@@ -36,83 +38,47 @@ public class ShortcutMenuView extends View{
 		buttonList[0].setOnClickListener(new View.OnClickListener(){
 			@Override
 			public void onClick(View view){
-				try{
-					Runtime.getRuntime().exec("su -c input keyevent 4");
-				}
-				catch (IOException e){
-					e.printStackTrace();
-				}
+				ActionButton.back();
 			}
 		});
 		
 		buttonList[1].setOnClickListener(new View.OnClickListener(){
 			@Override
 			public void onClick(View view){
-				try{
-					Runtime.getRuntime().exec("su -c input keyevent 3");
-				}
-				catch (IOException e){
-					e.printStackTrace();
-				}
+				ActionButton.home();
 			}
 		});
 		
 		buttonList[2].setOnClickListener(new View.OnClickListener(){
 			@Override
 			public void onClick(View view){
-				try
-				{
-					Runtime.getRuntime().exec("su -c input keyevent 82");
-				}
-				catch (IOException e){
-					e.printStackTrace();
-				}
+				ActionButton.menu();
 			}
 		});
 		
 		buttonList[3].setOnClickListener(new View.OnClickListener(){
 			@Override
 			public void onClick(View view){
-				try{
-					Runtime.getRuntime().exec("su -c input keyevent 24");
-				}
-				catch (IOException e){
-					e.printStackTrace();
-				}
+				ActionButton.volumeUp();
 			}
 		});
 		
 		buttonList[4].setOnClickListener(new View.OnClickListener(){
 			@Override
 			public void onClick(View view){
-				try{
-					Runtime.getRuntime().exec("su -c input keyevent 25");
-				}
-				catch (IOException e){
-					e.printStackTrace();
-				}
+				ActionButton.volumeDown();
 			}
 		});
 		buttonList[5].setOnClickListener(new View.OnClickListener(){
 			@Override
 			public void onClick(View view){
-				try{
-					Runtime.getRuntime().exec("su -c input keyevent 26");
-				}
-				catch (IOException e){
-					e.printStackTrace();
-				}
+				ActionButton.lock();
 			}
 		});
 		buttonList[6].setOnClickListener(new View.OnClickListener(){
 			@Override
 			public void onClick(View view){
-				try{
-					Runtime.getRuntime().exec("su -c shutdown");
-				}
-				catch (IOException e){
-					e.printStackTrace();
-				}
+				ActionButton.shutdown();
 			}
 		});
 	}

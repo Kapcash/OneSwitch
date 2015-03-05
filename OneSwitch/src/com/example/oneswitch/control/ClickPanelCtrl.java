@@ -11,6 +11,7 @@ import android.view.View.OnKeyListener;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.example.oneswitch.action.ActionGesture;
 import com.example.oneswitch.app.OneSwitchService;
 
 public class ClickPanelCtrl
@@ -97,10 +98,7 @@ public class ClickPanelCtrl
 							forSwipe = false;
 							popupCtrl.removeCircle();
 							removeLines();
-							try{
-								Runtime.getRuntime().exec("su -c input swipe " + posX + " " + posY + " " + posX2 + " " + posY2 + " 300");
-							}
-							catch (IOException e){}
+							ActionGesture.swipe(posX, posY, posX2, posY2);
 						}
 					}
 					//QUATRIEME CLICK QUAND LA POPUP EST AFFICHEE
@@ -121,6 +119,14 @@ public class ClickPanelCtrl
 			public boolean onLongClick(View paramAnonymousView){
 				if ((!horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)) {
 					openShortcutMenu();
+				}
+				else  if((horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)) {
+					horizLine().setInverse();
+					return true;
+				}
+				else if ((!horizLine().isMoving()) && (verticalLine().isMoving()) && (!popupVisible)) {
+					verticalLine().setInverse();
+					return true;
 				}
 				return false;
 			}
@@ -181,7 +187,8 @@ public class ClickPanelCtrl
 	}
 
 	public void reloadPanel(){
-		theService.removeView(thePanel);
+		if(thePanel!=null)
+			theService.removeView(thePanel);
 		theService.addView(thePanel, clickParams);
 	}
 

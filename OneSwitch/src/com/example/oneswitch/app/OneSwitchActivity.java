@@ -9,6 +9,7 @@ import android.widget.Toast;
 import java.io.IOException;
 
 import com.example.oneswitch.R;
+import com.example.oneswitch.action.ActionButton;
 
 public class OneSwitchActivity extends Activity{
 	private Intent globalService;
@@ -22,16 +23,14 @@ public class OneSwitchActivity extends Activity{
 	}
 
 	public void buttonClicked(View v){
-		if(v.getTag() == null){
+		if(!isStarted){
 			startService(globalService);
-			v.setTag("on");
 			isStarted = true;
 			((Button)v).setText("Stop Service");
 
 		}
 		else{
 			stopService(globalService);
-			v.setTag(null);
 			isStarted = false;
 			((Button)v).setText("Start Service");
 		}
@@ -41,11 +40,7 @@ public class OneSwitchActivity extends Activity{
 	@Override
 	public void onBackPressed(){
 		if(isStarted) {
-			try{
-				Runtime.getRuntime().exec("su -c input keyevent 3");
-			}
-			catch (IOException e){
-			}
+			ActionButton.home();
 		}
 		else{
 			super.onBackPressed();

@@ -94,6 +94,7 @@ public class PopupCtrl
 	public void removeCircle(){
 		if (circle != null) {
 			theService.removeView(circle);
+			circle = null;
 		}
 	}
 
@@ -101,6 +102,7 @@ public class PopupCtrl
 		isStarted = false;
 		if (thePopup != null) {
 			theService.removeView(thePopup);
+			thePopup = null;
 		}
 	}
 
@@ -108,9 +110,11 @@ public class PopupCtrl
 		isStarted = false;
 		if (thePopup != null) {
 			theService.removeView(thePopup);
+			thePopup = null;
 		}
 		if (circle != null) {
 			theService.removeView(circle);
+			circle = null;
 		}
 	}
 

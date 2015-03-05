@@ -141,4 +141,11 @@ public class VerticalLineCtrl
 			}
 		}
 	}
+
+	public void setInverse() {
+		iterations = 0;
+		if(isMovingRight) isMovingRight = false;
+		else isMovingRight = true;
+		
+	}
 }

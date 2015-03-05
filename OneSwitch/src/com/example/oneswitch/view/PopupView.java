@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.PopupWindow;
 
 import com.example.oneswitch.R;
+import com.example.oneswitch.action.ActionGesture;
 import com.example.oneswitch.control.ClickPanelCtrl;
 import com.example.oneswitch.control.PopupCtrl;
 
@@ -42,12 +43,7 @@ public class PopupView extends View{
 				theCtrl.removeAllViews();
 				int x = clickPanel().getPos().x;
 				int y = clickPanel().getPos().y;
-				try{
-					Runtime.getRuntime().exec("su -c input tap " + x + " " + y);
-				}
-				catch (IOException e){
-					e.printStackTrace();
-				}
+				ActionGesture.click(x, y);
 			}
 		});
 		butClicLong.setOnClickListener(new View.OnClickListener(){
@@ -57,13 +53,7 @@ public class PopupView extends View{
 				theCtrl.removeAllViews();
 				int x = clickPanel().getPos().x;
 				int y = clickPanel().getPos().y;
-				try{
-					Runtime.getRuntime().exec("su -c input swipe " + x + " " + y + " " + x + " " + y + " 800");
-					return;
-				}
-				catch (IOException localIOException){
-					localIOException.printStackTrace();
-				}
+				ActionGesture.longClick(x, y);
 			}
 		});
 		butGlisser.setOnClickListener(new View.OnClickListener(){

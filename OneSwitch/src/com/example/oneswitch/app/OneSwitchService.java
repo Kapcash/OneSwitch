@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.os.IBinder;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -91,6 +90,7 @@ public class OneSwitchService extends Service{
 	@Override
 	public void onDestroy(){
 		stopService();
+		unregisterReceiver(mBroadcastReceiver);
 		super.onDestroy();
 	}
 
