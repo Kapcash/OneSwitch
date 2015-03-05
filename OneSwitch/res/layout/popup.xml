@@ -1,35 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:background="#000000" >
 
-    <LinearLayout
-        android:layout_width="166dp"
-        android:layout_height="wrap_content" >
+    <Button
+        android:id="@+id/but_clic"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/but_glisser"
+        android:gravity="center|bottom"
+        android:minWidth="48dp"
+        android:text="Clic"
+        android:textSize="12sp" />
 
-        <Button
-            android:id="@+id/but_clic"
-            android:layout_width="82dp"
-            android:layout_height="82dp"
-            android:minWidth="48dp"
-            android:text="@string/clic_button" />
-
-        <Button
-            android:id="@+id/but_clic_long"
-            android:layout_width="82dp"
-            android:layout_height="82dp"
-            android:maxWidth="82dp"
-            android:minHeight="82dip"
-            android:minWidth="82dip"
-            android:text="Long" />
-
-    </LinearLayout>
+    <Button
+        android:id="@+id/but_autres"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignBaseline="@+id/but_glisser"
+        android:layout_alignBottom="@+id/but_glisser"
+        android:layout_alignParentRight="true"
+        android:gravity="center|bottom"
+        android:text="Autres..."
+        android:textSize="12sp" />
 
     <Button
         android:id="@+id/but_glisser"
-        android:layout_width="82dp"
-        android:layout_height="82dp"
-        android:text="@string/glisser_button" />
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:gravity="center|bottom"
+        android:minWidth="48dip"
+        android:text="Glisser"
+        android:textSize="12sp" />
 
-</LinearLayout>
+    <Button
+        android:id="@+id/but_clic_long"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:gravity="center|bottom"
+        android:minWidth="48dp"
+        android:text="Long"
+        android:textSize="12sp" />
+
+</RelativeLayout>

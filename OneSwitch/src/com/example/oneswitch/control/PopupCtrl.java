@@ -34,6 +34,10 @@ public class PopupCtrl
 	}
 
 	private void init(){
+		int widthCircle = 28;
+		int heightCircle = 28;
+		int largeurTrait = 2;
+		
 		density = theService.getResources().getDisplayMetrics().density;
 		circle = new CircleView(theService, this);
 		circleParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,
@@ -44,10 +48,10 @@ public class PopupCtrl
 				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
 				PixelFormat.TRANSLUCENT);
 		circleParams.gravity = Gravity.TOP | Gravity.LEFT;
-		circleParams.x = (int) (this.posX-(14*density)); //14 = rayon du cercle (12) + largeur du trait (2)
-		circleParams.y = (int) (this.posY-(14*density));
-		circleParams.height = (int) (density*28);
-		circleParams.width  = (int) (density*28);
+		circleParams.x = (int) (this.posX-((widthCircle/largeurTrait)*density));
+		circleParams.y = (int) (this.posY-((heightCircle/largeurTrait)*density));
+		circleParams.height = (int) (density*heightCircle);
+		circleParams.width  = (int) (density*widthCircle);
 		theService.addView(circle, circleParams);
 
 		thePopup = new PopupView(theService, this);
@@ -60,13 +64,18 @@ public class PopupCtrl
 				PixelFormat.TRANSLUCENT);
 		popupParams.gravity = Gravity.TOP | Gravity.LEFT;
 
+		
+		int heightPopup = 160;
+		int widthPopup = 190;
+		
+		popupParams.width  = (int) (density*widthPopup);
+		popupParams.height = (int) (density*heightPopup);
 		int rightPadding = (theService.getScreenSize().x - posX);
-		if(rightPadding>(166*density)) popupParams.x = (int) (this.posX-(14*density)); //14 = rayon du cercle (12) + largeur du trait (2)
-		else  popupParams.x = (int) (this.posX-(166*density));
-		popupParams.y = (int) (this.posY-(83*density));
-		popupParams.height = (int) (density*166);
-		popupParams.width  = (int) (density*200);
+		if(rightPadding>(heightPopup*density))	popupParams.x = circleParams.x;
+		else	popupParams.x = (int) circleParams.x - popupParams.width;
+		popupParams.y = (int) (this.posY-((heightPopup/2)*density));
 		theService.addView(thePopup, popupParams);
+		
 		handler = new Handler();
 		runnable = new PopupRunnable();
 	}

@@ -121,7 +121,7 @@ public class VerticalLineCtrl{
 		@Override
 		public void run(){
 			try{
-				if (getIterations() == 3){
+				if(getIterations() == 3){
 					stop();
 					theService.getHorizontalLineCtrl().stop();
 				}

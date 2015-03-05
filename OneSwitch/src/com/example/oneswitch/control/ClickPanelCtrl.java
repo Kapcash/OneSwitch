@@ -1,7 +1,5 @@
 package com.example.oneswitch.control;
 
-import java.io.IOException;
-
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.view.Gravity;
@@ -115,6 +113,9 @@ public class ClickPanelCtrl
 				}
 			}
 		});
+		
+		
+		
 		thePanel.setOnLongClickListener(new View.OnLongClickListener(){
 			public boolean onLongClick(View paramAnonymousView){
 				if ((!horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)) {
@@ -142,6 +143,12 @@ public class ClickPanelCtrl
 		}
 		if(shortcutMenuVisible){
 			closeShortcutMenu();
+		}
+		if(thePanel!=null){
+			theService.removeView(thePanel);
+		}
+		if(forSwipe){
+			popupCtrl.removeCircle();
 		}
 	}
 

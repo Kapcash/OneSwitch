@@ -23,11 +23,9 @@ public class OneSwitchService extends Service{
 	private VerticalLineCtrl verticalCtrl;
 	private WindowManager windowManager;
 	private OneSwitchService service;
-	
-	private static final String TAG = "MyService";
 
-    private static final String BCAST_CONFIGCHANGED = "android.intent.action.CONFIGURATION_CHANGED";
-    
+	private static final String BCAST_CONFIGCHANGED = "android.intent.action.CONFIGURATION_CHANGED";
+
 	public IBinder onBind(Intent paramIntent){
 		return null;
 	}
@@ -39,7 +37,7 @@ public class OneSwitchService extends Service{
 		windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 		if(!isStarted){
 			isStarted = true;
-			Toast.makeText(this, "Service démarré !", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Service dï¿½marrï¿½ !", Toast.LENGTH_SHORT).show();
 			init();
 		}
 	}
@@ -48,7 +46,7 @@ public class OneSwitchService extends Service{
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(BCAST_CONFIGCHANGED);
 		this.registerReceiver(mBroadcastReceiver, filter);
-		
+
 		horizCtrl = new HorizontalLineCtrl(this);
 		verticalCtrl = new VerticalLineCtrl(this);
 		clickCtrl = new ClickPanelCtrl(this);
@@ -114,25 +112,19 @@ public class OneSwitchService extends Service{
 	public void updateViewLayout(View paramView, WindowManager.LayoutParams paramLayoutParams){
 		windowManager.updateViewLayout(paramView, paramLayoutParams);
 	}
-	
-	public BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent myIntent) {
 
-            if ( myIntent.getAction().equals( BCAST_CONFIGCHANGED ) ) {
-                if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-                	if(clickCtrl!=null){
-                		clickCtrl.stopAll();
-                		horizCtrl = new HorizontalLineCtrl(service);
-                		verticalCtrl = new VerticalLineCtrl(service);
-                	}
-                }
-                else {
-                	clickCtrl.stopAll();
-            		horizCtrl = new HorizontalLineCtrl(service);
-            		verticalCtrl = new VerticalLineCtrl(service);
-                }
-            }
-        }
-    };
+	public BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent myIntent) {
+
+			if ( myIntent.getAction().equals( BCAST_CONFIGCHANGED ) ) {
+				if(clickCtrl!=null){
+					clickCtrl.stopAll();
+					horizCtrl = new HorizontalLineCtrl(service);
+					verticalCtrl = new VerticalLineCtrl(service);
+					clickCtrl = new ClickPanelCtrl(service);
+				}
+			}
+		}
+	};
 }
