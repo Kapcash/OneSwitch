@@ -23,6 +23,7 @@ public class HorizontalLineCtrl
 	private float speed;
 	private HorizontalLine theLine;
 	private OneSwitchService theService;
+	private Point size;
 
 	public HorizontalLineCtrl(OneSwitchService paramOneSwitchService){
 		theService = paramOneSwitchService;
@@ -50,6 +51,7 @@ public class HorizontalLineCtrl
 	}
 
 	public void init(){
+		size = theService.getScreenSize();
 		theLine = new HorizontalLine(theService);
 		theLine.setVisibility(4);
 		theLine.setId(200);
@@ -117,26 +119,25 @@ public class HorizontalLineCtrl
 		public void run(){
 			try{
 				if (getIterations()== 3){
-					pause();
 					stop();
 				}
-				Point size = theService.getScreenSize();
-				if((horizParams.y <= size.y)&&(isMovingDown)){
-					horizParams.y += speed;
-					theService.updateViewLayout(theLine, horizParams);
-					if(horizParams.y >= (size.y-speed))
-						isMovingDown = false;
-				}
-				else{
-					horizParams.y -= speed;
-					theService.updateViewLayout(theLine, horizParams);
-					if(horizParams.y <= (0+speed)){
-						isMovingDown = true;
-						addIterations();
+				if(isMoving){
+					if((horizParams.y <= size.y)&&(isMovingDown)){
+						horizParams.y += speed;
+						
+						if(horizParams.y >= (size.y-speed))
+							isMovingDown = false;
 					}
-				}
-				if(isMoving) //si elle doit continuer de bouger, alors on planifie le prochain mouvement
+					else{
+						horizParams.y -= speed;
+						if(horizParams.y <= (0+speed)){
+							isMovingDown = true;
+							addIterations();
+						}
+					}
+					theService.updateViewLayout(theLine, horizParams);
 					handler.postDelayed(this, 10);
+				}	
 			}
 			catch (Exception localException) {}
 		}

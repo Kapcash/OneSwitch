@@ -10,19 +10,20 @@ import android.view.WindowManager;
 import com.example.oneswitch.app.OneSwitchService;
 import com.example.oneswitch.view.VerticalLine;
 
-public class VerticalLineCtrl
-{
-	private Handler handler;
+public class VerticalLineCtrl{
 	private boolean isMoving = false;
 	private boolean isMovingRight = true;
 	private boolean isShown = false;
 	private int iterations;
 	private int lineThickness;
-	private Runnable runnable;
+	//private VerticalLineTask mTask;
+	private VerticalLineRunnable runnable;
+	private Handler handler = new Handler();
 	private float speed;
 	private VerticalLine theLine;
 	private OneSwitchService theService;
 	private WindowManager.LayoutParams verticalParams;
+	private Point size;
 
 	public VerticalLineCtrl(OneSwitchService service){
 		theService = service;
@@ -50,11 +51,12 @@ public class VerticalLineCtrl
 	}
 
 	public void init(){
+		size = theService.getScreenSize();
 		theLine = new VerticalLine(theService);
 		theLine.setVisibility(4);
 		theLine.setId(200);
 		speed = 3;
-		speed *= theLine.getResources().getDisplayMetrics().density;
+		speed = speed *theLine.getResources().getDisplayMetrics().density;
 		lineThickness = 5;
 		verticalParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,
 				theService.getStatusBarHeight(),
@@ -70,7 +72,7 @@ public class VerticalLineCtrl
 		verticalParams.height = theService.getScreenSize().y;
 		verticalParams.width = lineThickness;
 		theService.addView(theLine, verticalParams);
-		handler = new Handler();
+
 		runnable = new VerticalLineRunnable();
 	}
 
@@ -101,51 +103,49 @@ public class VerticalLineCtrl
 
 	public void stop(){
 		isMoving = false;
+		//mTask.cancel(true);
 		theLine.setVisibility(View.INVISIBLE);
 		verticalParams.x = 0;
 		verticalParams.y = 0;
 		theService.updateViewLayout(theLine, verticalParams);
 	}
 
+	public void setInverse() {
+		iterations = 0;
+		if(isMovingRight) isMovingRight = false;
+		else isMovingRight = true;
+
+	}
+	
 	class VerticalLineRunnable implements Runnable {
 		@Override
 		public void run(){
 			try{
 				if (getIterations() == 3){
-					pause();
 					stop();
-					theService.getHorizontalLineCtrl().pause();
 					theService.getHorizontalLineCtrl().stop();
 				}
-				Point size = theService.getScreenSize();
-				if((verticalParams.x <= size.x)&&(isMovingRight == true)){
-					verticalParams.x += speed;
-
-					theService.updateViewLayout(theLine, verticalParams);
-					if(verticalParams.x >= (size.x -speed))
-						isMovingRight = false;
-				}
-				else{
-					verticalParams.x -= speed;
-
-					theService.updateViewLayout(theLine, verticalParams);
-					if(verticalParams.x <= (0+speed)){
-						isMovingRight = true;
-						addIterations();
+				if(isMoving){
+					if((verticalParams.x <= size.x)  && (isMovingRight)){
+						verticalParams.x += speed;
+						if(verticalParams.x >= (size.x -speed))
+							isMovingRight = false;
 					}
-				}
-				if(isMoving)
+					else{
+						verticalParams.x -= speed;
+						if(verticalParams.x <= (0+speed)){
+							isMovingRight = true;
+							addIterations();
+						}
+					}
+					theService.updateViewLayout(theLine, verticalParams);
 					handler.postDelayed(this, 10);
+				}	
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
-	public void setInverse() {
-		iterations = 0;
-		if(isMovingRight) isMovingRight = false;
-		else isMovingRight = true;
-		
-	}
+
 }
