@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Configuration;
 import android.graphics.Point;
 import android.os.IBinder;
 import android.view.View;
@@ -37,7 +36,7 @@ public class OneSwitchService extends Service{
 		windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 		if(!isStarted){
 			isStarted = true;
-			Toast.makeText(this, "Service d�marr� !", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Service démarré !", Toast.LENGTH_SHORT).show();
 			init();
 		}
 	}
@@ -104,8 +103,10 @@ public class OneSwitchService extends Service{
 			if(windowManager != null){
 				clickCtrl.removeView();
 				horizCtrl.removeView();
+				verticalCtrl.removeView();
 			}
 			isStarted = false;
+			stopSelf();
 		}
 	}
 

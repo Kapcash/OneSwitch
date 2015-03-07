@@ -102,8 +102,6 @@ public class ClickPanelCtrl
 					//QUATRIEME CLICK QUAND LA POPUP EST AFFICHEE
 					else if((!horizLine().isMoving()) && (!verticalLine().isMoving()) && (popupVisible)){
 						//closePopupCtrl();
-						popupVisible = false;
-						removeLines();
 						popupCtrl.getSelected().performClick();
 					}
 				}
@@ -132,6 +130,11 @@ public class ClickPanelCtrl
 				return false;
 			}
 		});
+	}
+	
+	public void gestureDone(){
+		popupVisible = false;
+		removeLines();
 	}
 	
 	

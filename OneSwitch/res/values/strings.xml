@@ -13,6 +13,7 @@
     <string name="button_glisser">Glisser</string>
     <string name="toggle_on">Started</string>
     <string name="toggle_off">Stoped</string>
+    <string name="bt">button</string>
     
     <!-- Notifications -->
     

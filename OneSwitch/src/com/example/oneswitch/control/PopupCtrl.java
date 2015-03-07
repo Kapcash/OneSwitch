@@ -65,14 +65,18 @@ public class PopupCtrl
 		popupParams.gravity = Gravity.TOP | Gravity.LEFT;
 
 		
-		int heightPopup = 160;
-		int widthPopup = 190;
+		//TAILLE DE LA POPUP (en DP)
+		int widthPopup = 170;
+		int heightPopup = 190;
+		
+		//ESPACE ENTRE LA POPUP ET LE CERCLE
+		int spacing = 5;
 		
 		popupParams.width  = (int) (density*widthPopup);
 		popupParams.height = (int) (density*heightPopup);
-		int rightPadding = (theService.getScreenSize().x - posX);
-		if(rightPadding>(heightPopup*density))	popupParams.x = circleParams.x;
-		else	popupParams.x = (int) circleParams.x - popupParams.width;
+		int rightPadding = (theService.getScreenSize().x - (posX) + spacing);
+		if(rightPadding>((widthPopup+5)*density))	popupParams.x = (circleParams.x+circleParams.width + spacing);
+		else	popupParams.x = (int) circleParams.x - popupParams.width - spacing;
 		popupParams.y = (int) (this.posY-((heightPopup/2)*density));
 		theService.addView(thePopup, popupParams);
 		
