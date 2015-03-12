@@ -1,4 +1,4 @@
-package com.example.oneswitch.control;
+package iut.oneswitch.control;
 
 public abstract class LineController
 {

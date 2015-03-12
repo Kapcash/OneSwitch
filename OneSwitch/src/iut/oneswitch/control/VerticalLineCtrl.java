@@ -1,14 +1,15 @@
-package com.example.oneswitch.control;
+package iut.oneswitch.control;
 
+import iut.oneswitch.app.OneSwitchService;
+import iut.oneswitch.view.VerticalLine;
+import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
-
-import com.example.oneswitch.app.OneSwitchService;
-import com.example.oneswitch.view.VerticalLine;
 
 public class VerticalLineCtrl{
 	private boolean isMoving = false;
@@ -24,6 +25,7 @@ public class VerticalLineCtrl{
 	private OneSwitchService theService;
 	private WindowManager.LayoutParams verticalParams;
 	private Point size;
+	private SharedPreferences sp;
 
 	public VerticalLineCtrl(OneSwitchService service){
 		theService = service;
@@ -51,13 +53,19 @@ public class VerticalLineCtrl{
 	}
 
 	public void init(){
+		//The object containing all preferences
+		sp = PreferenceManager.getDefaultSharedPreferences(theService);
+		
 		size = theService.getScreenSize();
 		theLine = new VerticalLine(theService);
 		theLine.setVisibility(4);
 		theLine.setId(200);
-		speed = 3;
+		
+		speed = Integer.parseInt(sp.getString("lign_speed","4"));
 		speed = speed *theLine.getResources().getDisplayMetrics().density;
-		lineThickness = 5;
+		
+		lineThickness = Integer.parseInt(sp.getString("lign_size","3"));
+		
 		verticalParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,
 				theService.getStatusBarHeight(),
 				WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
@@ -71,8 +79,8 @@ public class VerticalLineCtrl{
 		verticalParams.y = 0;
 		verticalParams.height = theService.getScreenSize().y;
 		verticalParams.width = lineThickness;
+		
 		theService.addView(theLine, verticalParams);
-
 		runnable = new VerticalLineRunnable();
 	}
 
@@ -121,7 +129,7 @@ public class VerticalLineCtrl{
 		@Override
 		public void run(){
 			try{
-				if(getIterations() == 3){
+				if(getIterations() == Integer.parseInt(sp.getString("iterations","3"))){
 					stop();
 					theService.getHorizontalLineCtrl().stop();
 				}

@@ -1,5 +1,6 @@
-package com.example.oneswitch.control;
+package iut.oneswitch.control;
 
+import iut.oneswitch.app.OneSwitchService;
 import android.graphics.PixelFormat;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -7,8 +8,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
-
-import com.example.oneswitch.app.OneSwitchService;
 
 public class ScreenTouchDetectorCtrl{
 	private OneSwitchService theService;

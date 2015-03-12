@@ -1,5 +1,9 @@
-package com.example.oneswitch.view;
+package iut.oneswitch.view;
 
+import iut.oneswitch.R;
+import iut.oneswitch.action.ActionGesture;
+import iut.oneswitch.control.ClickPanelCtrl;
+import iut.oneswitch.control.PopupCtrl;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -11,11 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.PopupWindow;
-
-import com.example.oneswitch.R;
-import com.example.oneswitch.action.ActionGesture;
-import com.example.oneswitch.control.ClickPanelCtrl;
-import com.example.oneswitch.control.PopupCtrl;
 
 public class PopupView extends View{
 
@@ -253,7 +252,7 @@ public class PopupView extends View{
 		return selected.getButton();
 	}
 
-	class ButtonGroup {
+	private class ButtonGroup {
 		private Button button;
 		private Drawable blackIcon, whiteIcon;
 

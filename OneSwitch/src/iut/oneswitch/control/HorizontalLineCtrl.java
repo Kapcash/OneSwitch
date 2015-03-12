@@ -1,14 +1,15 @@
-package com.example.oneswitch.control;
+package iut.oneswitch.control;
 
+import iut.oneswitch.app.OneSwitchService;
+import iut.oneswitch.view.HorizontalLine;
+import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
-
-import com.example.oneswitch.app.OneSwitchService;
-import com.example.oneswitch.view.HorizontalLine;
 
 public class HorizontalLineCtrl
 {
@@ -24,6 +25,7 @@ public class HorizontalLineCtrl
 	private HorizontalLine theLine;
 	private OneSwitchService theService;
 	private Point size;
+	private SharedPreferences sp;
 
 	public HorizontalLineCtrl(OneSwitchService paramOneSwitchService){
 		theService = paramOneSwitchService;
@@ -51,13 +53,19 @@ public class HorizontalLineCtrl
 	}
 
 	public void init(){
+		//The object containing all preferences
+		sp = PreferenceManager.getDefaultSharedPreferences(theService);
+		
 		size = theService.getScreenSize();
 		theLine = new HorizontalLine(theService);
 		theLine.setVisibility(4);
 		theLine.setId(200);
-		speed = 3;
+		
+		speed = Integer.parseInt(sp.getString("lign_speed","4"));
 		speed *= theLine.getResources().getDisplayMetrics().density;
-		lineThickness = 5;
+		
+		lineThickness = Integer.parseInt(sp.getString("lign_size","3"));
+		
 		horizParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,
 				theService.getStatusBarHeight(),
 				WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
@@ -71,6 +79,7 @@ public class HorizontalLineCtrl
 		horizParams.y = 0;
 		horizParams.height = lineThickness;
 		horizParams.width = theService.getScreenSize().x;
+		
 		theService.addView(theLine, horizParams);
 		handler = new Handler();
 		runnable = new HorizLineRunnable();
@@ -118,7 +127,7 @@ public class HorizontalLineCtrl
 	class HorizLineRunnable implements Runnable{
 		public void run(){
 			try{
-				if (getIterations()== 3){
+				if (getIterations()== Integer.parseInt(sp.getString("iterations","3"))){
 					stop();
 				}
 				if(isMoving){

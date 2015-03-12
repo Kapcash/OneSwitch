@@ -1,19 +1,20 @@
-package com.example.oneswitch.app;
+package iut.oneswitch.app;
 
+import iut.oneswitch.control.ClickPanelCtrl;
+import iut.oneswitch.control.HorizontalLineCtrl;
+import iut.oneswitch.control.VerticalLineCtrl;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
-
-import com.example.oneswitch.control.ClickPanelCtrl;
-import com.example.oneswitch.control.HorizontalLineCtrl;
-import com.example.oneswitch.control.VerticalLineCtrl;
 
 public class OneSwitchService extends Service{
 	private ClickPanelCtrl clickCtrl;
@@ -106,6 +107,7 @@ public class OneSwitchService extends Service{
 				verticalCtrl.removeView();
 			}
 			isStarted = false;
+			Toast.makeText(this, "Service arrêté !", Toast.LENGTH_SHORT).show();
 			stopSelf();
 		}
 	}
@@ -117,8 +119,7 @@ public class OneSwitchService extends Service{
 	public BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent myIntent) {
-
-			if ( myIntent.getAction().equals( BCAST_CONFIGCHANGED ) ) {
+			if (myIntent.getAction().equals( BCAST_CONFIGCHANGED ) ) {
 				if(clickCtrl!=null){
 					clickCtrl.stopAll();
 					horizCtrl = new HorizontalLineCtrl(service);

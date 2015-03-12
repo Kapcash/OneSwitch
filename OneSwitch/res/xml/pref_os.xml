@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+    <PreferenceCategory android:title="@string/pref_header_service">
+
+        <!-- Switch activating the service -->
+        <SwitchPreference
+    		android:key="key_switch"
+    		android:title="@string/title_switch"
+    		android:summary="@string/switch_summary"
+    	/>
+        
+         <!-- Switch setting boot launch -->
+        <SwitchPreference
+    		android:key="key_switch_auto"
+    		android:title="@string/title_switch_auto"
+    		android:summary="@string/switch_auto_summary"
+    	/>
+        
+    </PreferenceCategory>
+        
+    <PreferenceCategory android:title="@string/pref_header_service">  
+        
+	    <!-- Size -->
+	    <iut.oneswitch.preference.AutoSummaryListPreference
+	        android:key="lign_size"
+	        android:title="@string/lign_size_title"
+	        android:entries="@array/pref_lign_size_entries"
+	        android:entryValues="@array/pref_lign_size_values"
+	        android:defaultValue="5" />
+	    
+	    <!-- Speed -->
+	    <iut.oneswitch.preference.AutoSummaryListPreference
+	        android:key="lign_speed"
+	        android:title="@string/lign_speed_title"
+	        android:entries="@array/pref_lign_speed_entries"
+	        android:entryValues="@array/pref_lign_speed_values"
+	        android:defaultValue="4" />
+	
+	    <!-- Iterations -->
+	    <iut.oneswitch.preference.AutoSummaryListPreference
+	        android:key="iterations"
+	        android:title="@string/iterations_title"
+	        android:entries="@array/pref_iterations_entries"
+	        android:entryValues="@array/pref_iterations_values"
+	        android:defaultValue="3" />
+	</PreferenceCategory>
+	
+</PreferenceScreen>

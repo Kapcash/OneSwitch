@@ -1,13 +1,11 @@
-package com.example.oneswitch.view;
+package iut.oneswitch.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.view.View;
 
-public class HorizontalLine
-  extends View
-{
+public class HorizontalLine extends View {
   Paint paint = new Paint();
   
   public HorizontalLine(Context paramContext)

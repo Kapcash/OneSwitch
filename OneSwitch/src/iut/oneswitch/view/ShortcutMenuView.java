@@ -1,23 +1,19 @@
-package com.example.oneswitch.view;
+package iut.oneswitch.view;
 
-import java.io.IOException;
-
+import iut.oneswitch.R;
+import iut.oneswitch.action.ActionButton;
+import iut.oneswitch.control.ClickPanelCtrl;
+import iut.oneswitch.control.ShortcutMenuCtrl;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.PopupWindow;
-
-import com.example.oneswitch.R;
-import com.example.oneswitch.action.ActionButton;
-import com.example.oneswitch.control.ClickPanelCtrl;
-import com.example.oneswitch.control.ShortcutMenuCtrl;
 
 public class ShortcutMenuView extends View{
 	private Button[] buttonList;

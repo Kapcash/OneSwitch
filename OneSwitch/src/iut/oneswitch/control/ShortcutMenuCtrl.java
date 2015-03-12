@@ -1,12 +1,11 @@
-package com.example.oneswitch.control;
+package iut.oneswitch.control;
 
+import iut.oneswitch.app.OneSwitchService;
+import iut.oneswitch.view.ShortcutMenuView;
 import android.os.Handler;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-
-import com.example.oneswitch.app.OneSwitchService;
-import com.example.oneswitch.view.ShortcutMenuView;
 
 public class ShortcutMenuCtrl{
 	private Handler handler;

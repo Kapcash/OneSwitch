@@ -1,4 +1,4 @@
-package com.example.oneswitch.action;
+package iut.oneswitch.action;
 
 import java.io.IOException;
 

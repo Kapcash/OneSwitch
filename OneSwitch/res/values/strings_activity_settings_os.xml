@@ -5,15 +5,28 @@
     <string name="title_activity_settings_os">Préferences OneSwitch</string>
 
     <!--  Nom de la première catégorie -->
-	<string name="pref_header">Général</string>
-	<!-- Nom de la list choissisant la taille des lignes -->
-	<string name="lign_size_title">Epaisseur des lignes</string>
+	<string name="pref_header_lign">Lignes</string>
+	<!--  Nom de la première catégorie -->
+	<string name="pref_header_service">Service</string>
+
+		
+	<!-- Switch service -->
+	<string name="title_switch">Service</string>
+	<string name="switch_summary">Active la fonction OneSwitch</string>
+	
+	<!-- Switch autoboot service -->
+	<string name="title_switch_auto">Auto</string>
+	<string name="switch_auto_summary">Activation automatique au démarrage </string>
 
 	<!--
 	Valeurs affichées (entries) et valeurs associées (values)
 	Big = 7 - Medium = 5 - Small = 3
 	Possibilité de rajouter des lignes si besoin
 	-->
+	
+	<!-- Nom de la liste choissisant la taille des lignes -->
+	<string name="lign_size_title">Epaisseur des lignes</string>
+	
     <string-array name="pref_lign_size_entries">
         <item>Fin</item>
         <item>Moyen</item>
@@ -26,32 +39,24 @@
     </string-array>
     
     
-    <!-- Nom de la list choissisant la taille des lignes -->
+    <!-- Nom de la liste choissisant la vitesse des lignes -->
 	<string name="lign_speed_title">Vitesse des lignes</string>
 
-	<!--
-	Valeurs affichées (entries) et valeurs associées (values)
-	Possibilité de rajouter des lignes si besoin
-	-->
     <string-array name="pref_lign_speed_entries">
         <item>Lent</item>
         <item>Moyen</item>
         <item>Rapide</item>
     </string-array>
     <string-array name="pref_lign_speed_values">
-        <item>1</item>
         <item>2</item>
-        <item>3</item>
+        <item>4</item>
+        <item>6</item>
     </string-array>
 
     
-        <!-- Nom de la list choissisant la taille des lignes -->
+    <!-- Nom de la liste choissisant le nombre d'itérations des lignes -->
 	<string name="iterations_title">Nombres d\'itérations</string>
 
-	<!--
-	Valeurs affichées (entries) et valeurs associées (values)
-	Possibilité de rajouter des lignes si besoin
-	-->
     <string-array name="pref_iterations_entries">
         <item>1</item>
         <item>2</item>

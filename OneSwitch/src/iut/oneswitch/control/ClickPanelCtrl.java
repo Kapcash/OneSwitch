@@ -1,5 +1,7 @@
-package com.example.oneswitch.control;
+package iut.oneswitch.control;
 
+import iut.oneswitch.action.ActionGesture;
+import iut.oneswitch.app.OneSwitchService;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.view.Gravity;
@@ -8,9 +10,6 @@ import android.view.View;
 import android.view.View.OnKeyListener;
 import android.view.WindowManager;
 import android.widget.Toast;
-
-import com.example.oneswitch.action.ActionGesture;
-import com.example.oneswitch.app.OneSwitchService;
 
 public class ClickPanelCtrl
 {

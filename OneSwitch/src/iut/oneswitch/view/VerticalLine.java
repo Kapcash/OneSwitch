@@ -1,4 +1,4 @@
-package com.example.oneswitch.view;
+package iut.oneswitch.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -10,8 +10,9 @@ public class VerticalLine extends View{
     Paint paint = new Paint();
 
     /**
-     * Constructeur de la classe VerticalLine. Celui-ci utilise le constructeur de la classe View.
-     * Pour plus de précisions sur l'affichage de la ligne :
+     * Constructeur de la classe VerticalLine.
+     * Celui-ci utilise le constructeur de la classe View.
+     * Pour plus de prÃ©cisions sur l'affichage de la ligne :
      * @see VerticalLine#onDraw(Canvas)
      * @param context le contexte
      */

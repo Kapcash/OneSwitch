@@ -1,5 +1,8 @@
-package com.example.oneswitch.control;
+package iut.oneswitch.control;
 
+import iut.oneswitch.app.OneSwitchService;
+import iut.oneswitch.view.CircleView;
+import iut.oneswitch.view.PopupView;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.Handler;
@@ -7,10 +10,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-
-import com.example.oneswitch.app.OneSwitchService;
-import com.example.oneswitch.view.CircleView;
-import com.example.oneswitch.view.PopupView;
 
 public class PopupCtrl
 {
