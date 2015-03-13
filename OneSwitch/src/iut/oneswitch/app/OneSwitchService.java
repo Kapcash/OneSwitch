@@ -1,28 +1,43 @@
 package iut.oneswitch.app;
 
 import iut.oneswitch.control.ClickPanelCtrl;
+import iut.oneswitch.control.Detector;
 import iut.oneswitch.control.HorizontalLineCtrl;
 import iut.oneswitch.control.VerticalLineCtrl;
+
+import java.io.IOException;
+
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.graphics.Point;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.os.Handler;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-public class OneSwitchService extends Service{
+public class OneSwitchService extends Service implements SensorEventListener{
 	private ClickPanelCtrl clickCtrl;
 	private HorizontalLineCtrl horizCtrl;
 	private boolean isStarted = false;
 	private VerticalLineCtrl verticalCtrl;
 	private WindowManager windowManager;
 	private OneSwitchService service;
+	public static final String TAG = OneSwitchService.class.getName();
+	private Detector detector;
+	public static final int SCREEN_OFF_RECEIVER_DELAY = 500;
+
+	private SensorManager mSensorManager = null;
 
 	private static final String BCAST_CONFIGCHANGED = "android.intent.action.CONFIGURATION_CHANGED";
 
@@ -35,6 +50,15 @@ public class OneSwitchService extends Service{
 		super.onCreate();
 		service = this;
 		windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+		
+		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+
+		PowerManager manager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+
+		registerReceiver(lockDetector, new IntentFilter(Intent.ACTION_SCREEN_OFF));
+		registerReceiver(unlockDetector, new IntentFilter(Intent.ACTION_SCREEN_ON));
+		detector = new Detector(this);
+		
 		if(!isStarted){
 			isStarted = true;
 			Toast.makeText(this, "Service démarré !", Toast.LENGTH_SHORT).show();
@@ -89,6 +113,10 @@ public class OneSwitchService extends Service{
 	public void onDestroy(){
 		stopService();
 		unregisterReceiver(mBroadcastReceiver);
+		unregisterReceiver(unlockDetector);
+		unregisterReceiver(lockDetector);
+		unregisterListener();
+		stopForeground(true);
 		super.onDestroy();
 	}
 
@@ -129,4 +157,96 @@ public class OneSwitchService extends Service{
 			}
 		}
 	};
+	
+	private void pauseService(){
+		if(clickCtrl!=null){
+			clickCtrl.setVisible(false);
+			clickCtrl.stopAll();
+		}
+	}
+	
+	private void resumeService(){
+		if(clickCtrl!=null){
+			horizCtrl = new HorizontalLineCtrl(service);
+			verticalCtrl = new VerticalLineCtrl(service);
+			clickCtrl = new ClickPanelCtrl(service);
+		}
+	}
+	
+	
+	
+	
+	//--------------VERRIFICATION DE SI L'ECRAN EST VERROUILLE OU NON ------------------------
+	
+	private void unregisterListener() {
+		mSensorManager.unregisterListener(this);
+	}
+	
+	private void registerListener() {
+		mSensorManager.registerListener(this,
+				mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+				SensorManager.SENSOR_DELAY_NORMAL);
+	}
+	
+	public BroadcastReceiver unlockDetector = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+
+
+			if (!intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+				return;
+			}
+
+			Runnable runnable = new Runnable() {
+				public void run() {
+					System.out.println("DEVERROUILLE");
+					try{
+						Runtime.getRuntime().exec("su -c input keyevent " + KeyEvent.KEYCODE_SPACE);
+						resumeService();
+					}
+					catch (IOException e){
+						e.printStackTrace();
+					}
+					unregisterListener();
+					registerListener();
+				}
+			};
+
+			new Handler().postDelayed(runnable, SCREEN_OFF_RECEIVER_DELAY);
+		}
+	};
+	
+	public BroadcastReceiver lockDetector = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+
+
+			if (!intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+				return;
+			}
+
+			Runnable runnable = new Runnable() {
+				public void run() {
+					System.out.println("VERROUILLE");
+					pauseService();
+					unregisterListener();
+					registerListener();
+				}
+			};
+
+			new Handler().postDelayed(runnable, SCREEN_OFF_RECEIVER_DELAY);
+		}
+	};
+
+	@Override
+	public void onSensorChanged(SensorEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+		// TODO Auto-generated method stub
+		
+	}
 }

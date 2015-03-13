@@ -65,6 +65,7 @@ public class HorizontalLineCtrl
 		speed *= theLine.getResources().getDisplayMetrics().density;
 		
 		lineThickness = Integer.parseInt(sp.getString("lign_size","3"));
+		lineThickness *= theLine.getResources().getDisplayMetrics().density;
 		
 		horizParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,
 				theService.getStatusBarHeight(),

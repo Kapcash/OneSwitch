@@ -65,6 +65,7 @@ public class VerticalLineCtrl{
 		speed = speed *theLine.getResources().getDisplayMetrics().density;
 		
 		lineThickness = Integer.parseInt(sp.getString("lign_size","3"));
+		lineThickness *= theLine.getResources().getDisplayMetrics().density;
 		
 		verticalParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,
 				theService.getStatusBarHeight(),
