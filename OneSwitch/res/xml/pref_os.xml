@@ -19,7 +19,7 @@
         
     </PreferenceCategory>
         
-    <PreferenceCategory android:title="@string/pref_header_service">  
+    <PreferenceCategory android:title="@string/pref_header_lign">  
         
 	    <!-- Size -->
 	    <iut.oneswitch.preference.AutoSummaryListPreference

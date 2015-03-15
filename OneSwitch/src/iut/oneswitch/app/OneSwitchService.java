@@ -3,15 +3,14 @@ package iut.oneswitch.app;
 import iut.oneswitch.control.ClickPanelCtrl;
 import iut.oneswitch.control.HorizontalLineCtrl;
 import iut.oneswitch.control.VerticalLineCtrl;
+import iut.oneswitch.preference.PrefGeneralFragment;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -37,6 +36,7 @@ public class OneSwitchService extends Service{
 		windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 		if(!isStarted){
 			isStarted = true;
+			Notif.getInstance(this).createRunningNotification();
 			Toast.makeText(this, "Service démarré !", Toast.LENGTH_SHORT).show();
 			init();
 		}
@@ -87,9 +87,12 @@ public class OneSwitchService extends Service{
 
 	@Override
 	public void onDestroy(){
+		super.onDestroy();
+		
+		PrefGeneralFragment.stop(); //Set the switchview to "off"
+		
 		stopService();
 		unregisterReceiver(mBroadcastReceiver);
-		super.onDestroy();
 	}
 
 	public void removeView(View paramView){
@@ -107,6 +110,7 @@ public class OneSwitchService extends Service{
 				verticalCtrl.removeView();
 			}
 			isStarted = false;
+			Notif.getInstance(this).removeRunningNotification();
 			Toast.makeText(this, "Service arrêté !", Toast.LENGTH_SHORT).show();
 			stopSelf();
 		}

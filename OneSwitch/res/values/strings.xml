@@ -18,6 +18,6 @@
     <!-- Notifications -->
     
     <string name="notif_title">One Switch Running</string>
-    <string name="notif_desc">OneSwitch is currently running, don\'t panic.</string>
+    <string name="notif_desc">One Switch is currently running</string>
     
 </resources>
