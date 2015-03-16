@@ -1,49 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-    
-    <PreferenceCategory android:title="@string/pref_header_service">
+
+    <PreferenceCategory android:title="@string/pref_header_service" >
 
         <!-- Switch activating the service -->
         <SwitchPreference
-    		android:key="key_switch"
-    		android:title="@string/title_switch"
-    		android:summary="@string/switch_summary"
-    	/>
-        
-         <!-- Switch setting boot launch -->
+            android:key="key_switch"
+            android:summary="@string/switch_summary"
+            android:title="@string/title_switch" />
+
+        <!-- Switch setting boot launch -->
         <SwitchPreference
-    		android:key="key_switch_auto"
-    		android:title="@string/title_switch_auto"
-    		android:summary="@string/switch_auto_summary"
-    	/>
-        
+            android:key="key_switch_auto"
+            android:summary="@string/switch_auto_summary"
+            android:title="@string/title_switch_auto" />
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_header_defilement" >
+
+        <!-- Size -->
+        <iut.oneswitch.preference.AutoSummaryListPreference
+            android:defaultValue="5"
+            android:entries="@array/pref_lign_size_entries"
+            android:entryValues="@array/pref_lign_size_values"
+            android:key="lign_size"
+            android:title="@string/lign_size_title" />
+
+        <!-- Speed -->
+        <iut.oneswitch.preference.AutoSummaryListPreference
+            android:defaultValue="4"
+            android:entries="@array/pref_lign_speed_entries"
+            android:entryValues="@array/pref_lign_speed_values"
+            android:key="lign_speed"
+            android:title="@string/lign_speed_title" />
+
+        <!-- Iterations -->
+        <iut.oneswitch.preference.AutoSummaryListPreference
+            android:defaultValue="3"
+            android:entries="@array/pref_iterations_entries"
+            android:entryValues="@array/pref_iterations_values"
+            android:key="iterations"
+            android:title="@string/iterations_title" />
         
-    <PreferenceCategory android:title="@string/pref_header_service">  
+        <!--  action clic long -->
+        <iut.oneswitch.preference.AutoSummaryListPreference
+            android:defaultValue="2"
+            android:entries="@array/pref_longPressAction_entries"
+            android:entryValues="@array/pref_longPressAction_values"
+            android:key="longPressAction"
+            android:title="@string/longPressAction_title" />
         
-	    <!-- Size -->
-	    <iut.oneswitch.preference.AutoSummaryListPreference
-	        android:key="lign_size"
-	        android:title="@string/lign_size_title"
-	        android:entries="@array/pref_lign_size_entries"
-	        android:entryValues="@array/pref_lign_size_values"
-	        android:defaultValue="5" />
-	    
-	    <!-- Speed -->
-	    <iut.oneswitch.preference.AutoSummaryListPreference
-	        android:key="lign_speed"
-	        android:title="@string/lign_speed_title"
-	        android:entries="@array/pref_lign_speed_entries"
-	        android:entryValues="@array/pref_lign_speed_values"
-	        android:defaultValue="4" />
-	
-	    <!-- Iterations -->
-	    <iut.oneswitch.preference.AutoSummaryListPreference
-	        android:key="iterations"
-	        android:title="@string/iterations_title"
-	        android:entries="@array/pref_iterations_entries"
-	        android:entryValues="@array/pref_iterations_values"
-	        android:defaultValue="3" />
-	</PreferenceCategory>
-	
+        <!--  delai demarrage defilement -->
+        <iut.oneswitch.preference.AutoSummaryListPreference
+            android:defaultValue="0"
+            android:entries="@array/pref_startDelay_entries"
+            android:entryValues="@array/pref_startDelay_values"
+            android:key="startDelay"
+            android:title="@string/startDelay_title" />
+        
+        <!-- delai anti rebonds -->
+        <iut.oneswitch.preference.AutoSummaryListPreference
+            android:defaultValue="200"
+            android:entries="@array/pref_reboundDelay_entries"
+            android:entryValues="@array/pref_reboundDelay_values"
+            android:key="reboundDelay"
+            android:title="@string/reboundDelay_title" />
+    </PreferenceCategory>
+
 </PreferenceScreen>

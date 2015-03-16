@@ -1,32 +1,33 @@
 <resources>
+
     <!-- Strings related to Settings -->
 
-	<!-- Titre de la page de préférences -->
+
+    <!-- Titre de la page de préférences -->
     <string name="title_activity_settings_os">Préferences OneSwitch</string>
 
-    <!--  Nom de la première catégorie -->
-	<string name="pref_header_lign">Lignes</string>
-	<!--  Nom de la première catégorie -->
-	<string name="pref_header_service">Service</string>
+    <!-- Nom des catégories -->
+    <string name="pref_header_defilement">Défilement</string>
+    <string name="pref_header_service">Service</string>
 
-		
-	<!-- Switch service -->
-	<string name="title_switch">Service</string>
-	<string name="switch_summary">Active la fonction OneSwitch</string>
-	
-	<!-- Switch autoboot service -->
-	<string name="title_switch_auto">Auto</string>
-	<string name="switch_auto_summary">Activation automatique au démarrage </string>
+    <!-- Switch service -->
+    <string name="title_switch">Service</string>
+    <string name="switch_summary">Active la fonction OneSwitch</string>
 
-	<!--
+    <!-- Switch autoboot service -->
+    <string name="title_switch_auto">Auto</string>
+    <string name="switch_auto_summary">Activation automatique au démarrage </string>
+
+    <!--
 	Valeurs affichées (entries) et valeurs associées (values)
 	Big = 7 - Medium = 5 - Small = 3
-	Possibilité de rajouter des lignes si besoin
-	-->
-	
-	<!-- Nom de la liste choissisant la taille des lignes -->
-	<string name="lign_size_title">Epaisseur des lignes</string>
-	
+	Possibilité de rajouter des lignes si besoin
+    -->
+
+
+    <!-- Nom de la liste choissisant la taille des lignes -->
+    <string name="lign_size_title">Epaisseur des lignes</string>
+
     <string-array name="pref_lign_size_entries">
         <item>Fin</item>
         <item>Moyen</item>
@@ -37,10 +38,9 @@
         <item>5</item>
         <item>7</item>
     </string-array>
-    
-    
+
     <!-- Nom de la liste choissisant la vitesse des lignes -->
-	<string name="lign_speed_title">Vitesse des lignes</string>
+    <string name="lign_speed_title">Vitesse des lignes</string>
 
     <string-array name="pref_lign_speed_entries">
         <item>Lent</item>
@@ -53,9 +53,8 @@
         <item>6</item>
     </string-array>
 
-    
     <!-- Nom de la liste choissisant le nombre d'itérations des lignes -->
-	<string name="iterations_title">Nombres d\'itérations</string>
+    <string name="iterations_title">Nombres d\'itérations</string>
 
     <string-array name="pref_iterations_entries">
         <item>1</item>
@@ -73,4 +72,51 @@
         <item>5</item>
         <item>6</item>
     </string-array>
+
+    <!-- Action a reliaser en cas d'appui long -->
+    <string name="longPressAction_title">Action lors d\'un appui long (en défilement)</string>
+
+    <string-array name="pref_longPressAction_entries">
+        <item>Ne rien faire</item>
+        <item>Inversion du sens</item>
+        <item>Retour au début</item>
+        <item>Arret du balayage</item>
+    </string-array>
+    <string-array name="pref_longPressAction_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+
+    <!-- Délai entre l'appui et le début du défilement -->
+    <string name="startDelay_title">Délai du démarrage du défilement</string>
+
+    <string-array name="pref_startDelay_entries">
+        <item>0ms</item>
+        <item>200ms</item>
+        <item>500ms</item>
+        <item>1000ms</item>
+    </string-array>
+    <string-array name="pref_startDelay_values">
+        <item>0</item>
+        <item>200</item>
+        <item>500</item>
+        <item>1000</item>
+    </string-array>
+    
+        <!-- Temps anti-rebond -->
+    <string name="reboundDelay_title">Délai anti-rebonds</string>
+
+    <string-array name="pref_reboundDelay_entries">
+        <item>0ms</item>
+        <item>200ms</item>
+        <item>500ms</item>
+    </string-array>
+    <string-array name="pref_reboundDelay_values">
+        <item>0</item>
+        <item>200</item>
+        <item>500</item>
+    </string-array>
+
 </resources>
