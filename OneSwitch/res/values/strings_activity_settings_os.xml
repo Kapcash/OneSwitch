@@ -4,10 +4,9 @@
 	<!-- Titre de la page de préférences -->
     <string name="title_activity_settings_os">Préferences OneSwitch</string>
 
-    <!--  Nom de la première catégorie -->
-	<string name="pref_header_lign">Lignes</string>
-	<!--  Nom de la première catégorie -->
-	<string name="pref_header_service">Service</string>
+     <!-- Nom des catégories -->
+    <string name="pref_header_defilement">Défilement</string>
+    <string name="pref_header_service">Service</string>
 
 		
 	<!-- Switch service -->
@@ -72,5 +71,50 @@
         <item>4</item>
         <item>5</item>
         <item>6</item>
+    </string-array>
+    <!-- Action a reliaser en cas d'appui long -->
+    <string name="longPressAction_title">Action lors d\'un appui long (en défilement)</string>
+
+    <string-array name="pref_longPressAction_entries">
+        <item>Ne rien faire</item>
+        <item>Inversion du sens</item>
+        <item>Retour au début</item>
+        <item>Arret du balayage</item>
+    </string-array>
+    <string-array name="pref_longPressAction_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+
+    <!-- Délai entre l'appui et le début du défilement -->
+    <string name="startDelay_title">Délai du démarrage du défilement</string>
+
+    <string-array name="pref_startDelay_entries">
+        <item>500ms</item>
+        <item>1000ms</item>
+        <item>1500ms</item>
+        <item>2000ms</item>
+    </string-array>
+    <string-array name="pref_startDelay_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        
+    </string-array>
+    
+        <!-- Temps anti-rebond -->
+    <string name="reboundDelay_title">Délai anti-rebonds</string>
+
+    <string-array name="pref_reboundDelay_entries">
+        <item>0ms</item>
+        <item>200ms</item>
+        <item>500ms</item>
+    </string-array>
+    <string-array name="pref_reboundDelay_values">
+        <item>0</item>
+        <item>200</item>
+        <item>500</item>
     </string-array>
 </resources>

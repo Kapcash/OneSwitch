@@ -12,6 +12,7 @@
 	<!-- Buttons mecaniques -->
 	<string name="back_button">Retour</string>
 	<string name="home_button">Accueil</string>
+	<string name="taches_button">Multitaches</string>
 	<string name="menu_button">Menu</string>
 	<string name="volup_button">Volume +</string>
 	<string name="voldown_button">Volume -</string>

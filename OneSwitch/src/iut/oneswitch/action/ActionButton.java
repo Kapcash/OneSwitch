@@ -15,6 +15,15 @@ public class ActionButton {
 		}
 	}
 	
+	public static void taches(){
+		try{
+			Runtime.getRuntime().exec("su -c input keyevent " + KeyEvent.KEYCODE_APP_SWITCH);
+		}
+		catch (IOException e){
+			e.printStackTrace();
+		}
+	}
+	
 	public static void home(){
 		try{
 			Runtime.getRuntime().exec("su -c input keyevent " + KeyEvent.KEYCODE_HOME);

@@ -41,37 +41,44 @@ public class ShortcutMenuView extends View{
 		buttonList[1].setOnClickListener(new View.OnClickListener(){
 			@Override
 			public void onClick(View view){
-				ActionButton.home();
+				ActionButton.taches();
 			}
 		});
 		
 		buttonList[2].setOnClickListener(new View.OnClickListener(){
 			@Override
 			public void onClick(View view){
-				ActionButton.menu();
+				ActionButton.home();
 			}
 		});
 		
 		buttonList[3].setOnClickListener(new View.OnClickListener(){
 			@Override
 			public void onClick(View view){
-				ActionButton.volumeUp();
+				ActionButton.menu();
 			}
 		});
 		
 		buttonList[4].setOnClickListener(new View.OnClickListener(){
 			@Override
 			public void onClick(View view){
-				ActionButton.volumeDown();
+				ActionButton.volumeUp();
 			}
 		});
 		buttonList[5].setOnClickListener(new View.OnClickListener(){
 			@Override
 			public void onClick(View view){
-				ActionButton.lock();
+				ActionButton.volumeDown();
 			}
 		});
 		buttonList[6].setOnClickListener(new View.OnClickListener(){
+			@Override
+			public void onClick(View view){
+				ActionButton.lock();
+			}
+		});
+		
+		buttonList[7].setOnClickListener(new View.OnClickListener(){
 			@Override
 			public void onClick(View view){
 				ActionButton.shutdown();
@@ -95,7 +102,7 @@ public class ShortcutMenuView extends View{
 	public void onDraw(Canvas paramCanvas){
 		float density = getResources().getDisplayMetrics().density;
 
-		buttonList = new Button[7];
+		buttonList = new Button[8];
 
 		LayoutInflater inflater = (LayoutInflater)this.getContext().getSystemService
 				(Context.LAYOUT_INFLATER_SERVICE);
@@ -104,9 +111,11 @@ public class ShortcutMenuView extends View{
 		popUp.setContentView(view);
 
 		popUp.showAtLocation(this, Gravity.CENTER, 0, 0);
-		popUp.update(28, 0, (int)(300*density), (int)(370*density));
+		popUp.update(28, 0, (int)(300*density), (int)(415*density));
+		
 		
 		Button butBack = (Button)view.findViewById(R.id.but_back);
+		Button butTache = (Button)view.findViewById(R.id.but_taches);
 		Button butHome = (Button)view.findViewById(R.id.but_home);
 		Button butMenu = (Button)view.findViewById(R.id.but_menu);
 		Button butVolup = (Button)view.findViewById(R.id.but_volup);
@@ -118,12 +127,13 @@ public class ShortcutMenuView extends View{
 		selectedIndex = 0;
 
 		buttonList[0] = butBack;
-		buttonList[1] = butHome;
-		buttonList[2] = butMenu;
-		buttonList[3] = butVolup;
-		buttonList[4] = butVoldown;
-		buttonList[5] = butLock;
-		buttonList[6] = butShut;
+		buttonList[1] = butTache;
+		buttonList[2] = butHome;
+		buttonList[3] = butMenu;
+		buttonList[4] = butVolup;
+		buttonList[5] = butVoldown;
+		buttonList[6] = butLock;
+		buttonList[7] = butShut;
 		
 		buttonList[selectedIndex].getBackground().setColorFilter(new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP));
 
@@ -144,7 +154,7 @@ public class ShortcutMenuView extends View{
 			clickPanel().closeShortcutMenu();
 			return;
 		}
-		selectedIndex = ((1 + selectedIndex) % 7);
+		selectedIndex = ((1 + selectedIndex) % 8);
 		selected = buttonList[selectedIndex];
 		buttonList[selectedIndex].getBackground().setColorFilter(new PorterDuffColorFilter(-1, PorterDuff.Mode.SRC_ATOP));
 		for (int i = 0;; i++)
