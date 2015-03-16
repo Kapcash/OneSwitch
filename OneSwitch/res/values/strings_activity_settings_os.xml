@@ -21,9 +21,7 @@
     <!--
 	Valeurs affichées (entries) et valeurs associées (values)
 	Big = 7 - Medium = 5 - Small = 3
-	Possibilité de rajouter des lignes si besoin
-    -->
-
+	Possibilité de rajouter des lignes si besoin    -->
 
     <!-- Nom de la liste choissisant la taille des lignes -->
     <string name="lign_size_title">Epaisseur des lignes</string>
@@ -93,16 +91,16 @@
     <string name="startDelay_title">Délai du démarrage du défilement</string>
 
     <string-array name="pref_startDelay_entries">
-        <item>0ms</item>
-        <item>200ms</item>
         <item>500ms</item>
         <item>1000ms</item>
+        <item>1500ms</item>
+        <item>2000ms</item>
     </string-array>
     <string-array name="pref_startDelay_values">
         <item>0</item>
-        <item>200</item>
-        <item>500</item>
         <item>1000</item>
+        <item>1500</item>
+        <item>2000</item>
     </string-array>
     
         <!-- Temps anti-rebond -->

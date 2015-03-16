@@ -2,8 +2,10 @@ package iut.oneswitch.control;
 
 import iut.oneswitch.action.ActionGesture;
 import iut.oneswitch.app.OneSwitchService;
+import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
+import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -26,9 +28,13 @@ public class ClickPanelCtrl
 	private boolean shortcutMenuVisible = false;
 	private View thePanel;
 	private OneSwitchService theService;
+	protected long currentClick;
+	protected long lastClick = 0;
+	private SharedPreferences sp;
 
 	public ClickPanelCtrl(OneSwitchService service){
 		theService = service;
+		sp = PreferenceManager.getDefaultSharedPreferences(theService);
 		init();
 		listener();
 	}
@@ -59,18 +65,27 @@ public class ClickPanelCtrl
 
 			@Override
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				System.out.println("RFHERUHVDKHVDRH");
 				if(keyCode == 62){
 					Toast.makeText(theService, "button pressed", Toast.LENGTH_LONG).show();
 				}
 				return false;
 			}
-			
 		});
+		
 		thePanel.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View paramAnonymousView){
+				int delay = Integer.parseInt(sp.getString("reboundDelay","200"));
 				if (!shortcutMenuVisible){
 					//PREMIER CLICK
+					currentClick = System.currentTimeMillis();
+					
+					if(currentClick-lastClick<delay && lastClick != 0){
+						Toast.makeText(theService, "Anti-rebonds : click ignoré.", Toast.LENGTH_SHORT).show();
+						return;
+					}
+					else
+						lastClick = currentClick;
+					
 					if ((!horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)){
 						screenTouch = new ScreenTouchDetectorCtrl(theService);
 						horizLine().start();

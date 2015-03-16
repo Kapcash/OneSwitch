@@ -251,6 +251,5 @@ public class OneSwitchService extends Service implements SensorEventListener{
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 		// TODO Auto-generated method stub
-		
 	}
 }

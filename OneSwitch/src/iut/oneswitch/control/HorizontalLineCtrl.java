@@ -109,7 +109,7 @@ public class HorizontalLineCtrl
 	protected void start(){
 		isMoving = true;
 		theLine.setVisibility(View.VISIBLE);
-		handler.postDelayed(runnable, 1000);
+		handler.postDelayed(runnable, Integer.parseInt(sp.getString("Delay", "1000")));
 		iterations = 0;
 	}
 

@@ -53,7 +53,7 @@ public class ActionGesture {
 	}
 	public static void pageLeft(int x, int y, Point screenSize){
 		try{
-			Runtime.getRuntime().exec("su -c input swipe " + x + " " + y + " " + screenSize.x + " " + y + " 300");
+			Runtime.getRuntime().exec("su -c input swipe " + x + " " + y + " " + screenSize.x + " " + y);
 		}
 		catch (IOException e){
 			e.printStackTrace();
@@ -61,7 +61,7 @@ public class ActionGesture {
 	}
 	public static void pageRight(int x, int y, Point screenSize){
 		try{
-			Runtime.getRuntime().exec("su -c input swipe " + x + " " + y + " " + 0 + " " + y + " 300");
+			Runtime.getRuntime().exec("su -c input swipe " + x + " " + y + " " + 0 + " " + y);
 		}
 		catch (IOException e){
 			e.printStackTrace();
