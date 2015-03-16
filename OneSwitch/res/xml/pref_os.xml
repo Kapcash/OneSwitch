@@ -40,30 +40,33 @@
             android:entryValues="@array/pref_iterations_values"
             android:key="iterations"
             android:title="@string/iterations_title" />
-        
-        <!--  action clic long -->
+
+        <!-- action clic long -->
         <iut.oneswitch.preference.AutoSummaryListPreference
             android:defaultValue="2"
             android:entries="@array/pref_longPressAction_entries"
             android:entryValues="@array/pref_longPressAction_values"
             android:key="longPressAction"
             android:title="@string/longPressAction_title" />
-        
-        <!--  delai demarrage defilement -->
-        <iut.oneswitch.preference.AutoSummaryListPreference
-            android:defaultValue="0"
-            android:entries="@array/pref_startDelay_entries"
-            android:entryValues="@array/pref_startDelay_values"
-            android:key="startDelay"
-            android:title="@string/startDelay_title" />
-        
-        <!-- delai anti rebonds -->
-        <iut.oneswitch.preference.AutoSummaryListPreference
-            android:defaultValue="200"
-            android:entries="@array/pref_reboundDelay_entries"
-            android:entryValues="@array/pref_reboundDelay_values"
-            android:key="reboundDelay"
-            android:title="@string/reboundDelay_title" />
+
+        <PreferenceCategory android:title="@string/pref_header_lign" >
+
+            <!-- delai demarrage defilement -->
+            <iut.oneswitch.preference.AutoSummaryListPreference
+                android:defaultValue="0"
+                android:entries="@array/pref_startDelay_entries"
+                android:entryValues="@array/pref_startDelay_values"
+                android:key="startDelay"
+                android:title="@string/startDelay_title" />
+
+            <!-- delai anti rebonds -->
+            <iut.oneswitch.preference.AutoSummaryListPreference
+                android:defaultValue="200"
+                android:entries="@array/pref_reboundDelay_entries"
+                android:entryValues="@array/pref_reboundDelay_values"
+                android:key="reboundDelay"
+                android:title="@string/reboundDelay_title" />
+        </PreferenceCategory>
     </PreferenceCategory>
 
 </PreferenceScreen>

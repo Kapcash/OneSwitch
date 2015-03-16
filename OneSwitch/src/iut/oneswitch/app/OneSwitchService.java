@@ -4,6 +4,7 @@ import iut.oneswitch.control.ClickPanelCtrl;
 import iut.oneswitch.control.Detector;
 import iut.oneswitch.control.HorizontalLineCtrl;
 import iut.oneswitch.control.VerticalLineCtrl;
+import iut.oneswitch.preference.PrefGeneralFragment;
 
 import java.io.IOException;
 
@@ -20,7 +21,6 @@ import android.hardware.SensorManager;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.os.PowerManager.WakeLock;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -61,6 +61,7 @@ public class OneSwitchService extends Service implements SensorEventListener{
 		
 		if(!isStarted){
 			isStarted = true;
+			Notif.getInstance(this).createRunningNotification();
 			Toast.makeText(this, "Service démarré !", Toast.LENGTH_SHORT).show();
 			init();
 		}
@@ -111,6 +112,10 @@ public class OneSwitchService extends Service implements SensorEventListener{
 
 	@Override
 	public void onDestroy(){
+		super.onDestroy();
+		
+		PrefGeneralFragment.stop(); //Set the switchview to "off"
+		
 		stopService();
 		unregisterReceiver(mBroadcastReceiver);
 		unregisterReceiver(unlockDetector);
@@ -135,6 +140,7 @@ public class OneSwitchService extends Service implements SensorEventListener{
 				verticalCtrl.removeView();
 			}
 			isStarted = false;
+			Notif.getInstance(this).removeRunningNotification();
 			Toast.makeText(this, "Service arrêté !", Toast.LENGTH_SHORT).show();
 			stopSelf();
 		}
@@ -220,7 +226,6 @@ public class OneSwitchService extends Service implements SensorEventListener{
 		@Override
 		public void onReceive(Context context, Intent intent) {
 
-
 			if (!intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
 				return;
 			}
@@ -241,7 +246,6 @@ public class OneSwitchService extends Service implements SensorEventListener{
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

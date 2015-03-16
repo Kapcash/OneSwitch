@@ -19,6 +19,7 @@ import android.preference.SwitchPreference;
 public class PrefGeneralFragment extends PreferenceFragment{
 	
 	private Intent globalService;
+	private static SwitchPreference sw;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -27,8 +28,8 @@ public class PrefGeneralFragment extends PreferenceFragment{
 		
 		globalService = new Intent(getActivity(), OneSwitchService.class);
 		
-		SwitchPreference switchPref = (SwitchPreference) findPreference("key_switch");
-	    switchPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+		sw = (SwitchPreference) findPreference("key_switch");
+	    sw.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 	        @Override
 	        public boolean onPreferenceChange(Preference preference, Object newValue) {
 	            if(newValue.equals(true)){
@@ -45,7 +46,6 @@ public class PrefGeneralFragment extends PreferenceFragment{
 	@Override
 	public void onResume() {
 		super.onResume();
-		SwitchPreference sw = (SwitchPreference) findPreference("key_switch"); //Attribute "key" in pref_os.xml
 		if(sw != null){
 			//Check is the service is currently running and update the switch
 			if(isMyServiceRunning(OneSwitchService.class)){
@@ -57,6 +57,10 @@ public class PrefGeneralFragment extends PreferenceFragment{
 				sw.setChecked(false);
 			}
 		}
+	}
+	
+	public static void stop(){
+		sw.setChecked(false);
 	}
 	
 	private boolean isMyServiceRunning(Class<?> serviceClass) {

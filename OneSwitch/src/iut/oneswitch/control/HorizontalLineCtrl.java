@@ -61,9 +61,11 @@ public class HorizontalLineCtrl
 		theLine.setVisibility(4);
 		theLine.setId(200);
 		
+		//Get the speed from preferences
 		speed = Integer.parseInt(sp.getString("lign_speed","4"));
 		speed *= theLine.getResources().getDisplayMetrics().density;
 		
+		//Get the line size from preferences
 		lineThickness = Integer.parseInt(sp.getString("lign_size","3"));
 		lineThickness *= theLine.getResources().getDisplayMetrics().density;
 		
@@ -75,7 +77,7 @@ public class HorizontalLineCtrl
 				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
 				PixelFormat.TRANSLUCENT);
 
-		horizParams.gravity = Gravity.TOP | Gravity.LEFT;
+		horizParams.gravity = Gravity.TOP | Gravity.START;
 		horizParams.x = 0;
 		horizParams.y = 0;
 		horizParams.height = lineThickness;

@@ -61,9 +61,11 @@ public class VerticalLineCtrl{
 		theLine.setVisibility(4);
 		theLine.setId(200);
 		
+		//Get the speed from preferences
 		speed = Integer.parseInt(sp.getString("lign_speed","4"));
 		speed = speed *theLine.getResources().getDisplayMetrics().density;
 		
+		//Get the line size from preferences
 		lineThickness = Integer.parseInt(sp.getString("lign_size","3"));
 		lineThickness *= theLine.getResources().getDisplayMetrics().density;
 		
@@ -75,7 +77,7 @@ public class VerticalLineCtrl{
 				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
 				PixelFormat.TRANSLUCENT);
 
-		verticalParams.gravity = Gravity.TOP | Gravity.LEFT;
+		verticalParams.gravity = Gravity.TOP | Gravity.START;
 		verticalParams.x = 0;
 		verticalParams.y = 0;
 		verticalParams.height = theService.getScreenSize().y;
