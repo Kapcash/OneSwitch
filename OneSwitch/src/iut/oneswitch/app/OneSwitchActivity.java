@@ -1,5 +1,7 @@
 package iut.oneswitch.app;
 
+import java.io.IOException;
+
 import iut.oneswitch.action.ActionButton;
 import iut.oneswitch.preference.PrefGeneralFragment;
 import android.app.Activity;
@@ -13,7 +15,12 @@ public class OneSwitchActivity extends Activity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		
+		try {
+			Process root = Runtime.getRuntime().exec("su");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		getFragmentManager().beginTransaction().replace(android.R.id.content,new PrefGeneralFragment()).commit();
 	
 	}

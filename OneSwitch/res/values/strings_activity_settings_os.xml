@@ -9,7 +9,8 @@
     <!-- Nom des catégories -->
     <string name="pref_header_defilement">Défilement</string>
     <string name="pref_header_service">Service</string>
-
+    <string name="pref_header_ligns">Lignes</string>
+    
     <!-- Switch service -->
     <string name="title_switch">Service</string>
     <string name="switch_summary">Active la fonction OneSwitch</string>
@@ -21,7 +22,9 @@
     <!--
 	Valeurs affichées (entries) et valeurs associées (values)
 	Big = 7 - Medium = 5 - Small = 3
-	Possibilité de rajouter des lignes si besoin    -->
+	Possibilité de rajouter des lignes si besoin
+    -->
+
 
     <!-- Nom de la liste choissisant la taille des lignes -->
     <string name="lign_size_title">Epaisseur des lignes</string>
@@ -81,10 +84,10 @@
         <item>Arret du balayage</item>
     </string-array>
     <string-array name="pref_longPressAction_values">
+        <item>0</item>
         <item>1</item>
         <item>2</item>
         <item>3</item>
-        <item>4</item>
     </string-array>
 
     <!-- Délai entre l'appui et le début du défilement -->
@@ -97,13 +100,13 @@
         <item>2000ms</item>
     </string-array>
     <string-array name="pref_startDelay_values">
-        <item>0</item>
+        <item>500</item>
         <item>1000</item>
         <item>1500</item>
         <item>2000</item>
     </string-array>
-    
-        <!-- Temps anti-rebond -->
+
+    <!-- Temps anti-rebond -->
     <string name="reboundDelay_title">Délai anti-rebonds</string>
 
     <string-array name="pref_reboundDelay_entries">
@@ -116,5 +119,11 @@
         <item>200</item>
         <item>500</item>
     </string-array>
+    
+        <string name="color1_title">Ligne horizontale</string>
+        <string name="color1_summary">Cliquez pour choisir une couleur</string>
+        
+       <string name="color2_title">Ligne verticale</string>
+        <string name="color2_summary">Cliquez pour choisir une couleur</string>
 
 </resources>

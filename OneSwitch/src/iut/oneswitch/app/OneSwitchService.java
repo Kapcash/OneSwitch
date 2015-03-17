@@ -49,6 +49,8 @@ public class OneSwitchService extends Service implements SensorEventListener{
 	public void onCreate() {
 		super.onCreate();
 		service = this;
+		
+		
 		windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 		
 		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);

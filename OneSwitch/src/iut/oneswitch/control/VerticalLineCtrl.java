@@ -108,7 +108,7 @@ public class VerticalLineCtrl{
 	protected void start(){
 		isMoving = true;
 		theLine.setVisibility(View.VISIBLE);
-		handler.postDelayed(runnable, 1000);
+		handler.postDelayed(runnable, Integer.parseInt(sp.getString("Delay", "1000")));
 		iterations = 0;
 	}
 
@@ -125,7 +125,12 @@ public class VerticalLineCtrl{
 		iterations = 0;
 		if(isMovingRight) isMovingRight = false;
 		else isMovingRight = true;
-
+	}
+	
+	public void restart() {
+		verticalParams.x = 0;
+		verticalParams.y = 0;
+		theService.updateViewLayout(theLine, verticalParams);
 	}
 	
 	class VerticalLineRunnable implements Runnable {
@@ -157,6 +162,5 @@ public class VerticalLineCtrl{
 			}
 		}
 	}
-
 
 }

@@ -16,9 +16,9 @@
             android:title="@string/title_switch_auto" />
     </PreferenceCategory>
     
-    <PreferenceCategory android:title="@string/pref_header_defilement" >
-
-        <!-- Size -->
+    
+    <PreferenceCategory android:title="@string/pref_header_ligns" >
+          <!-- Size -->
         <iut.oneswitch.preference.AutoSummaryListPreference
             android:defaultValue="5"
             android:entries="@array/pref_lign_size_entries"
@@ -33,6 +33,26 @@
             android:entryValues="@array/pref_lign_speed_values"
             android:key="lign_speed"
             android:title="@string/lign_speed_title" />
+        
+        
+        <net.margaritov.preference.colorpicker.ColorPickerPreference
+            alphaSlider="false"
+            android:defaultValue="0xff0000ff"
+            android:key="color1"
+            android:summary="@string/color1_summary"
+            android:title="@string/color1_title" />
+        <net.margaritov.preference.colorpicker.ColorPickerPreference
+            alphaSlider="false"
+            android:defaultValue="0xff0000ff"
+            android:key="color2"
+            android:summary="@string/color2_summary"
+            android:title="@string/color2_title" />
+    </PreferenceCategory>
+    
+    
+    <PreferenceCategory android:title="@string/pref_header_defilement" >
+
+      
 
         <!-- Iterations -->
         <iut.oneswitch.preference.AutoSummaryListPreference
@@ -49,14 +69,14 @@
             android:entryValues="@array/pref_longPressAction_values"
             android:key="longPressAction"
             android:title="@string/longPressAction_title" />
-        
+
         <!-- Delai avant défilement -->
         <iut.oneswitch.preference.AutoSummaryListPreference
             android:defaultValue="1000"
             android:entries="@array/pref_startDelay_entries"
             android:entryValues="@array/pref_startDelay_values"
             android:key="delay"
-            android:title="@string/startDelay_title"/>
+            android:title="@string/startDelay_title" />
 
         <!-- Delai anti rebonds -->
         <iut.oneswitch.preference.AutoSummaryListPreference
@@ -65,58 +85,7 @@
             android:entryValues="@array/pref_reboundDelay_values"
             android:key="reboundDelay"
             android:title="@string/reboundDelay_title" />
-        
+
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/pref_header_defilement">  
-        
-	    <!-- Size -->
-	    <iut.oneswitch.preference.AutoSummaryListPreference
-	        android:key="lign_size"
-	        android:title="@string/lign_size_title"
-	        android:entries="@array/pref_lign_size_entries"
-	        android:entryValues="@array/pref_lign_size_values"
-	        android:defaultValue="5" />
-	    
-	    <!-- Speed -->
-	    <iut.oneswitch.preference.AutoSummaryListPreference
-	        android:key="lign_speed"
-	        android:title="@string/lign_speed_title"
-	        android:entries="@array/pref_lign_speed_entries"
-	        android:entryValues="@array/pref_lign_speed_values"
-	        android:defaultValue="4" />
-	
-	    <!-- Iterations -->
-	    <iut.oneswitch.preference.AutoSummaryListPreference
-	        android:key="iterations"
-	        android:title="@string/iterations_title"
-	        android:entries="@array/pref_iterations_entries"
-	        android:entryValues="@array/pref_iterations_values"
-	        android:defaultValue="3" />
-	</PreferenceCategory>
-	
-    <!-- action clic long -->
-        <iut.oneswitch.preference.AutoSummaryListPreference
-            android:defaultValue="2"
-            android:entries="@array/pref_longPressAction_entries"
-            android:entryValues="@array/pref_longPressAction_values"
-            android:key="longPressAction"
-            android:title="@string/longPressAction_title" />
 
-
-            <!-- delai demarrage defilement -->
-            <iut.oneswitch.preference.AutoSummaryListPreference
-                android:defaultValue="50"
-                android:entries="@array/pref_startDelay_entries"
-                android:entryValues="@array/pref_startDelay_values"
-                android:key="startDelay"
-                android:title="@string/startDelay_title" />
-
-            <!-- delai anti rebonds -->
-            <iut.oneswitch.preference.AutoSummaryListPreference
-                android:defaultValue="200"
-                android:entries="@array/pref_reboundDelay_entries"
-                android:entryValues="@array/pref_reboundDelay_values"
-                android:key="reboundDelay"
-                android:title="@string/reboundDelay_title" />
->>>>>>> branch 'master' of git@gitinfo:one_switch_b.git
 </PreferenceScreen>

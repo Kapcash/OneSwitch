@@ -133,14 +133,47 @@ public class ClickPanelCtrl
 				if ((!horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)) {
 					openShortcutMenu();
 				}
-				else  if((horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)) {
-					horizLine().setInverse();
-					return true;
+				
+				switch (Integer.parseInt(sp.getString("longPressAction","1"))) {
+				case 0:
+					//Ne fait rien
+					break;
+				case 1:
+					//Inverse lignes
+					if((horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)) {
+						horizLine().setInverse();
+						return true;
+					}
+					else if ((!horizLine().isMoving()) && (verticalLine().isMoving()) && (!popupVisible)) {
+						verticalLine().setInverse();
+						return true;
+					}
+					break;
+				case 2:
+					//Recommence au début
+					if((horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)) {
+						horizLine().restart();
+						return true;
+					}
+					else if ((!horizLine().isMoving()) && (verticalLine().isMoving()) && (!popupVisible)) {
+						verticalLine().restart();
+						return true;
+					}
+					break;
+				case 3:
+					if(!popupVisible) {
+						removeLines();
+						return true;
+					}
+					
+					break;
+
+				default:
+					break;
 				}
-				else if ((!horizLine().isMoving()) && (verticalLine().isMoving()) && (!popupVisible)) {
-					verticalLine().setInverse();
-					return true;
-				}
+				
+				
+				
 				return false;
 			}
 		});

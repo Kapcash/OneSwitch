@@ -120,11 +120,19 @@ public class HorizontalLineCtrl
 		horizParams.y = 0;
 		theService.updateViewLayout(theLine, horizParams);
 	}
+	
 	public void setInverse() {
 		iterations = 0;
 		if(isMovingDown) isMovingDown = false;
 		else isMovingDown = true;
 		
+	}
+	
+
+	public void restart() {
+		horizParams.x = 0;
+		horizParams.y = 0;
+		theService.updateViewLayout(theLine, horizParams);
 	}
 
 	class HorizLineRunnable implements Runnable{
@@ -154,4 +162,5 @@ public class HorizontalLineCtrl
 			catch (Exception localException) {}
 		}
 	}
+
 }
