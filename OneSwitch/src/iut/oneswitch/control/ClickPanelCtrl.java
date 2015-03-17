@@ -61,16 +61,7 @@ public class ClickPanelCtrl
 	}
 
 	private void listener(){
-		thePanel.setOnKeyListener(new OnKeyListener(){
-
-			@Override
-			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				if(keyCode == 62){
-					Toast.makeText(theService, "button pressed", Toast.LENGTH_LONG).show();
-				}
-				return false;
-			}
-		});
+	
 		
 		thePanel.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View paramAnonymousView){

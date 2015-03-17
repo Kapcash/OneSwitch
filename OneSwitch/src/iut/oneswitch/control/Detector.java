@@ -4,10 +4,13 @@ package iut.oneswitch.control;
 import iut.oneswitch.app.OneSwitchService;
 import android.graphics.PixelFormat;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.View.OnKeyListener;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
 
 public class Detector{
@@ -48,6 +51,8 @@ public class Detector{
 				return true;
 			}
 		});
+		
+	
 	}
 
 
