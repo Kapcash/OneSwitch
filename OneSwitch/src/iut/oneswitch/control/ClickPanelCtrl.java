@@ -1,5 +1,6 @@
 package iut.oneswitch.control;
 
+import iut.oneswitch.action.ActionButton;
 import iut.oneswitch.action.ActionGesture;
 import iut.oneswitch.app.OneSwitchService;
 import android.content.SharedPreferences;
@@ -61,53 +62,67 @@ public class ClickPanelCtrl
 	}
 
 	private void listener(){
-	
-		
+		thePanel.setOnKeyListener(new OnKeyListener(){
+
+			@Override
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				if(keyCode == 62){
+					Toast.makeText(theService, "button pressed", Toast.LENGTH_LONG).show();
+				}
+				return false;
+			}
+		});
+
 		thePanel.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View paramAnonymousView){
 				int delay = Integer.parseInt(sp.getString("reboundDelay","200"));
 				if (!shortcutMenuVisible){
-					//PREMIER CLICK
-					currentClick = System.currentTimeMillis();
-					
-					if(currentClick-lastClick<delay && lastClick != 0){
-						Toast.makeText(theService, "Anti-rebonds : click ignoré.", Toast.LENGTH_SHORT).show();
-						return;
-					}
-					else
-						lastClick = currentClick;
-					
-					if ((!horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)){
-						screenTouch = new ScreenTouchDetectorCtrl(theService);
-						horizLine().start();
-					}
-					//DEUXIEME CLICK, QUAND LA LIGNE HORIZONTALE BOUGE
-					else if ((horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)){
-						horizLine().pause();
-						verticalLine().start();
-						if (!forSwipe) posY = horizLine().getY();
-						else posY2 = horizLine().getY();
-					}
-					//TROISIEME CLICK QUAND LA LIGNE VERTICAL BOUGE
-					else if ((!horizLine().isMoving()) && (verticalLine().isMoving()) && (!popupVisible)){
-						verticalLine().pause();
-						if (!forSwipe){
-							posX = verticalLine().getX();
-							openPopupCtrl();
+					if(ActionButton.getVolumeStop()) {
+						//PREMIER CLICK
+						currentClick = System.currentTimeMillis();
+
+						if(currentClick-lastClick<delay && lastClick != 0){
+							Toast.makeText(theService, "Anti-rebonds : click ignoré.", Toast.LENGTH_SHORT).show();
+							return;
 						}
-						else{
-							setVisible(false);
-							posX2 = verticalLine().getX();
-							forSwipe = false;
-							popupCtrl.removeCircle();
-							removeLines();
-							ActionGesture.swipe(posX, posY, posX2, posY2);
+						else
+							lastClick = currentClick;
+
+						if ((!horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)){
+							screenTouch = new ScreenTouchDetectorCtrl(theService);
+							horizLine().start();
+						}
+						//DEUXIEME CLICK, QUAND LA LIGNE HORIZONTALE BOUGE
+						else if ((horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)){
+							horizLine().pause();
+							verticalLine().start();
+							if (!forSwipe) posY = horizLine().getY();
+							else posY2 = horizLine().getY();
+						}
+						//TROISIEME CLICK QUAND LA LIGNE VERTICAL BOUGE
+						else if ((!horizLine().isMoving()) && (verticalLine().isMoving()) && (!popupVisible)){
+							verticalLine().pause();
+							if (!forSwipe){
+								posX = verticalLine().getX();
+								openPopupCtrl();
+							}
+							else{
+								setVisible(false);
+								posX2 = verticalLine().getX();
+								forSwipe = false;
+								popupCtrl.removeCircle();
+								removeLines();
+								ActionGesture.swipe(posX, posY, posX2, posY2);
+							}
+						}
+						//QUATRIEME CLICK QUAND LA POPUP EST AFFICHEE
+						else if((!horizLine().isMoving()) && (!verticalLine().isMoving()) && (popupVisible)){
+							//closePopupCtrl();
+							popupCtrl.getSelected().performClick();
 						}
 					}
-					//QUATRIEME CLICK QUAND LA POPUP EST AFFICHEE
-					else if((!horizLine().isMoving()) && (!verticalLine().isMoving()) && (popupVisible)){
-						//closePopupCtrl();
-						popupCtrl.getSelected().performClick();
+					else {
+						ActionButton.stopVolumeChange();
 					}
 				}
 				else{
@@ -116,15 +131,15 @@ public class ClickPanelCtrl
 				}
 			}
 		});
-		
-		
-		
+
+
+
 		thePanel.setOnLongClickListener(new View.OnLongClickListener(){
 			public boolean onLongClick(View paramAnonymousView){
 				if ((!horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)) {
 					openShortcutMenu();
 				}
-				
+
 				switch (Integer.parseInt(sp.getString("longPressAction","1"))) {
 				case 0:
 					//Ne fait rien
@@ -156,27 +171,27 @@ public class ClickPanelCtrl
 						removeLines();
 						return true;
 					}
-					
+
 					break;
 
 				default:
 					break;
 				}
-				
-				
-				
+
+
+
 				return false;
 			}
 		});
 	}
-	
+
 	public void gestureDone(){
 		popupVisible = false;
 		removeLines();
 	}
-	
-	
-	
+
+
+
 	public void stopAll(){
 		removeLines();
 		if(popupVisible){

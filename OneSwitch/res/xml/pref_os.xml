@@ -43,7 +43,7 @@
             android:title="@string/color1_title" />
         <net.margaritov.preference.colorpicker.ColorPickerPreference
             alphaSlider="false"
-            android:defaultValue="0xff0000ff"
+            android:defaultValue="0xff00ffff"
             android:key="color2"
             android:summary="@string/color2_summary"
             android:title="@string/color2_title" />
