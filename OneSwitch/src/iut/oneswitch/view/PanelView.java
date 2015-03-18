@@ -18,7 +18,7 @@ public class PanelView{
 		theService = service;
 		init();
 	}
-	
+
 	private void init(){
 		thePanel = new View(theService);
 		clickParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,
@@ -35,44 +35,45 @@ public class PanelView{
 		clickParams.width = theService.getScreenSize().x;
 		theService.addView(thePanel, clickParams);
 	}
-	
+
 	public void setOnClickListener(OnClickListener listener){
 		thePanel.setOnClickListener(listener);
 	}
-	
+
 	public void setOnLongClickListener(OnLongClickListener listener){
 		thePanel.setOnLongClickListener(listener);
 	}
-	
+
 	public void setOnKeyListener(OnKeyListener listener){
 		thePanel.setOnKeyListener(listener);
 	}
-	
+
 	public void removeView(){
 		if(thePanel!=null){
 			if(theService!=null)
 				theService.removeView(thePanel);
 		}
 	}
-	
+
 	public void reloadPanel(){
 		if(thePanel!=null){
 			if(theService!=null){
 				theService.removeView(thePanel);
 				theService.addView(thePanel, clickParams);
 			}
-			
+
 		}
 	}
-	
+
 	public void setVisible(boolean paramBoolean){
 		if (paramBoolean){
 			thePanel.setVisibility(View.VISIBLE);
-			return;
 		}
-		thePanel.setVisibility(View.INVISIBLE);
+		else{
+			thePanel.setVisibility(View.INVISIBLE);
+		}
 	}
-	
-	
+
+
 
 }

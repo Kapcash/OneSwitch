@@ -109,7 +109,8 @@ public class ClickPanelCtrl{
 					}
 				}
 				else{
-					shortcutMenuCtrl.getSelected().performClick();
+					if(shortcutMenuCtrl.getSelected()!=null)
+						shortcutMenuCtrl.getSelected().performClick();
 					closeShortcutMenu();
 				}
 			}
@@ -173,9 +174,8 @@ public class ClickPanelCtrl{
 		removeLines();
 	}
 
-
-
-	public void stopAll(){
+	public void pause(){
+		thePanel.setVisible(false);
 		removeLines();
 		if(popupVisible){
 			closePopupCtrl();
@@ -183,7 +183,20 @@ public class ClickPanelCtrl{
 		if(shortcutMenuVisible){
 			closeShortcutMenu();
 		}
+		if(forSwipe){
+			popupCtrl.removeCircle();
+		}
+	}
+
+	public void stopAll(){
+		removeLines();
 		removeView();
+		if(popupVisible){
+			closePopupCtrl();
+		}
+		if(shortcutMenuVisible){
+			closeShortcutMenu();
+		}
 		if(forSwipe){
 			popupCtrl.removeCircle();
 		}
