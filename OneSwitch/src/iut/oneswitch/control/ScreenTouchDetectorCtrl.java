@@ -13,8 +13,8 @@ public class ScreenTouchDetectorCtrl{
 	private OneSwitchService theService;
 	private LinearLayout touchLayout;
 
-	public ScreenTouchDetectorCtrl(OneSwitchService paramOneSwitchService){
-		theService = paramOneSwitchService;
+	public ScreenTouchDetectorCtrl(OneSwitchService service){
+		theService = service;
 		init();
 		listener();
 	}
@@ -32,7 +32,7 @@ public class ScreenTouchDetectorCtrl{
 				WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH |
 				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
 				PixelFormat.TRANSLUCENT);
-		mParams.gravity = Gravity.LEFT | Gravity.TOP;  
+		mParams.gravity = Gravity.START | Gravity.TOP;  
 
 		theService.addView(touchLayout, mParams);
 	}
@@ -44,6 +44,7 @@ public class ScreenTouchDetectorCtrl{
 				if (paramAnonymousMotionEvent.getAction() == 4) {
 					theService.getClickPanelCtrl().clickDone();
 					removeView();
+					touchLayout = null;
 				}
 				return true;
 			}
@@ -51,8 +52,10 @@ public class ScreenTouchDetectorCtrl{
 	}
 
 	public void removeView(){
+		if(touchLayout!=null){
 			touchLayout.setOnClickListener(null);
 			theService.removeView(touchLayout);
 			touchLayout = null;
+		}
 	}
 }

@@ -174,29 +174,24 @@ public class ClickPanelCtrl{
 		removeLines();
 	}
 
-	public void pause(){
-		thePanel.setVisible(false);
-		removeLines();
-		if(popupVisible){
-			closePopupCtrl();
-		}
-		if(shortcutMenuVisible){
-			closeShortcutMenu();
-		}
-		if(forSwipe){
-			popupCtrl.removeCircle();
-		}
-	}
-
 	public void stopAll(){
 		removeLines();
 		removeView();
-		if(popupVisible){
-			closePopupCtrl();
+		removeTouchDetection();
+		closePopupCtrl();
+		closeShortcutMenu();
+		removeCircle();
+	}
+	
+	
+	public void removeTouchDetection(){
+		if(screenTouch!=null){
+			screenTouch.removeView();
 		}
-		if(shortcutMenuVisible){
-			closeShortcutMenu();
-		}
+		screenTouch = null;
+	}
+
+	public void removeCircle(){
 		if(forSwipe){
 			popupCtrl.removeCircle();
 		}
@@ -224,20 +219,24 @@ public class ClickPanelCtrl{
 	}
 
 	public void closePopupCtrl(){
-		if (popupCtrl != null) {
-			popupCtrl.removeAllViews();
-			popupCtrl = null;
+		if(popupVisible){
+			if (popupCtrl != null) {
+				popupCtrl.removeAllViews();
+				popupCtrl = null;
+			}
+			popupVisible = false;
+			removeLines();
 		}
-		popupVisible = false;
-		removeLines();
 	}
 
 	public void closeShortcutMenu(){
-		if (shortcutMenuCtrl != null) {
-			shortcutMenuCtrl.removeView();
-			shortcutMenuCtrl = null;
+		if(shortcutMenuVisible){
+			if (shortcutMenuCtrl != null) {
+				shortcutMenuCtrl.removeView();
+				shortcutMenuCtrl = null;
+			}
+			shortcutMenuVisible = false;
 		}
-		shortcutMenuVisible = false;
 	}
 
 	public Point getPos(){
@@ -258,6 +257,7 @@ public class ClickPanelCtrl{
 	public void removeView(){
 		if (thePanel != null) {
 			thePanel.removeView();
+			thePanel = null;
 		}
 	}
 
@@ -266,6 +266,7 @@ public class ClickPanelCtrl{
 	}
 
 	public void setVisible(boolean paramBoolean){
-		thePanel.setVisible(paramBoolean);
+		if(thePanel!=null)
+			thePanel.setVisible(paramBoolean);
 	}
 }

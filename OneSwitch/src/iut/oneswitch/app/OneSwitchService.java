@@ -4,10 +4,6 @@ import iut.oneswitch.control.ClickPanelCtrl;
 import iut.oneswitch.control.HorizontalLineCtrl;
 import iut.oneswitch.control.VerticalLineCtrl;
 import iut.oneswitch.preference.PrefGeneralFragment;
-
-import java.io.IOException;
-
-import android.app.Notification;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -21,8 +17,6 @@ import android.hardware.SensorManager;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.os.Process;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -36,6 +30,7 @@ public class OneSwitchService extends Service implements SensorEventListener{
 	private OneSwitchService service;
 	public static final String TAG = OneSwitchService.class.getName();
 	public static final int SCREEN_OFF_RECEIVER_DELAY = 500;
+	private boolean paused = false;
 
 	private SensorManager mSensorManager = null;
 
@@ -50,15 +45,13 @@ public class OneSwitchService extends Service implements SensorEventListener{
 		super.onCreate();
 		service = this;
 
-
 		windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 
 		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
-		PowerManager manager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-
 		registerReceiver(lockDetector, new IntentFilter(Intent.ACTION_SCREEN_OFF));
 		registerReceiver(unlockDetector, new IntentFilter(Intent.ACTION_SCREEN_ON));
+		registerReceiver(userPresentDetector, new IntentFilter(Intent.ACTION_USER_PRESENT));
 
 		if(!isStarted){
 			isStarted = true;
@@ -121,6 +114,7 @@ public class OneSwitchService extends Service implements SensorEventListener{
 		unregisterReceiver(mBroadcastReceiver);
 		unregisterReceiver(unlockDetector);
 		unregisterReceiver(lockDetector);
+		unregisterReceiver(userPresentDetector);
 		unregisterListener();
 		stopForeground(true);
 		super.onDestroy();
@@ -169,17 +163,22 @@ public class OneSwitchService extends Service implements SensorEventListener{
 
 	private void pauseService(){
 		if(clickCtrl!=null){
-			clickCtrl.setVisible(false);
+			System.out.println("Vérrouillé");
 			clickCtrl.stopAll();
+			System.out.println("MAIS OUI JE SUPPRIME BORDEL");
+			paused = true;
 		}
 	}
 
 	private void resumeService(){
-		if(clickCtrl!=null){
+		if(paused){
 			horizCtrl = new HorizontalLineCtrl(service);
 			verticalCtrl = new VerticalLineCtrl(service);
 			clickCtrl = new ClickPanelCtrl(service);
+			paused = false;
+			System.out.println("Déverrouillé !!");
 		}
+		System.out.println("Déverrouillé 2!!");
 	}
 
 
@@ -200,21 +199,13 @@ public class OneSwitchService extends Service implements SensorEventListener{
 	public BroadcastReceiver unlockDetector = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-
-
 			if (!intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
 				return;
 			}
 
 			Runnable runnable = new Runnable() {
 				public void run() {
-					System.out.println("DEVERROUILLE");
-					try{
-						Runtime.getRuntime().exec("su -c input keyevent " + KeyEvent.KEYCODE_SPACE);
-					}
-					catch (IOException e){
-						e.printStackTrace();
-					}
+					System.out.println("Nous sommes sur le lockscreen");
 					unregisterListener();
 					registerListener();
 				}
@@ -224,6 +215,27 @@ public class OneSwitchService extends Service implements SensorEventListener{
 		}
 	};
 
+	public BroadcastReceiver userPresentDetector = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (!intent.getAction().equals(Intent.ACTION_USER_PRESENT)) {
+				return;
+			}
+
+			Runnable runnable = new Runnable() {
+				public void run() {
+					System.out.println("USER PRESENCE");
+					resumeService();
+					unregisterListener();
+					registerListener();
+				}
+			};
+
+			new Handler().postDelayed(runnable, SCREEN_OFF_RECEIVER_DELAY);
+		}
+	};
+
+	
 	public BroadcastReceiver lockDetector = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -234,7 +246,6 @@ public class OneSwitchService extends Service implements SensorEventListener{
 
 			Runnable runnable = new Runnable() {
 				public void run() {
-					System.out.println("VERROUILLE");
 					pauseService();
 					unregisterListener();
 					registerListener();
@@ -244,14 +255,17 @@ public class OneSwitchService extends Service implements SensorEventListener{
 			new Handler().postDelayed(runnable, SCREEN_OFF_RECEIVER_DELAY);
 		}
 	};
-
+	
+/*
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		super.onStartCommand(intent, flags, startId);
 		registerListener();
+		mWakeLock.acquire();
 		resumeService();
+		
 		return START_STICKY;
-	}
+	}*/
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {

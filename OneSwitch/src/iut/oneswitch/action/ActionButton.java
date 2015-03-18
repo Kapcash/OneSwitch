@@ -9,7 +9,7 @@ import android.view.KeyEvent;
 
 public class ActionButton {
 
-	private static boolean volumeStop;
+	private static boolean volumeStop = true;
 
 	public static void back(){
 		try{
