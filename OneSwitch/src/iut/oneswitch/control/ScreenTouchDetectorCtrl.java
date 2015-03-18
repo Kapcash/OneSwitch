@@ -51,8 +51,8 @@ public class ScreenTouchDetectorCtrl{
 	}
 
 	public void removeView(){
-		if (touchLayout != null) {
+			touchLayout.setOnClickListener(null);
 			theService.removeView(touchLayout);
-		}
+			touchLayout = null;
 	}
 }

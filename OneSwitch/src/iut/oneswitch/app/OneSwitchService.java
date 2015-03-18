@@ -1,13 +1,13 @@
 package iut.oneswitch.app;
 
 import iut.oneswitch.control.ClickPanelCtrl;
-import iut.oneswitch.control.Detector;
 import iut.oneswitch.control.HorizontalLineCtrl;
 import iut.oneswitch.control.VerticalLineCtrl;
 import iut.oneswitch.preference.PrefGeneralFragment;
 
 import java.io.IOException;
 
+import android.app.Notification;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -21,6 +21,7 @@ import android.hardware.SensorManager;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.os.Process;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -34,7 +35,6 @@ public class OneSwitchService extends Service implements SensorEventListener{
 	private WindowManager windowManager;
 	private OneSwitchService service;
 	public static final String TAG = OneSwitchService.class.getName();
-	private Detector detector;
 	public static final int SCREEN_OFF_RECEIVER_DELAY = 500;
 
 	private SensorManager mSensorManager = null;
@@ -49,18 +49,17 @@ public class OneSwitchService extends Service implements SensorEventListener{
 	public void onCreate() {
 		super.onCreate();
 		service = this;
-		
-		
+
+
 		windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-		
+
 		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
 		PowerManager manager = (PowerManager) getSystemService(Context.POWER_SERVICE);
 
 		registerReceiver(lockDetector, new IntentFilter(Intent.ACTION_SCREEN_OFF));
 		registerReceiver(unlockDetector, new IntentFilter(Intent.ACTION_SCREEN_ON));
-		detector = new Detector(this);
-		
+
 		if(!isStarted){
 			isStarted = true;
 			Notif.getInstance(this).createRunningNotification();
@@ -115,9 +114,9 @@ public class OneSwitchService extends Service implements SensorEventListener{
 	@Override
 	public void onDestroy(){
 		super.onDestroy();
-		
+
 		PrefGeneralFragment.stop(); //Set the switchview to "off"
-		
+
 		stopService();
 		unregisterReceiver(mBroadcastReceiver);
 		unregisterReceiver(unlockDetector);
@@ -128,8 +127,10 @@ public class OneSwitchService extends Service implements SensorEventListener{
 	}
 
 	public void removeView(View paramView){
-		if(paramView != null && windowManager!=null){
-			windowManager.removeView(paramView);
+		if(paramView != null){
+			if(windowManager!=null){
+				windowManager.removeView(paramView);
+			}
 		}
 
 	}
@@ -165,14 +166,14 @@ public class OneSwitchService extends Service implements SensorEventListener{
 			}
 		}
 	};
-	
+
 	private void pauseService(){
 		if(clickCtrl!=null){
 			clickCtrl.setVisible(false);
 			clickCtrl.stopAll();
 		}
 	}
-	
+
 	private void resumeService(){
 		if(clickCtrl!=null){
 			horizCtrl = new HorizontalLineCtrl(service);
@@ -180,22 +181,22 @@ public class OneSwitchService extends Service implements SensorEventListener{
 			clickCtrl = new ClickPanelCtrl(service);
 		}
 	}
-	
-	
-	
-	
+
+
+
+
 	//--------------VERRIFICATION DE SI L'ECRAN EST VERROUILLE OU NON ------------------------
-	
+
 	private void unregisterListener() {
 		mSensorManager.unregisterListener(this);
 	}
-	
+
 	private void registerListener() {
 		mSensorManager.registerListener(this,
 				mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 				SensorManager.SENSOR_DELAY_NORMAL);
 	}
-	
+
 	public BroadcastReceiver unlockDetector = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -210,7 +211,6 @@ public class OneSwitchService extends Service implements SensorEventListener{
 					System.out.println("DEVERROUILLE");
 					try{
 						Runtime.getRuntime().exec("su -c input keyevent " + KeyEvent.KEYCODE_SPACE);
-						resumeService();
 					}
 					catch (IOException e){
 						e.printStackTrace();
@@ -223,7 +223,7 @@ public class OneSwitchService extends Service implements SensorEventListener{
 			new Handler().postDelayed(runnable, SCREEN_OFF_RECEIVER_DELAY);
 		}
 	};
-	
+
 	public BroadcastReceiver lockDetector = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -244,6 +244,14 @@ public class OneSwitchService extends Service implements SensorEventListener{
 			new Handler().postDelayed(runnable, SCREEN_OFF_RECEIVER_DELAY);
 		}
 	};
+
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		super.onStartCommand(intent, flags, startId);
+		registerListener();
+		resumeService();
+		return START_STICKY;
+	}
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {

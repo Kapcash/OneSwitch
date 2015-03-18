@@ -3,20 +3,16 @@ package iut.oneswitch.control;
 import iut.oneswitch.action.ActionButton;
 import iut.oneswitch.action.ActionGesture;
 import iut.oneswitch.app.OneSwitchService;
+import iut.oneswitch.view.PanelView;
 import android.content.SharedPreferences;
-import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.preference.PreferenceManager;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnKeyListener;
-import android.view.WindowManager;
 import android.widget.Toast;
 
-public class ClickPanelCtrl
-{
-	private WindowManager.LayoutParams clickParams;
+public class ClickPanelCtrl{
 	private boolean forSwipe = false;
 	private PopupCtrl popupCtrl;
 	private boolean popupVisible = false;
@@ -27,7 +23,7 @@ public class ClickPanelCtrl
 	private ScreenTouchDetectorCtrl screenTouch;
 	private ShortcutMenuCtrl shortcutMenuCtrl;
 	private boolean shortcutMenuVisible = false;
-	private View thePanel;
+	private PanelView thePanel;
 	private OneSwitchService theService;
 	protected long currentClick;
 	protected long lastClick = 0;
@@ -45,20 +41,7 @@ public class ClickPanelCtrl
 	}
 
 	private void init(){
-		thePanel = new View(theService);
-		clickParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,
-				theService.getStatusBarHeight(),
-				WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
-				WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|
-				WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL|
-				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
-				PixelFormat.TRANSLUCENT); 
-		clickParams.gravity = Gravity.TOP | Gravity.LEFT;
-		clickParams.x = 0;
-		clickParams.y = 0;
-		clickParams.height = theService.getScreenSize().y;
-		clickParams.width = theService.getScreenSize().x;
-		theService.addView(thePanel, clickParams);
+		thePanel = new PanelView(theService);
 	}
 
 	private void listener(){
@@ -200,9 +183,7 @@ public class ClickPanelCtrl
 		if(shortcutMenuVisible){
 			closeShortcutMenu();
 		}
-		if(thePanel!=null){
-			theService.removeView(thePanel);
-		}
+		removeView();
 		if(forSwipe){
 			popupCtrl.removeCircle();
 		}
@@ -226,6 +207,7 @@ public class ClickPanelCtrl
 
 	public void clickDone(){
 		setVisible(true);
+		screenTouch = null;
 	}
 
 	public void closePopupCtrl(){
@@ -250,9 +232,9 @@ public class ClickPanelCtrl
 	}
 
 	public void reloadPanel(){
-		if(thePanel!=null)
-			theService.removeView(thePanel);
-		theService.addView(thePanel, clickParams);
+		if(thePanel!=null){
+			thePanel.reloadPanel();
+		}
 	}
 
 	public void removeLines(){
@@ -262,7 +244,7 @@ public class ClickPanelCtrl
 
 	public void removeView(){
 		if (thePanel != null) {
-			theService.removeView(thePanel);
+			thePanel.removeView();
 		}
 	}
 
@@ -271,10 +253,6 @@ public class ClickPanelCtrl
 	}
 
 	public void setVisible(boolean paramBoolean){
-		if (paramBoolean){
-			thePanel.setVisibility(View.VISIBLE);
-			return;
-		}
-		thePanel.setVisibility(View.INVISIBLE);
+		thePanel.setVisible(paramBoolean);
 	}
 }
