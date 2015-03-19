@@ -21,7 +21,7 @@ import android.widget.PopupWindow;
 
 public class PopupView extends View{
 
-	private int iterations = -1;
+	private int iterations = 0;
 	private int selectedIndex = 0;
 	private PopupWindow popUp;
 	private ButtonGroup selected;
@@ -216,7 +216,7 @@ public class PopupView extends View{
 	}
 
 	public void selectNext(){
-		if (iterations == 3){
+		if (iterations == Integer.parseInt(sp.getString("iterations","3"))){
 			clickPanel().closePopupCtrl();
 		}
 		else{

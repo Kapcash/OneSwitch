@@ -24,7 +24,7 @@ import android.widget.Button;
 import android.widget.PopupWindow;
 
 public class ShortcutMenuView extends View{
-	private int iterations = -1;
+	private int iterations = 0;
 	private PopupWindow popUp;
 	private ButtonGroup selected;
 	private int selectedIndex;
@@ -151,7 +151,7 @@ public class ShortcutMenuView extends View{
 	}
 
 	public void selectNext(){
-		if (iterations == 3){
+		if (iterations == Integer.parseInt(sp.getString("iterations","3"))){
 			clickPanel().closeShortcutMenu();
 		}
 		else{
