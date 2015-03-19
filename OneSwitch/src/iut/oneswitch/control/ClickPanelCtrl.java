@@ -101,6 +101,7 @@ public class ClickPanelCtrl{
 							if (!forSwipe){
 								posX = verticalLine().getX();
 								openPopupCtrl();
+								screenTouch.giveCoord(posX,posY);
 							}
 							else{
 								setVisible(false);
@@ -124,6 +125,7 @@ public class ClickPanelCtrl{
 				else{
 					if(shortcutMenuCtrl.getSelected()!=null)
 						shortcutMenuCtrl.getSelected().performClick();
+					
 					closeShortcutMenu();
 				}
 			}
@@ -133,47 +135,58 @@ public class ClickPanelCtrl{
 
 		thePanel.setOnLongClickListener(new View.OnLongClickListener(){
 			public boolean onLongClick(View paramAnonymousView){
-				if ((!horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)) {
-					openShortcutMenu();
+				if(!shortcutMenuVisible){
+					if ((!horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)) {
+						openShortcutMenu();
+					}
+					switch (Integer.parseInt(sp.getString("longPressAction","1"))) {
+					case 0:
+						//Ne fait rien
+						break;
+					case 1:
+						//Inverse lignes
+						if((horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)) {
+							horizLine().setInverse();
+							return true;
+						}
+						else if ((!horizLine().isMoving()) && (verticalLine().isMoving()) && (!popupVisible)) {
+							verticalLine().setInverse();
+							return true;
+						}
+						break;
+					case 2:
+						//Recommence au début
+						if((horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)) {
+							horizLine().restart();
+							return true;
+						}
+						else if ((!horizLine().isMoving()) && (verticalLine().isMoving()) && (!popupVisible)) {
+							verticalLine().restart();
+							return true;
+						}
+						break;
+					case 3:
+						if(!popupVisible) {
+							removeLines();
+							return true;
+						}
+						break;
+					default:
+						break;
+					}
 				}
-				switch (Integer.parseInt(sp.getString("longPressAction","1"))) {
-				case 0:
-					//Ne fait rien
-					break;
-				case 1:
-					//Inverse lignes
-					if((horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)) {
-						horizLine().setInverse();
-						return true;
-					}
-					else if ((!horizLine().isMoving()) && (verticalLine().isMoving()) && (!popupVisible)) {
-						verticalLine().setInverse();
-						return true;
-					}
-					break;
-				case 2:
-					//Recommence au début
-					if((horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)) {
-						horizLine().restart();
-						return true;
-					}
-					else if ((!horizLine().isMoving()) && (verticalLine().isMoving()) && (!popupVisible)) {
-						verticalLine().restart();
-						return true;
-					}
-					break;
-				case 3:
-					if(!popupVisible) {
-						removeLines();
-						return true;
-					}
-					break;
-				default:
-					break;
+				else{
+					closeShortcutMenu();
 				}
 				return false;
 			}
 		});
+	}
+	
+	public void closeScreenTouchDetection(){
+		if(screenTouch != null){
+			screenTouch.close();
+		}
 	}
 
 	public void gestureDone(){

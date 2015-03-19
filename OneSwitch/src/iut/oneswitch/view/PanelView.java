@@ -68,13 +68,11 @@ public class PanelView{
 				theService.removeView(thePanel);
 				theService.addView(thePanel, clickParams);
 			}
-
 		}
 	}
 	
 	public void updateView(){
-		if(thePanel!=null){
-			if(theService!=null){
+		if(thePanel != null && theService!=  null){
 				theService.removeView(thePanel);
 				clickParams = new WindowManager.LayoutParams(
 						WindowManager.LayoutParams.MATCH_PARENT,
@@ -84,8 +82,6 @@ public class PanelView{
 						WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
 						PixelFormat.TRANSLUCENT); 
 				theService.addView(thePanel, clickParams);
-			}
-
 		}
 	}
 

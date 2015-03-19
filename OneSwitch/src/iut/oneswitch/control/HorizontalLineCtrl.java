@@ -151,7 +151,7 @@ public class HorizontalLineCtrl
 					}
 					else{
 						horizParams.y -= speed;
-						if(horizParams.y <= (0+speed)){
+						if(horizParams.y <= speed){
 							isMovingDown = true;
 							addIterations();
 						}

@@ -133,7 +133,7 @@ public class PopupView extends View{
 			@Override
 			public void onClick(View v){
 				//theCtrl.removeAllViews();
-				iterations=-1;
+				iterations=0;
 				nextPage();
 			}
 		});
@@ -203,21 +203,20 @@ public class PopupView extends View{
 		btList.get(4).getButton().setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v){
-				iterations=-1;
+				iterations=0;
 				prevPage();
 			}
 		});
 
-
 		for(int i=0;i<btList.size()-1;i++)
 			btList.get(i).setNotSelectedStyle();
-		
 
 	}
 
 	public void selectNext(){
 		if (iterations == Integer.parseInt(sp.getString("iterations","3"))){
 			clickPanel().closePopupCtrl();
+			clickPanel().closeScreenTouchDetection();
 		}
 		else{
 			for(int i=0; i<btList.size();i++)
