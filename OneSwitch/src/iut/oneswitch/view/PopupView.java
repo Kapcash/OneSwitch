@@ -2,13 +2,16 @@ package iut.oneswitch.view;
 
 import iut.oneswitch.R;
 import iut.oneswitch.action.ActionGesture;
+import iut.oneswitch.action.SpeakAText;
 import iut.oneswitch.control.ClickPanelCtrl;
 import iut.oneswitch.control.PopupCtrl;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.preference.PreferenceManager;
 import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,10 +28,12 @@ public class PopupView extends View{
 	private PopupCtrl theCtrl;
 	private View view;
 	private SparseArray<ButtonGroup> btList = new SparseArray<ButtonGroup>();
+	private SharedPreferences sp;
 
 	public PopupView(Context paramContext, PopupCtrl paramPopupCtrl){
 		super(paramContext);
 		theCtrl = paramPopupCtrl;
+		sp = PreferenceManager.getDefaultSharedPreferences(theCtrl.getService());
 		init();
 	}
 
@@ -228,8 +233,11 @@ public class PopupView extends View{
 			else selectedIndex=0;
 			
 			if(selectedIndex==(btList.size()-1)) iterations++;
-
+			
 			selected = btList.get(selectedIndex);
+			if(sp.getBoolean("vocal", false)) {
+				SpeakAText.speak(theCtrl.getService(), btList.get(selectedIndex).getButton().getText().toString().replaceAll("[^A-Za-z0-9éà ]", ""));
+			}
 			popUp.setContentView(view);
 		}
 	}

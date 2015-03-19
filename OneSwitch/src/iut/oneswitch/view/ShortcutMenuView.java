@@ -2,6 +2,7 @@ package iut.oneswitch.view;
 
 import iut.oneswitch.R;
 import iut.oneswitch.action.ActionButton;
+import iut.oneswitch.action.SpeakAText;
 import iut.oneswitch.control.ClickPanelCtrl;
 import iut.oneswitch.control.ShortcutMenuCtrl;
 
@@ -9,9 +10,11 @@ import java.io.IOException;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.Gravity;
@@ -29,12 +32,14 @@ public class ShortcutMenuView extends View{
 	private View view;
 	private SparseArray<ButtonGroup> btList = new SparseArray<ButtonGroup>();
 	private Context context;
+	private SharedPreferences sp;
 
 	public ShortcutMenuView(Context paramContext, ShortcutMenuCtrl paramShortcutMenuCtrl){
 		super(paramContext);
 		context = paramContext;
 		theCtrl = paramShortcutMenuCtrl;
 		popUp = new PopupWindow(getContext());
+		sp = PreferenceManager.getDefaultSharedPreferences(context);
 
 		LayoutInflater inflater = (LayoutInflater)this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		view = inflater.inflate(R.layout.shortcutlayout,null);
@@ -165,6 +170,9 @@ public class ShortcutMenuView extends View{
 			if(selectedIndex==(btList.size()-1)) iterations++;
 
 			selected = btList.get(selectedIndex);
+			if(sp.getBoolean("vocal", false)) {
+				SpeakAText.speak(context, btList.get(selectedIndex).getButton().getText().toString());
+			}
 			popUp.setContentView(view);
 		}
 	}

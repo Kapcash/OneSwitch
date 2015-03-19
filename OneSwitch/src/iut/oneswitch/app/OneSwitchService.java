@@ -15,6 +15,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -23,6 +24,7 @@ import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.os.Handler;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -40,6 +42,7 @@ public class OneSwitchService extends Service implements SensorEventListener{
 	public static final String TAG = OneSwitchService.class.getName();
 	public static final int SCREEN_OFF_RECEIVER_DELAY = 500;
 	private boolean paused = false;
+	private SharedPreferences sp;
 
 	private SensorManager mSensorManager = null;
 
@@ -60,7 +63,7 @@ public class OneSwitchService extends Service implements SensorEventListener{
 	public void onCreate() {
 		super.onCreate();
 		service = this;
-
+		sp = PreferenceManager.getDefaultSharedPreferences(service);
 		windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 
 		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -78,7 +81,9 @@ public class OneSwitchService extends Service implements SensorEventListener{
 	}
 
 	private void init(){
-        SpeakAText.speak(getApplicationContext(), "Synthèse vocale initialisée");
+		if(sp.getBoolean("vocal", false)) {
+			SpeakAText.speak(getApplicationContext(), "Synthèse vocale initialisée");
+		}
         IntentFilter filter = new IntentFilter();
         filter.addAction(BCAST_CONFIGCHANGED);
         this.registerReceiver(onOrientationChanged, filter);
@@ -115,23 +120,25 @@ public class MyReceiver extends BroadcastReceiver {
                         clickCtrl.stopMove();
                         panelCall = new PanelView(service);
                         //panelCall.setColor(0xCCff0000);
-                       
-                        String incNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
-                        String contactName = SpeakAText.retrieveContact(getApplicationContext(), incNumber);
-                       
-                        if(incNumber == null) {
-                                SpeakAText.speak(getApplicationContext(), "Appel entrant d'un numéro masqué");
+                        
+                        if(sp.getBoolean("vocal", false)) {
+	                        String incNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
+	                        String contactName = SpeakAText.retrieveContact(getApplicationContext(), incNumber);
+	                       
+	                        if(incNumber == null) {
+	                                SpeakAText.speak(getApplicationContext(), "Appel entrant d'un numéro masqué");
+	                        }
+	                        else if(contactName == null) {
+	                                SpeakAText.speak(getApplicationContext(), "Appel entrant");
+	                        }
+	                        else {
+	                                SpeakAText.speak(getApplicationContext(), "Appel entrant de "+contactName+".");
+	                        }
+	                       
+	                       
+	                        SpeakAText.speak(getApplicationContext(), "Clic court pour décrocher.");
+	                        SpeakAText.speak(getApplicationContext(), "Clic long pour refuser l'appel.");
                         }
-                        else if(contactName == null) {
-                                SpeakAText.speak(getApplicationContext(), "Appel entrant");
-                        }
-                        else {
-                                SpeakAText.speak(getApplicationContext(), "Appel entrant de "+contactName+".");
-                        }
-                       
-                       
-                        SpeakAText.speak(getApplicationContext(), "Clic court pour décrocher.");
-                        SpeakAText.speak(getApplicationContext(), "Clic long pour refuser l'appel.");
                         for(int i=0;i<4;i++){
                                 Toast.makeText(context, "Clic court : Décrocher\nClic long : Raccrocher", Toast.LENGTH_LONG).show();
                         }

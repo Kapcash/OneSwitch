@@ -72,7 +72,7 @@ public class ShortcutMenuCtrl{
 			try{
 				if(isRunning){
 					theShortcutMenu.selectNext();
-					handler.postDelayed(this, 1000);
+					handler.postDelayed(this, 1200);
 				}
 			}
 			catch (Exception e){
