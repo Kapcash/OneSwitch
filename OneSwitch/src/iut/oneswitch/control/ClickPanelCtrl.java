@@ -3,6 +3,7 @@ package iut.oneswitch.control;
 import iut.oneswitch.action.ActionButton;
 import iut.oneswitch.action.ActionGesture;
 import iut.oneswitch.app.OneSwitchService;
+import iut.oneswitch.action.SpeakAText;
 import iut.oneswitch.view.PanelView;
 import android.content.SharedPreferences;
 import android.graphics.Point;
@@ -73,6 +74,7 @@ public class ClickPanelCtrl{
 				if (!shortcutMenuVisible){
 					if(ActionButton.getVolumeStop()) {
 						//PREMIER CLICK
+						SpeakAText.playSound(theService);
 						currentClick = System.currentTimeMillis();
 
 						if(currentClick-lastClick<delay && lastClick != 0){
