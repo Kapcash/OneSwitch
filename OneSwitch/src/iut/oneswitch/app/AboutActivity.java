@@ -20,7 +20,6 @@ public class AboutActivity extends Activity {
 		getActionBar().setTitle("A propos");
 	}
 	
-	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();

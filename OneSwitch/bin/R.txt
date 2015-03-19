@@ -32,7 +32,7 @@ int drawable hautblack 0x7f020010
 int drawable home 0x7f020011
 int drawable homeblack 0x7f020012
 int drawable ic_launcher 0x7f020013
-int drawable icon3 0x7f020014
+int drawable icon_os 0x7f020014
 int drawable iut 0x7f020015
 int drawable kerpape 0x7f020016
 int drawable longclic 0x7f020017

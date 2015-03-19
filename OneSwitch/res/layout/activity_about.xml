@@ -13,7 +13,7 @@
             android:layout_height="100dp"
             android:contentDescription="@string/os_logo_desc"
             android:paddingTop="20dp"
-            android:src="@drawable/icon3" />
+            android:src="@drawable/icon_os" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -38,105 +38,40 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
-            <LinearLayout
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/raphael"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingTop="5dp" >
+                android:text="@string/raphael" />
 
-                <ImageView
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:layout_marginRight="10dp"
-                    android:contentDescription="@string/raphael"
-                    android:src="@drawable/raphael" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/raphael" />
-            </LinearLayout>
-
-            <LinearLayout
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/florent"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingTop="5dp" >
+                android:text="@string/florent" />
 
-                <ImageView
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:layout_marginRight="10dp"
-                    android:contentDescription="@string/florent"
-                    android:src="@drawable/florent" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/florent" />
-            </LinearLayout>
-
-            <LinearLayout
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/mehdi"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingTop="5dp" >
+                android:text="@string/mehdi" />
 
-                <ImageView
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:layout_marginRight="10dp"
-                    android:contentDescription="@string/mehdi"
-                    android:src="@drawable/mehdi" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/mehdi" />
-            </LinearLayout>
-
-            <LinearLayout
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/yoann"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingTop="5dp" >
+                android:text="@string/yoann" />
 
-                <ImageView
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:layout_marginRight="10dp"
-                    android:contentDescription="@string/yoann"
-                    android:src="@drawable/yoann" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/yoann" />
-            </LinearLayout>
-
-            <LinearLayout
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/sacha"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingTop="5dp" >
-
-                <ImageView
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:layout_marginRight="10dp"
-                    android:contentDescription="@string/sacha"
-                    android:src="@drawable/sacha" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/sacha" />
-            </LinearLayout>
+                android:text="@string/sacha" />
         </LinearLayout>
 
         <TextView
@@ -159,8 +94,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:orientation="horizontal" 
-            android:paddingBottom="10dp">
+            android:orientation="horizontal"
+            android:paddingBottom="10dp" >
 
             <ImageView
                 android:layout_width="100dp"
