@@ -24,11 +24,10 @@ public class PanelView{
 		clickParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,
 				theService.getStatusBarHeight(),
 				WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
-				WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|
 				WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL|
 				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
 				PixelFormat.TRANSLUCENT); 
-		clickParams.gravity = Gravity.TOP | Gravity.LEFT;
+		clickParams.gravity = Gravity.TOP | Gravity.START;
 		clickParams.x = 0;
 		clickParams.y = 0;
 		clickParams.height = theService.getScreenSize().y;
@@ -48,6 +47,10 @@ public class PanelView{
 		thePanel.setOnKeyListener(listener);
 	}
 
+	public void setColor(int color){
+		thePanel.setBackgroundColor(color);
+	}
+
 	public void removeView(){
 		if(thePanel!=null){
 			if(theService!=null)
@@ -55,10 +58,31 @@ public class PanelView{
 		}
 	}
 
+	public void performClick(){
+		thePanel.performClick();
+	}
+
 	public void reloadPanel(){
 		if(thePanel!=null){
 			if(theService!=null){
 				theService.removeView(thePanel);
+				theService.addView(thePanel, clickParams);
+			}
+
+		}
+	}
+	
+	public void updateView(){
+		if(thePanel!=null){
+			if(theService!=null){
+				theService.removeView(thePanel);
+				clickParams = new WindowManager.LayoutParams(
+						WindowManager.LayoutParams.MATCH_PARENT,
+						WindowManager.LayoutParams.MATCH_PARENT,
+						WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
+						WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL|
+						WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
+						PixelFormat.TRANSLUCENT); 
 				theService.addView(thePanel, clickParams);
 			}
 

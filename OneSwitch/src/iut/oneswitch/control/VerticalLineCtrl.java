@@ -55,21 +55,22 @@ public class VerticalLineCtrl{
 	public void init(){
 		//The object containing all preferences
 		sp = PreferenceManager.getDefaultSharedPreferences(theService);
-		
+
 		size = theService.getScreenSize();
 		theLine = new VerticalLine(theService);
 		theLine.setVisibility(4);
 		theLine.setId(200);
-		
+
 		//Get the speed from preferences
 		speed = Integer.parseInt(sp.getString("lign_speed","4"));
 		speed = speed *theLine.getResources().getDisplayMetrics().density;
-		
+
 		//Get the line size from preferences
 		lineThickness = Integer.parseInt(sp.getString("lign_size","3"));
 		lineThickness *= theLine.getResources().getDisplayMetrics().density;
-		
-		verticalParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,
+
+		verticalParams = new WindowManager.LayoutParams(
+				WindowManager.LayoutParams.MATCH_PARENT,
 				theService.getStatusBarHeight(),
 				WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
 				WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|
@@ -82,7 +83,7 @@ public class VerticalLineCtrl{
 		verticalParams.y = 0;
 		verticalParams.height = theService.getScreenSize().y;
 		verticalParams.width = lineThickness;
-		
+
 		theService.addView(theLine, verticalParams);
 		runnable = new VerticalLineRunnable();
 	}
@@ -126,13 +127,13 @@ public class VerticalLineCtrl{
 		if(isMovingRight) isMovingRight = false;
 		else isMovingRight = true;
 	}
-	
+
 	public void restart() {
 		verticalParams.x = 0;
 		verticalParams.y = 0;
 		theService.updateViewLayout(theLine, verticalParams);
 	}
-	
+
 	class VerticalLineRunnable implements Runnable {
 		@Override
 		public void run(){

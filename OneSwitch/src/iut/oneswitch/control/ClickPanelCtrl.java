@@ -42,6 +42,7 @@ public class ClickPanelCtrl{
 
 	private void init(){
 		thePanel = new PanelView(theService);
+		//thePanel.setColor(0xCC000000);
 	}
 
 	private void listener(){
@@ -49,10 +50,20 @@ public class ClickPanelCtrl{
 
 			@Override
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				if(keyCode == 62){
-					Toast.makeText(theService, "button pressed", Toast.LENGTH_LONG).show();
+				if(keyCode == 58){
+					int delay = 500;
+					
+					currentClick = System.currentTimeMillis();
+					if(currentClick-lastClick<delay && lastClick != 0){
+						System.out.println("trop de key");
+					}
+					else{
+						thePanel.performClick();
+						lastClick = System.currentTimeMillis();
+					}
+					
 				}
-				return false;
+				return true;
 			}
 		});
 
@@ -123,7 +134,6 @@ public class ClickPanelCtrl{
 				if ((!horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)) {
 					openShortcutMenu();
 				}
-
 				switch (Integer.parseInt(sp.getString("longPressAction","1"))) {
 				case 0:
 					//Ne fait rien
@@ -155,15 +165,10 @@ public class ClickPanelCtrl{
 						removeLines();
 						return true;
 					}
-
 					break;
-
 				default:
 					break;
 				}
-
-
-
 				return false;
 			}
 		});
@@ -175,8 +180,12 @@ public class ClickPanelCtrl{
 	}
 
 	public void stopAll(){
-		removeLines();
 		removeView();
+		stopMove();
+	}
+	
+	public void stopMove(){
+		removeLines();
 		removeTouchDetection();
 		closePopupCtrl();
 		closeShortcutMenu();

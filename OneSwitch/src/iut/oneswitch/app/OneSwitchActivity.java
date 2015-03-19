@@ -1,9 +1,10 @@
 package iut.oneswitch.app;
 
-import java.io.IOException;
-
 import iut.oneswitch.action.ActionButton;
 import iut.oneswitch.preference.PrefGeneralFragment;
+
+import java.io.IOException;
+
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
@@ -11,7 +12,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 public class OneSwitchActivity extends Activity{
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
@@ -35,6 +36,9 @@ public class OneSwitchActivity extends Activity{
 		}
 	}
 	
+
+	
+
 	private boolean isMyServiceRunning(Class<?> serviceClass) {
 	    ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
 	    for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {

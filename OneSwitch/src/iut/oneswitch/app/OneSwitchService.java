@@ -4,6 +4,11 @@ import iut.oneswitch.control.ClickPanelCtrl;
 import iut.oneswitch.control.HorizontalLineCtrl;
 import iut.oneswitch.control.VerticalLineCtrl;
 import iut.oneswitch.preference.PrefGeneralFragment;
+import iut.oneswitch.view.PanelView;
+
+import java.io.IOException;
+import java.lang.reflect.Method;
+
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,9 +19,12 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.AudioManager;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.PowerManager;
+import android.telephony.TelephonyManager;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -35,6 +43,13 @@ public class OneSwitchService extends Service implements SensorEventListener{
 	private SensorManager mSensorManager = null;
 
 	private static final String BCAST_CONFIGCHANGED = "android.intent.action.CONFIGURATION_CHANGED";
+
+	//Broadcast pour l'appel
+	private BroadcastReceiver callReceive;
+	//Panel pour appel
+	private PanelView panelCall;
+	private boolean call=false;
+
 
 	public IBinder onBind(Intent paramIntent){
 		return null;
@@ -64,11 +79,152 @@ public class OneSwitchService extends Service implements SensorEventListener{
 	private void init(){
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(BCAST_CONFIGCHANGED);
-		this.registerReceiver(mBroadcastReceiver, filter);
+		this.registerReceiver(onOrientationChanged, filter);
 
 		horizCtrl = new HorizontalLineCtrl(this);
 		verticalCtrl = new VerticalLineCtrl(this);
 		clickCtrl = new ClickPanelCtrl(this);
+		bindCallReceiver();
+
+	}
+
+	public void bindCallReceiver(){
+		//Ajout du broadcastReceiver sur un appel
+		IntentFilter filterCall = new IntentFilter();
+		filterCall.addAction("android.intent.action.PHONE_STATE");
+		//	filterCall.addAction("android.intent.action.NEW_OUTGOING_CALL");
+		callReceive = new MyReceiver();
+		registerReceiver(callReceive, filterCall);
+	}
+	//Classe interne pour un appel
+	public class MyReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+
+			//Réception d'un appel
+			if (  intent != null 
+					&& intent.getAction().equals(TelephonyManager.ACTION_PHONE_STATE_CHANGED)
+					&& intent.hasExtra(TelephonyManager.EXTRA_STATE)
+					&& intent.getStringExtra(TelephonyManager.EXTRA_STATE).equals(TelephonyManager.EXTRA_STATE_RINGING)
+					&& !call){
+
+				call=true;
+				clickCtrl.stopMove();
+				panelCall = new PanelView(service);
+				panelCall.setColor(0xCCff0000); 
+				System.out.println(intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER));
+				for(int i=0;i<4;i++){
+					Toast.makeText(context, "Clic court : Décrocher\nClic long : Raccrocher", Toast.LENGTH_LONG).show();
+				}
+
+			}
+
+			//Pendant l'appel 
+			else if (  intent != null 
+					&& intent.getAction().equals(TelephonyManager.ACTION_PHONE_STATE_CHANGED)
+					&& intent.hasExtra(TelephonyManager.EXTRA_STATE)
+					&& intent.getStringExtra(TelephonyManager.EXTRA_STATE).equals(TelephonyManager.EXTRA_STATE_OFFHOOK)){
+
+				AudioManager audioManager =  (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+				audioManager.setMode(AudioManager.MODE_IN_CALL);
+				audioManager.setSpeakerphoneOn(true);
+			} 
+
+			//Fin de l'appel 
+			else if (  intent != null 
+					&& intent.getAction().equals(TelephonyManager.ACTION_PHONE_STATE_CHANGED)
+					&& intent.hasExtra(TelephonyManager.EXTRA_STATE)
+					&& intent.getStringExtra(TelephonyManager.EXTRA_STATE).equals(TelephonyManager.EXTRA_STATE_IDLE)){
+
+
+				call=false;
+				panelCall.removeView();
+				System.out.println("on remove le panel");
+				try{
+					unregisterReceiver(this);
+					bindCallReceiver();
+				}
+				catch(RuntimeException e){
+
+				}
+			} 
+
+			listeners(context,intent);
+		}
+
+		private void listeners(final Context context, final Intent intent) {
+
+			//Sur un clic simple, on décroche.
+			panelCall.setOnClickListener(new View.OnClickListener(){
+
+				@Override
+				public void onClick(View v) {
+					try {
+						Runtime.getRuntime().exec("su -c input keyevent " +
+								Integer.toString(KeyEvent.KEYCODE_HEADSETHOOK));
+					} catch (IOException e) {
+						// Runtime.exec(String) had an I/O problem, try to fall back
+						Intent buttonDown = new Intent(Intent.ACTION_MEDIA_BUTTON);
+						buttonDown.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_HEADSETHOOK));
+						context.sendOrderedBroadcast(buttonDown,"android.permission.CALL_PRIVILEGED");
+
+
+						// froyo and beyond trigger on buttonUp instead of buttonDown
+						Intent buttonUp = new Intent(Intent.ACTION_MEDIA_BUTTON);
+						buttonUp.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_HEADSETHOOK));
+						context.sendOrderedBroadcast(buttonUp,"android.permission.CALL_PRIVILEGED");
+					}
+
+				}
+			});
+
+
+			//Sur un long clic, on raccroche.
+			panelCall.setOnLongClickListener(new View.OnLongClickListener(){
+
+				@Override
+				public boolean onLongClick(View v) {
+					//raccroche
+					try {
+						// Get the boring old TelephonyManager
+						TelephonyManager telephonyManager =
+								(TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+
+						// Get the getITelephony() method
+						Class classTelephony = Class.forName(telephonyManager.getClass().getName());
+						Method methodGetITelephony = classTelephony.getDeclaredMethod("getITelephony");
+
+						// Ignore that the method is supposed to be private
+						methodGetITelephony.setAccessible(true);
+
+
+						// Invoke getITelephony() to get the ITelephony interface
+						Object telephonyInterface = methodGetITelephony.invoke(telephonyManager);
+
+						// Get the endCall method from ITelephony
+						Class telephonyInterfaceClass =  
+								Class.forName(telephonyInterface.getClass().getName());
+						Method methodEndCall = telephonyInterfaceClass.getDeclaredMethod("endCall");
+
+						// Invoke endCall()
+						methodEndCall.invoke(telephonyInterface);
+
+					}
+
+					catch (Exception ex) { // Many things can go wrong with reflection calls
+						Log.d(TAG,"PhoneStateReceiver **" + ex.toString());
+						return false;
+					}
+					return true;
+				}
+			});
+		}
+
+		// constructor
+		public MyReceiver(){
+
+		}
 	}
 
 	public void addView(View paramView, WindowManager.LayoutParams paramLayoutParams){
@@ -111,10 +267,11 @@ public class OneSwitchService extends Service implements SensorEventListener{
 		PrefGeneralFragment.stop(); //Set the switchview to "off"
 
 		stopService();
-		unregisterReceiver(mBroadcastReceiver);
+		unregisterReceiver(onOrientationChanged);
 		unregisterReceiver(unlockDetector);
 		unregisterReceiver(lockDetector);
 		unregisterReceiver(userPresentDetector);
+		unregisterReceiver(callReceive);
 		unregisterListener();
 		stopForeground(true);
 		super.onDestroy();
@@ -123,7 +280,13 @@ public class OneSwitchService extends Service implements SensorEventListener{
 	public void removeView(View paramView){
 		if(paramView != null){
 			if(windowManager!=null){
-				windowManager.removeView(paramView);
+				try{
+					windowManager.removeView(paramView);
+				}
+				catch(RuntimeException e){
+					
+				}
+				
 			}
 		}
 
@@ -147,7 +310,7 @@ public class OneSwitchService extends Service implements SensorEventListener{
 		windowManager.updateViewLayout(paramView, paramLayoutParams);
 	}
 
-	public BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+	public BroadcastReceiver onOrientationChanged = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent myIntent) {
 			if (myIntent.getAction().equals( BCAST_CONFIGCHANGED ) ) {
@@ -156,6 +319,8 @@ public class OneSwitchService extends Service implements SensorEventListener{
 					horizCtrl = new HorizontalLineCtrl(service);
 					verticalCtrl = new VerticalLineCtrl(service);
 					clickCtrl = new ClickPanelCtrl(service);
+					if(panelCall!=null)
+						panelCall.updateView();
 				}
 			}
 		}
@@ -163,9 +328,7 @@ public class OneSwitchService extends Service implements SensorEventListener{
 
 	private void pauseService(){
 		if(clickCtrl!=null){
-			System.out.println("Vérrouillé");
 			clickCtrl.stopAll();
-			System.out.println("MAIS OUI JE SUPPRIME BORDEL");
 			paused = true;
 		}
 	}
@@ -176,9 +339,7 @@ public class OneSwitchService extends Service implements SensorEventListener{
 			verticalCtrl = new VerticalLineCtrl(service);
 			clickCtrl = new ClickPanelCtrl(service);
 			paused = false;
-			System.out.println("Déverrouillé !!");
 		}
-		System.out.println("Déverrouillé 2!!");
 	}
 
 
@@ -205,7 +366,6 @@ public class OneSwitchService extends Service implements SensorEventListener{
 
 			Runnable runnable = new Runnable() {
 				public void run() {
-					System.out.println("Nous sommes sur le lockscreen");
 					unregisterListener();
 					registerListener();
 				}
@@ -224,7 +384,6 @@ public class OneSwitchService extends Service implements SensorEventListener{
 
 			Runnable runnable = new Runnable() {
 				public void run() {
-					System.out.println("USER PRESENCE");
 					resumeService();
 					unregisterListener();
 					registerListener();
@@ -235,7 +394,7 @@ public class OneSwitchService extends Service implements SensorEventListener{
 		}
 	};
 
-	
+
 	public BroadcastReceiver lockDetector = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -255,17 +414,8 @@ public class OneSwitchService extends Service implements SensorEventListener{
 			new Handler().postDelayed(runnable, SCREEN_OFF_RECEIVER_DELAY);
 		}
 	};
-	
-/*
-	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
-		super.onStartCommand(intent, flags, startId);
-		registerListener();
-		mWakeLock.acquire();
-		resumeService();
-		
-		return START_STICKY;
-	}*/
+
+
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {

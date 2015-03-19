@@ -69,7 +69,8 @@ public class HorizontalLineCtrl
 		lineThickness = Integer.parseInt(sp.getString("lign_size","3"));
 		lineThickness *= theLine.getResources().getDisplayMetrics().density;
 		
-		horizParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,
+		horizParams = new WindowManager.LayoutParams(
+				WindowManager.LayoutParams.MATCH_PARENT,
 				theService.getStatusBarHeight(),
 				WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
 				WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|

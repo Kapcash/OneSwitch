@@ -15,6 +15,5 @@
 	<string name="taches_button">Multitaches</string>
 	<string name="menu_button">Menu</string>
 	<string name="volup_button">Volume</string>
-	<string name="lock_button">Verrouiller</string>
-	<string name="shutdown_button">Eteindre</string>
+	<string name="okgoogle_button">OK Google</string>
 </resources>

@@ -1,59 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@drawable/popupbackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:padding="10dp" >
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/titleshortcutmenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
         android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="10dp"
         android:gravity="center"
         android:text="@string/header_popup_meca"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Button
-        android:id="@+id/but_back"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/back_button" />
-    
-    <Button
-        android:id="@+id/but_taches"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/taches_button" />
+        android:id="@+id/but_home"
+        android:layout_width="95dp"
+        android:layout_height="95dp"
+        android:layout_alignTop="@+id/but_menu"
+        android:layout_toRightOf="@+id/but_menu"
+        android:background="@drawable/buttonpopup"
+        android:drawableTop="@drawable/home"
+        android:gravity="center_horizontal|bottom"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="@string/home_button"
+        android:textSize="12sp" />
 
     <Button
-        android:id="@+id/but_home"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/home_button" />
+        android:id="@+id/but_taches"
+        android:layout_width="95dp"
+        android:layout_height="95dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/but_menu"
+        android:background="@drawable/buttonpopup"
+        android:drawableTop="@drawable/multitask"
+        android:gravity="center_horizontal|bottom"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="@string/taches_button"
+        android:textSize="10sp" />
+
+    <Button
+        android:id="@+id/but_volume"
+        android:layout_width="95dp"
+        android:layout_height="95dp"
+        android:layout_alignLeft="@+id/but_home"
+        android:layout_alignTop="@+id/but_taches"
+        android:background="@drawable/buttonpopup"
+        android:drawableTop="@drawable/volume"
+        android:gravity="center_horizontal|bottom"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="@string/volup_button"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/but_okgoogle"
+        android:layout_width="95dp"
+        android:layout_height="95dp"
+        android:layout_alignBaseline="@+id/but_volume"
+        android:layout_alignBottom="@+id/but_volume"
+        android:layout_toRightOf="@+id/but_home"
+        android:background="@drawable/buttonpopup"
+        android:drawableTop="@drawable/okgoogle"
+        android:gravity="center_horizontal|bottom"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="@string/okgoogle_button"
+        android:textSize="10sp" />
 
     <Button
         android:id="@+id/but_menu"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/menu_button" />
+        android:layout_width="95dp"
+        android:layout_height="95dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/titleshortcutmenu"
+        android:background="@drawable/buttonpopup"
+        android:drawableTop="@drawable/menu"
+        android:gravity="center_horizontal|bottom"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="@string/menu_button"
+        android:textSize="12sp" />
 
     <Button
-        android:id="@+id/but_volup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/volup_button" />
+        android:id="@+id/but_back"
+        android:layout_width="95dp"
+        android:layout_height="95dp"
+        android:layout_above="@+id/but_volume"
+        android:layout_toRightOf="@+id/but_home"
+        android:background="@drawable/buttonpopup"
+        android:drawableTop="@drawable/back"
+        android:gravity="center_horizontal|bottom"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="@string/back_button"
+        android:textSize="12sp" />
 
-
-    <Button
-        android:id="@+id/but_lock"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/lock_button" />
-
-    <Button
-        android:id="@+id/but_shutdown"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/shutdown_button" />
-
-</LinearLayout>
+</RelativeLayout>

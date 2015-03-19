@@ -55,16 +55,14 @@ public class PopupView extends View{
 	}
 
 	public void onDraw(Canvas canvas){
-		float density = getResources().getDisplayMetrics().density;
-
 		popUp.setContentView(view);
 		popUp.setBackgroundDrawable(getResources().getDrawable(R.drawable.popupbackground));
 		popUp.showAtLocation(this, Gravity.NO_GRAVITY, 0, 0);
-		popUp.update(0, 0, (int)(canvas.getWidth()), canvas.getHeight());
+		popUp.update(0, 0,(canvas.getWidth()), canvas.getHeight());
 
 		selectedIndex = btList.size()-1;
 		selected = btList.get(selectedIndex);
-
+		
 		theCtrl.start();
 		prevPage();
 	}

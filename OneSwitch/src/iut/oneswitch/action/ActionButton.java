@@ -3,13 +3,17 @@ package iut.oneswitch.action;
 import java.io.IOException;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 
 public class ActionButton {
 
 	private static boolean volumeStop = true;
+	private static int count;
+	private static boolean changeWay = false;
 
 	public static void back(){
 		try{
@@ -50,42 +54,54 @@ public class ActionButton {
 	public static void volumeUp(final Context context) throws IOException{
 		final Handler handler = new Handler();
 		volumeStop = false;
+		final SharedPreferences sp;
+		sp = PreferenceManager.getDefaultSharedPreferences(context);
+		final int iterations = Integer.parseInt(sp.getString("iterations","3"));
+		count = 0;
 
 		Runnable a = new Runnable() {
 
 			public void run() {
-
+				
 				AudioManager myAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 				try {
-
-					if(myAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC) != myAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)) { 
-						myAudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC,
-								AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI);
-						System.out.println("UP");
-						if(!volumeStop)
-							handler.postDelayed(this, 300);
-
-					}
-
-
-
-					else {
-						myAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 1, AudioManager.FLAG_SHOW_UI);
-						System.out.println(myAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
-						if(!volumeStop)
+					if(count != iterations && !volumeStop) {
+						if(!changeWay) {
+							if(myAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC) != myAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)) {
+								myAudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC,
+			                        AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI);
+							}
+							else {
+								changeWay = true;
+							}
+						}
+						if(changeWay && count != iterations) {
+							if(myAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC) != 0) {
+								myAudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC,
+				                        AudioManager.ADJUST_LOWER, AudioManager.FLAG_SHOW_UI);
+								
+							}
+							else {
+								changeWay = false;
+								count++;
+							}
+							
+						}
+						if(count != iterations){
 							handler.postDelayed(this, 250);
+						}
+					}
+					else {
+						changeWay = false;
 					}
 				}
-
 				catch(Exception e) {
 					e.printStackTrace();
 				}
 			}
-
 		};
 		a.run();
 	}
-
 
 
 	public static void lock(){

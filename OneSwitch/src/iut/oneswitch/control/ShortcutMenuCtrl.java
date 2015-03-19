@@ -2,8 +2,8 @@ package iut.oneswitch.control;
 
 import iut.oneswitch.app.OneSwitchService;
 import iut.oneswitch.view.ShortcutMenuView;
+import android.graphics.PixelFormat;
 import android.os.Handler;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
@@ -22,21 +22,28 @@ public class ShortcutMenuCtrl{
 	}
 
 	private void init(){
+		float density = theService.getResources().getDisplayMetrics().density;
+		int width = 305;
+		int height = 245;
+		
 		theShortcutMenu = new ShortcutMenuView(theService, this);
-		shortcutMenuParams = new WindowManager.LayoutParams(-1, theService.getStatusBarHeight(), 2010, 296, -3);
-		shortcutMenuParams.gravity = 51;
-		shortcutMenuParams.x = 0;
-		shortcutMenuParams.y = 0;
-		shortcutMenuParams.height = theService.getScreenSize().y;
-		shortcutMenuParams.width = theService.getScreenSize().x;
+		shortcutMenuParams = new WindowManager.LayoutParams(
+				WindowManager.LayoutParams.MATCH_PARENT,
+				theService.getStatusBarHeight(),
+				WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
+				WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|
+				WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL|
+				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
+				PixelFormat.TRANSLUCENT);
+		
+		shortcutMenuParams.height = (int)(height*density);
+		shortcutMenuParams.width = (int)(width*density);
 		theService.addView(theShortcutMenu, shortcutMenuParams);
 		handler = new Handler();
 		runnable = new PopupMenuRunnable();
 	}
 
-	public View getButton(int paramInt){
-		return theShortcutMenu.getButton(paramInt);
-	}
+
 
 	public Button getSelected(){
 		return theShortcutMenu.getSelected();
@@ -56,7 +63,7 @@ public class ShortcutMenuCtrl{
 
 	public void startThread(){
 		isRunning = true;
-		handler.postDelayed(runnable, 1000L);
+		handler.postDelayed(runnable, 1000);
 	}
 
 	class PopupMenuRunnable implements Runnable{
@@ -65,7 +72,7 @@ public class ShortcutMenuCtrl{
 			try{
 				if(isRunning){
 					theShortcutMenu.selectNext();
-					handler.postDelayed(this, 1000L);
+					handler.postDelayed(this, 1000);
 				}
 			}
 			catch (Exception e){

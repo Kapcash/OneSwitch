@@ -9,8 +9,8 @@ import iut.oneswitch.control.ShortcutMenuCtrl;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
+import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,52 +18,82 @@ import android.widget.Button;
 import android.widget.PopupWindow;
 
 public class ShortcutMenuView extends View{
-	private Button[] buttonList;
-	private int iterations;
+	private int iterations = -1;
 	private PopupWindow popUp;
-	private Button selected;
+	private ButtonGroup selected;
 	private int selectedIndex;
 	private ShortcutMenuCtrl theCtrl;
 	private View view;
+	private SparseArray<ButtonGroup> btList = new SparseArray<ButtonGroup>();
 
 	public ShortcutMenuView(Context paramContext, ShortcutMenuCtrl paramShortcutMenuCtrl){
 		super(paramContext);
 		theCtrl = paramShortcutMenuCtrl;
 		popUp = new PopupWindow(getContext());
+		
+		LayoutInflater inflater = (LayoutInflater)this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		view = inflater.inflate(R.layout.shortcutlayout,null);
+		
+		//AJOUT BOUTON MENU
+		addButton(R.id.but_menu, R.drawable.menu, R.drawable.menublack);
+
+		//AJOUT BOUTON HOME
+		addButton(R.id.but_home, R.drawable.home, R.drawable.homeblack);
+
+		//AJOUT BOUTON RETOUR
+		addButton(R.id.but_back, R.drawable.back, R.drawable.backblack);
+
+		//AJOUT BOUTON MULTITASK
+		addButton(R.id.but_taches, R.drawable.multitask, R.drawable.multitaskblack);
+
+		//AJOUT BOUTON VOLUMEs
+		addButton(R.id.but_volume, R.drawable.volume, R.drawable.volumeblack);
+
+		//AJOUT BOUTON OKGOOGLE
+		addButton(R.id.but_okgoogle, R.drawable.okgoogle, R.drawable.okgoogleblack);
+	}
+
+	private void addButton(int btId, int idIconWhite, int idIconBlack){
+		btList.put(btList.size(), new ButtonGroup(btId, idIconWhite, idIconBlack));
 	}
 
 	private void listener(){
-		buttonList[0].setOnClickListener(new View.OnClickListener(){
+		//LISTENER MENU
+		btList.get(0).getButton().setOnClickListener(new OnClickListener(){
 			@Override
-			public void onClick(View view){
-				ActionButton.back();
-			}
-		});
-		
-		buttonList[1].setOnClickListener(new View.OnClickListener(){
-			@Override
-			public void onClick(View view){
-				ActionButton.taches();
-			}
-		});
-		
-		buttonList[2].setOnClickListener(new View.OnClickListener(){
-			@Override
-			public void onClick(View view){
-				ActionButton.home();
-			}
-		});
-		
-		buttonList[3].setOnClickListener(new View.OnClickListener(){
-			@Override
-			public void onClick(View view){
+			public void onClick(View v){
 				ActionButton.menu();
 			}
 		});
-		
-		buttonList[4].setOnClickListener(new View.OnClickListener(){
+
+		//LISTENER HOME
+		btList.get(1).getButton().setOnClickListener(new OnClickListener(){
 			@Override
-			public void onClick(View view){
+			public void onClick(View v){
+				ActionButton.home();
+			}
+		});
+
+		//LISTENER BACK
+		btList.get(2).getButton().setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v){
+				ActionButton.back();
+			}
+		});
+
+		//LISTENER MULTITASK
+		btList.get(3).getButton().setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v){
+				ActionButton.taches();
+			}
+		});
+
+		//LISTENER VOLUME
+		btList.get(4).getButton().setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v){
 				try {
 					ActionButton.volumeUp(ShortcutMenuView.this.getContext());
 				} catch (IOException e) {
@@ -71,104 +101,108 @@ public class ShortcutMenuView extends View{
 				}
 			}
 		});
-		
-		buttonList[5].setOnClickListener(new View.OnClickListener(){
+
+		//LISTENER OK GOOGLE
+		btList.get(5).getButton().setOnClickListener(new OnClickListener(){
 			@Override
-			public void onClick(View view){
-				ActionButton.lock();
+			public void onClick(View v){
+
 			}
 		});
-		
-		buttonList[6].setOnClickListener(new View.OnClickListener(){
-			@Override
-			public void onClick(View view){
-				ActionButton.shutdown();
-			}
-		});
+
+
 	}
 
 	public ClickPanelCtrl clickPanel(){
 		return theCtrl.getService().getClickPanelCtrl();
 	}
 
-	public Button getButton(int index){
-		if(index < 0 || index > 6) throw new IllegalArgumentException("Mauvais index");
-		return buttonList[index];
-	}
+
 
 	public Button getSelected(){
-		return selected;
+		return selected.getButton();
 	}
 
-	public void onDraw(Canvas paramCanvas){
-		float density = getResources().getDisplayMetrics().density;
-
-		buttonList = new Button[7];
-
-		LayoutInflater inflater = (LayoutInflater)this.getContext().getSystemService
-				(Context.LAYOUT_INFLATER_SERVICE);
-
-		view = inflater.inflate(R.layout.shortcutlayout,null);
+	public void onDraw(Canvas canvas){
 		popUp.setContentView(view);
-
+		popUp.setBackgroundDrawable(getResources().getDrawable(R.drawable.popupbackground));
 		popUp.showAtLocation(this, Gravity.CENTER, 0, 0);
-		popUp.update(28, 0, (int)(300*density), (int)(360*density));
-		
-		
-		Button butBack = (Button)view.findViewById(R.id.but_back);
-		Button butTache = (Button)view.findViewById(R.id.but_taches);
-		Button butHome = (Button)view.findViewById(R.id.but_home);
-		Button butMenu = (Button)view.findViewById(R.id.but_menu);
-		Button butVolup = (Button)view.findViewById(R.id.but_volup);
-		Button butLock = (Button)view.findViewById(R.id.but_lock);
-		Button butShut = (Button)view.findViewById(R.id.but_shutdown);
-		
-		selected = butBack;
-		selectedIndex = 0;
+		popUp.update(0, 0, (canvas.getWidth()), canvas.getHeight());
 
-		buttonList[0] = butBack;
-		buttonList[1] = butTache;
-		buttonList[2] = butHome;
-		buttonList[3] = butMenu;
-		buttonList[4] = butVolup;
-		buttonList[5] = butLock;
-		buttonList[6] = butShut;
-		
-		buttonList[selectedIndex].getBackground().setColorFilter(new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP));
-
-		for(int i = 0; i<buttonList.length;i++){
-			if(i != selectedIndex){
-				buttonList[i].getBackground().clearColorFilter();
-			}
-		}
-		popUp.setContentView(view);
+		selectedIndex = btList.size()-1;
+		selected = btList.get(selectedIndex);
 		listener();
 		theCtrl.startThread();
 	}
 
-	public void selectNext()
-	{
-		if (iterations == 3)
-		{
+	public void selectNext(){
+		if (iterations == 3){
 			clickPanel().closeShortcutMenu();
-			return;
 		}
-		selectedIndex = ((1 + selectedIndex) % 7);
-		selected = buttonList[selectedIndex];
-		buttonList[selectedIndex].getBackground().setColorFilter(new PorterDuffColorFilter(-1, PorterDuff.Mode.SRC_ATOP));
-		for (int i = 0;; i++)
-		{
-			if (i >= buttonList.length)
-			{
-				if (selectedIndex == -1 + buttonList.length) {
-					iterations = (1 + iterations);
-				}
-				popUp.setContentView(view);
-				return;
+		else{
+			for(int i=0; i<btList.size();i++)
+				btList.get(i).setNotSelectedStyle();
+
+
+			int current = selectedIndex+1;
+			if(current>(btList.size()-1)) current = 0;
+
+			btList.get(current).setSelectedStyle();
+
+			if(selectedIndex<(btList.size()-1)) selectedIndex++;
+			else selectedIndex=0;
+
+			if(selectedIndex==(btList.size()-1)) iterations++;
+
+			selected = btList.get(selectedIndex);
+			popUp.setContentView(view);
+		}
+	}
+
+	private class ButtonGroup {
+		private Button button;
+		private Drawable blackIcon, whiteIcon;
+
+		public ButtonGroup(int btID, int idIconWhite, int idIconBlack) {
+			button = (Button) view.findViewById(btID);
+			whiteIcon = getResources().getDrawable(idIconWhite);
+			blackIcon = getResources().getDrawable(idIconBlack);
+		}
+
+		public ButtonGroup(int btID) {
+			button = (Button) view.findViewById(btID);
+		}
+
+		public Button getButton(){
+			return button;
+		}
+
+		public void setData(String textButton, int idIconWhite, int idIconBlack){
+			if(button!=null){
+				button.setText(textButton);
+				whiteIcon = getResources().getDrawable(idIconWhite);
+				blackIcon = getResources().getDrawable(idIconBlack);
 			}
-			if (i != selectedIndex) {
-				buttonList[i].getBackground().clearColorFilter();
+		}
+
+		public void setData(String textButton){
+			if(button!=null){
+				button.setText(textButton);
+				whiteIcon = null;
+				blackIcon = null;
 			}
+		}
+
+		public void setNotSelectedStyle(){
+			button.setBackground(getResources().getDrawable(R.drawable.buttonpopup));
+			button.setTextColor(Color.WHITE);
+			button.setCompoundDrawablesWithIntrinsicBounds(null, whiteIcon, null, null);
+		}
+
+		public void setSelectedStyle(){
+			button.setCompoundDrawablesWithIntrinsicBounds(null, blackIcon, null, null);
+			button.setBackground(getResources().getDrawable(R.drawable.buttonpopupselected));
+			button.setTextColor(Color.BLACK);
 		}
 	}
 }
