@@ -284,9 +284,9 @@ public class OneSwitchService extends Service implements SensorEventListener{
 					windowManager.removeView(paramView);
 				}
 				catch(RuntimeException e){
-					
+
 				}
-				
+
 			}
 		}
 
@@ -319,8 +319,10 @@ public class OneSwitchService extends Service implements SensorEventListener{
 					horizCtrl = new HorizontalLineCtrl(service);
 					verticalCtrl = new VerticalLineCtrl(service);
 					clickCtrl = new ClickPanelCtrl(service);
-					if(panelCall!=null)
+					if(call)
 						panelCall.updateView();
+
+
 				}
 			}
 		}
