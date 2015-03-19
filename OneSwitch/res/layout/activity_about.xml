@@ -41,9 +41,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/raphael"
+                android:drawableLeft="@drawable/yoann"
                 android:gravity="center_vertical"
-                android:text="@string/raphael" />
+                android:text="@string/yoann" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -62,9 +62,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/yoann"
+                android:drawableLeft="@drawable/raphael"
                 android:gravity="center_vertical"
-                android:text="@string/yoann" />
+                android:text="@string/raphael" />
 
             <TextView
                 android:layout_width="wrap_content"
