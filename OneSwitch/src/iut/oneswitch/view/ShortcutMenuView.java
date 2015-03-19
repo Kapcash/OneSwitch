@@ -1,15 +1,18 @@
 package iut.oneswitch.view;
 
-import java.io.IOException;
-
 import iut.oneswitch.R;
 import iut.oneswitch.action.ActionButton;
 import iut.oneswitch.control.ClickPanelCtrl;
 import iut.oneswitch.control.ShortcutMenuCtrl;
+
+import java.io.IOException;
+
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,15 +28,17 @@ public class ShortcutMenuView extends View{
 	private ShortcutMenuCtrl theCtrl;
 	private View view;
 	private SparseArray<ButtonGroup> btList = new SparseArray<ButtonGroup>();
+	private Context context;
 
 	public ShortcutMenuView(Context paramContext, ShortcutMenuCtrl paramShortcutMenuCtrl){
 		super(paramContext);
+		context = paramContext;
 		theCtrl = paramShortcutMenuCtrl;
 		popUp = new PopupWindow(getContext());
-		
+
 		LayoutInflater inflater = (LayoutInflater)this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		view = inflater.inflate(R.layout.shortcutlayout,null);
-		
+
 		//AJOUT BOUTON MENU
 		addButton(R.id.but_menu, R.drawable.menu, R.drawable.menublack);
 
@@ -106,7 +111,12 @@ public class ShortcutMenuView extends View{
 		btList.get(5).getButton().setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v){
-
+				Intent intent = new Intent(Intent.ACTION_MAIN);
+				intent.setClassName("com.google.android.googlequicksearchbox",
+						"com.google.android.googlequicksearchbox.VoiceSearchActivity");
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				Log.d("OK","Google Search");
+				context.startActivity(intent);
 			}
 		});
 

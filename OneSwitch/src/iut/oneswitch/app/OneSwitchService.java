@@ -112,7 +112,7 @@ public class OneSwitchService extends Service implements SensorEventListener{
 				call=true;
 				clickCtrl.stopMove();
 				panelCall = new PanelView(service);
-				panelCall.setColor(0xCCff0000); 
+				//panelCall.setColor(0xCCff0000); 
 				System.out.println(intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER));
 				for(int i=0;i<4;i++){
 					Toast.makeText(context, "Clic court : Décrocher\nClic long : Raccrocher", Toast.LENGTH_LONG).show();
@@ -192,7 +192,7 @@ public class OneSwitchService extends Service implements SensorEventListener{
 								(TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 
 						// Get the getITelephony() method
-						Class classTelephony = Class.forName(telephonyManager.getClass().getName());
+						Class<?> classTelephony = Class.forName(telephonyManager.getClass().getName());
 						Method methodGetITelephony = classTelephony.getDeclaredMethod("getITelephony");
 
 						// Ignore that the method is supposed to be private
@@ -203,7 +203,7 @@ public class OneSwitchService extends Service implements SensorEventListener{
 						Object telephonyInterface = methodGetITelephony.invoke(telephonyManager);
 
 						// Get the endCall method from ITelephony
-						Class telephonyInterfaceClass =  
+						Class<?> telephonyInterfaceClass =  
 								Class.forName(telephonyInterface.getClass().getName());
 						Method methodEndCall = telephonyInterfaceClass.getDeclaredMethod("endCall");
 
@@ -421,11 +421,9 @@ public class OneSwitchService extends Service implements SensorEventListener{
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-		// TODO Auto-generated method stub
 	}
 }

@@ -1,6 +1,7 @@
 package iut.oneswitch.preference;
 
 import iut.oneswitch.R;
+import iut.oneswitch.app.AboutActivity;
 import iut.oneswitch.app.OneSwitchService;
 import net.margaritov.preference.colorpicker.ColorPickerPreference;
 import android.app.ActivityManager;
@@ -54,6 +55,16 @@ public class PrefGeneralFragment extends PreferenceFragment implements OnSharedP
 				return true;
 			}
 		});
+	    
+	    Preference about = (Preference) findPreference("about");
+	    about.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				Intent intent = new Intent(PrefGeneralFragment.this.getActivity(),AboutActivity.class);
+				PrefGeneralFragment.this.getActivity().startActivity(intent);
+				return false;
+			}
+		});
 	}
 	
 	@Override
@@ -95,6 +106,9 @@ public class PrefGeneralFragment extends PreferenceFragment implements OnSharedP
 		
 		SwitchPreference switchPref = (SwitchPreference) findPreference("key_switch_auto");
 		switchPref.setChecked(false);
+		
+		SwitchPreference switchVocal = (SwitchPreference) findPreference("vocal");
+		switchVocal.setChecked(false);
 		
 		ColorPickerPreference colorH = (ColorPickerPreference) findPreference("color1");
 		colorH.onColorChanged(0xff0000ff);

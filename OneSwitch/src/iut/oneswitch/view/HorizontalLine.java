@@ -1,6 +1,5 @@
 package iut.oneswitch.view;
 
-import net.margaritov.preference.colorpicker.ColorPickerPreference;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;

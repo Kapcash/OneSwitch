@@ -26,8 +26,6 @@ public class SpeakAText{
 				ready = true;
 
 				ttobj.speak(text, TextToSpeech.QUEUE_FLUSH, null);
-
-
 			}
 		});
 	}

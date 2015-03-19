@@ -18,6 +18,10 @@
     <!-- Switch autoboot service -->
     <string name="title_switch_auto">Auto</string>
     <string name="switch_auto_summary">Activation automatique au démarrage </string>
+    
+    <!-- Switch vocal -->
+    <string name="vocal_title">Synthèse vocale</string>
+    <string name="vocal_desc">Activation de la synthèse vocale </string>
 
     <!--
 	Valeurs affichées (entries) et valeurs associées (values)

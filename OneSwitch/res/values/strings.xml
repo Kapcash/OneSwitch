@@ -5,9 +5,9 @@
     <string name="hello_world">One Switch</string>
     <string name="action_settings">Settings</string>
     <string name="button_service">TEST</string>
-    
+
     <!-- Buttons -->
-    
+
     <string name="button_start">Start</string>
     <string name="button_stop">Stop</string>
     <string name="button_glisser">Glisser</string>
@@ -15,9 +15,27 @@
     <string name="toggle_off">Stoped</string>
     <string name="bt">button</string>
     
-    <!-- Notifications -->
     
+    <!-- About OneSwitch -->
+    <string name="os_logo_desc">OneSwitch</string>
+    <string name="oneswitch">OneSwitch</string>
+    <string name="app_realized">Application réalisée dans le cadre</string>
+    <string name="proj_synthese">d\'un projet de synthèse par :</string>
+	<string name="raphael">Raphaël Le Gorande</string>
+	<string name="florent">Florent Catiau-Tristant</string>
+	<string name="mehdi">Mehdi Haddad</string>
+	<string name="sacha">Sacha Loriot</string>
+	<string name="yoann">Yoann Boyère</string>
+	<string name="tutore">Projet tutorés par Matthieu Le Lain</string>
+	<string name="CMRRF">pour le compte du CMRRF de Kerpape</string>
+	<string name="willy">représenté par Willy Alègre.</string>
+	<string name="iut">IUT de Vannes</string>
+	<string name="kerpape">CMRRF de Kerpape</string>
+	
+    <!-- Notifications -->
+
     <string name="notif_title">One Switch Running</string>
     <string name="notif_desc">One Switch is currently running</string>
-    
+    <string name="title_activity_about">AboutActivity</string>
+
 </resources>

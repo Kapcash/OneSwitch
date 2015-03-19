@@ -14,6 +14,12 @@
             android:key="key_switch_auto"
             android:summary="@string/switch_auto_summary"
             android:title="@string/title_switch_auto" />
+        
+        <!-- Switch setting boot launch -->
+        <SwitchPreference
+            android:key="vocal"
+            android:title="@string/vocal_title"
+            android:summary="@string/vocal_desc"/>
     </PreferenceCategory>
     
     
@@ -90,6 +96,10 @@
     
     <Preference android:key="reset"
         android:title="Remise à zéro"/>
+    
+    <Preference 
+        android:key="about"
+        android:title="A propos de OneSwitch"/>
         
 
 </PreferenceScreen>

@@ -17,9 +17,8 @@ public class OneSwitchActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		try {
-			Process root = Runtime.getRuntime().exec("su");
+			Runtime.getRuntime().exec("su");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		getFragmentManager().beginTransaction().replace(android.R.id.content,new PrefGeneralFragment()).commit();
