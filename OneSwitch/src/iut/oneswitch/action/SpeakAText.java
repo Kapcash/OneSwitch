@@ -33,7 +33,7 @@ public class SpeakAText{
 	public static void speak(Context context, final String text){
 
 		if(ready){
-			ttobj.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+			ttobj.speak(text, TextToSpeech.QUEUE_ADD, null);
 		}
 		else{
 			init(context, text);
@@ -46,7 +46,7 @@ public class SpeakAText{
 		Uri uri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
 		Cursor cursor = cr.query(uri, new String[]{PhoneLookup.DISPLAY_NAME}, null, null, null);
 		if (cursor == null) {
-			return "Inconnu";
+			return null;
 		}
 		String contactName = null;
 		if(cursor.moveToFirst()) {

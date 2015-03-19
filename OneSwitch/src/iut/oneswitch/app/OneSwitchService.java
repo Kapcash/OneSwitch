@@ -1,5 +1,6 @@
 package iut.oneswitch.app;
 
+import iut.oneswitch.action.SpeakAText;
 import iut.oneswitch.control.ClickPanelCtrl;
 import iut.oneswitch.control.HorizontalLineCtrl;
 import iut.oneswitch.control.VerticalLineCtrl;
@@ -77,81 +78,98 @@ public class OneSwitchService extends Service implements SensorEventListener{
 	}
 
 	private void init(){
-		IntentFilter filter = new IntentFilter();
-		filter.addAction(BCAST_CONFIGCHANGED);
-		this.registerReceiver(onOrientationChanged, filter);
+        SpeakAText.speak(getApplicationContext(), "Synthèse vocale initialisée");
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(BCAST_CONFIGCHANGED);
+        this.registerReceiver(onOrientationChanged, filter);
 
-		horizCtrl = new HorizontalLineCtrl(this);
-		verticalCtrl = new VerticalLineCtrl(this);
-		clickCtrl = new ClickPanelCtrl(this);
-		bindCallReceiver();
+        horizCtrl = new HorizontalLineCtrl(this);
+        verticalCtrl = new VerticalLineCtrl(this);
+        clickCtrl = new ClickPanelCtrl(this);
+        bindCallReceiver();
 
-	}
+}
 
-	public void bindCallReceiver(){
-		//Ajout du broadcastReceiver sur un appel
-		IntentFilter filterCall = new IntentFilter();
-		filterCall.addAction("android.intent.action.PHONE_STATE");
-		//	filterCall.addAction("android.intent.action.NEW_OUTGOING_CALL");
-		callReceive = new MyReceiver();
-		registerReceiver(callReceive, filterCall);
-	}
-	//Classe interne pour un appel
-	public class MyReceiver extends BroadcastReceiver {
+public void bindCallReceiver(){
+        //Ajout du broadcastReceiver sur un appel
+        IntentFilter filterCall = new IntentFilter();
+        filterCall.addAction("android.intent.action.PHONE_STATE");
+        //      filterCall.addAction("android.intent.action.NEW_OUTGOING_CALL");
+        callReceive = new MyReceiver();
+        registerReceiver(callReceive, filterCall);
+}
+//Classe interne pour un appel
+public class MyReceiver extends BroadcastReceiver {
 
-		@Override
-		public void onReceive(Context context, Intent intent) {
+        @Override
+        public void onReceive(Context context, Intent intent) {
 
-			//Réception d'un appel
-			if (  intent != null 
-					&& intent.getAction().equals(TelephonyManager.ACTION_PHONE_STATE_CHANGED)
-					&& intent.hasExtra(TelephonyManager.EXTRA_STATE)
-					&& intent.getStringExtra(TelephonyManager.EXTRA_STATE).equals(TelephonyManager.EXTRA_STATE_RINGING)
-					&& !call){
+                //Réception d'un appel
+                if (  intent != null
+                                && intent.getAction().equals(TelephonyManager.ACTION_PHONE_STATE_CHANGED)
+                                && intent.hasExtra(TelephonyManager.EXTRA_STATE)
+                                && intent.getStringExtra(TelephonyManager.EXTRA_STATE).equals(TelephonyManager.EXTRA_STATE_RINGING)
+                                && !call){
 
-				call=true;
-				clickCtrl.stopMove();
-				panelCall = new PanelView(service);
-				//panelCall.setColor(0xCCff0000); 
-				System.out.println(intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER));
-				for(int i=0;i<4;i++){
-					Toast.makeText(context, "Clic court : Décrocher\nClic long : Raccrocher", Toast.LENGTH_LONG).show();
-				}
+                        call=true;
+                        clickCtrl.stopMove();
+                        panelCall = new PanelView(service);
+                        //panelCall.setColor(0xCCff0000);
+                       
+                        String incNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
+                        String contactName = SpeakAText.retrieveContact(getApplicationContext(), incNumber);
+                       
+                        if(incNumber == null) {
+                                SpeakAText.speak(getApplicationContext(), "Appel entrant d'un numéro masqué");
+                        }
+                        else if(contactName == null) {
+                                SpeakAText.speak(getApplicationContext(), "Appel entrant");
+                        }
+                        else {
+                                SpeakAText.speak(getApplicationContext(), "Appel entrant de "+contactName+".");
+                        }
+                       
+                       
+                        SpeakAText.speak(getApplicationContext(), "Clic court pour décrocher.");
+                        SpeakAText.speak(getApplicationContext(), "Clic long pour refuser l'appel.");
+                        for(int i=0;i<4;i++){
+                                Toast.makeText(context, "Clic court : Décrocher\nClic long : Raccrocher", Toast.LENGTH_LONG).show();
+                        }
 
-			}
+                }
 
-			//Pendant l'appel 
-			else if (  intent != null 
-					&& intent.getAction().equals(TelephonyManager.ACTION_PHONE_STATE_CHANGED)
-					&& intent.hasExtra(TelephonyManager.EXTRA_STATE)
-					&& intent.getStringExtra(TelephonyManager.EXTRA_STATE).equals(TelephonyManager.EXTRA_STATE_OFFHOOK)){
+                //Pendant l'appel
+                else if (  intent != null
+                                && intent.getAction().equals(TelephonyManager.ACTION_PHONE_STATE_CHANGED)
+                                && intent.hasExtra(TelephonyManager.EXTRA_STATE)
+                                && intent.getStringExtra(TelephonyManager.EXTRA_STATE).equals(TelephonyManager.EXTRA_STATE_OFFHOOK)){
 
-				AudioManager audioManager =  (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-				audioManager.setMode(AudioManager.MODE_IN_CALL);
-				audioManager.setSpeakerphoneOn(true);
-			} 
+                        AudioManager audioManager =  (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+                        audioManager.setMode(AudioManager.MODE_IN_CALL);
+                        audioManager.setSpeakerphoneOn(true);
+                }
 
-			//Fin de l'appel 
-			else if (  intent != null 
-					&& intent.getAction().equals(TelephonyManager.ACTION_PHONE_STATE_CHANGED)
-					&& intent.hasExtra(TelephonyManager.EXTRA_STATE)
-					&& intent.getStringExtra(TelephonyManager.EXTRA_STATE).equals(TelephonyManager.EXTRA_STATE_IDLE)){
+                //Fin de l'appel
+                else if (  intent != null
+                                && intent.getAction().equals(TelephonyManager.ACTION_PHONE_STATE_CHANGED)
+                                && intent.hasExtra(TelephonyManager.EXTRA_STATE)
+                                && intent.getStringExtra(TelephonyManager.EXTRA_STATE).equals(TelephonyManager.EXTRA_STATE_IDLE)){
 
 
-				call=false;
-				panelCall.removeView();
-				System.out.println("on remove le panel");
-				try{
-					unregisterReceiver(this);
-					bindCallReceiver();
-				}
-				catch(RuntimeException e){
+                        call=false;
+                        panelCall.removeView();
+                        System.out.println("on remove le panel");
+                        try{
+                                unregisterReceiver(this);
+                                bindCallReceiver();
+                        }
+                        catch(RuntimeException e){
 
-				}
-			} 
+                        }
+                }
 
-			listeners(context,intent);
-		}
+                listeners(context,intent);
+        }
 
 		private void listeners(final Context context, final Intent intent) {
 
