@@ -6,6 +6,7 @@ import android.graphics.PixelFormat;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -13,8 +14,9 @@ import android.widget.LinearLayout.LayoutParams;
 public class ScreenTouchDetectorCtrl{
 	private OneSwitchService theService;
 	private LinearLayout touchLayout;
-	private WindowManager.LayoutParams panelBas,panelHaut,panelGauche,panelDroite;
-	private View haut, bas, gauche, droite;
+	private View avoidStatusBar;
+	private WindowManager.LayoutParams panelBas,panelHaut;
+	private View haut, bas;
 
 	public ScreenTouchDetectorCtrl(OneSwitchService service){
 		theService = service;
@@ -24,30 +26,44 @@ public class ScreenTouchDetectorCtrl{
 
 	private void init(){
 		touchLayout = new LinearLayout(theService);
+		avoidStatusBar = new View(theService);
 		LayoutParams lp = new LayoutParams(0, 0);
 		touchLayout.setLayoutParams(lp);
 
 		haut = new View(theService);
 		bas = new View(theService);
-		droite = new View(theService);
-		gauche = new View(theService);
 
 		WindowManager.LayoutParams mParams = new WindowManager.LayoutParams(
 				0,
 				0,
 				WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
 				WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
+				WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|
 				WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH |
 				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
 				PixelFormat.TRANSLUCENT);
-		mParams.gravity = Gravity.START | Gravity.TOP;  
+		mParams.gravity = Gravity.START | Gravity.TOP; 
+		
+		WindowManager.LayoutParams paramStatusBar = new WindowManager.LayoutParams(
+				theService.getScreenSize().x,
+				theService.getStatusBarHeight(),
+				WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
+				WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|
+				WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL|
+				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
+				PixelFormat.TRANSLUCENT);
+		paramStatusBar.gravity = Gravity.START | Gravity.TOP; 
+		paramStatusBar.x = 0;
+		paramStatusBar.y = 0;
+		paramStatusBar.width = theService.getScreenSize().x;
+		paramStatusBar.height = theService.getStatusBarHeight();
 
 		panelBas = new WindowManager.LayoutParams(
 				0,
 				0,
-				WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
-				WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
-				WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH |
+				WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
+				WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|
+				WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL|
 				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
 				PixelFormat.TRANSLUCENT);
 		panelBas.gravity = Gravity.START | Gravity.TOP;
@@ -55,18 +71,19 @@ public class ScreenTouchDetectorCtrl{
 		panelHaut = new WindowManager.LayoutParams(
 				0,
 				0,
-				WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
-				WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
-				WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH |
+				WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
+				WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|
+				WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL|
 				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
 				PixelFormat.TRANSLUCENT);
 		panelHaut.gravity = Gravity.START | Gravity.TOP; 
-
-		haut.setBackgroundColor(Color.BLACK);
-		bas.setBackgroundColor(Color.WHITE);
+		
+		//avoidStatusBar.setBackgroundColor(Color.WHITE);
+		//haut.setBackgroundColor(Color.BLACK);
+		//bas.setBackgroundColor(Color.WHITE);
 
 		theService.addView(touchLayout, mParams);
-
+		theService.addView(avoidStatusBar, paramStatusBar);
 		theService.addView(bas, panelBas);
 		theService.addView(haut, panelHaut);
 	}
@@ -81,14 +98,17 @@ public class ScreenTouchDetectorCtrl{
 				return true;
 			}
 		});
+		avoidStatusBar.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				close();
+			}
+		});
 	}
 
 	public void close(){
 		theService.getClickPanelCtrl().clickDone();
 		removeView();
-		touchLayout = null;
-		bas = null;
-		haut = null;
 	}
 
 	public void giveCoord(int x, int y){
@@ -102,21 +122,8 @@ public class ScreenTouchDetectorCtrl{
 		panelHaut.width = theService.getScreenSize().x;
 		panelHaut.height = (theService.getScreenSize().y)-(theService.getScreenSize().y-(y-2));
 
-		/*panelDroite.x = x+2;
-        panelDroite.y = 0;
-        panelDroite.width = theService.getScreenSize().x-(x+2);
-        panelDroite.height = theService.getScreenSize().y;
-
-        panelGauche.x = 0;
-        panelGauche.y = 0;
-        panelGauche.width =theService.getScreenSize().x-panelDroite.width-2;
-        panelGauche.height = theService.getScreenSize().y;
-		 */
-
-		//theService.updateViewLayout(haut, panelHaut);
-		//theService.updateViewLayout(bas, panelBas);
-		//theService.updateViewLayout(droite, panelDroite);
-		//theService.updateViewLayout(gauche, panelGauche);
+		theService.updateViewLayout(haut, panelHaut);
+		theService.updateViewLayout(bas, panelBas);
 	}
 
 	public void removeView(){
@@ -125,7 +132,12 @@ public class ScreenTouchDetectorCtrl{
 			theService.removeView(touchLayout);
 			theService.removeView(bas);
 			theService.removeView(haut);
+			avoidStatusBar.setOnClickListener(null);
+			theService.removeView(avoidStatusBar);
 			touchLayout = null;
+			bas = null;
+			haut = null;
+			avoidStatusBar=null;
 		}
 	}
 }

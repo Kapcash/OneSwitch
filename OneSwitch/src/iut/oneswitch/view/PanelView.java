@@ -5,7 +5,6 @@ import android.graphics.PixelFormat;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnKeyListener;
 import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
 
@@ -21,10 +20,12 @@ public class PanelView{
 
 	private void init(){
 		thePanel = new View(theService);
-		clickParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,
+		clickParams = new WindowManager.LayoutParams(
+				WindowManager.LayoutParams.MATCH_PARENT,
 				theService.getStatusBarHeight(),
 				WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
 				WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL|
+				WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|
 				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
 				PixelFormat.TRANSLUCENT); 
 		clickParams.gravity = Gravity.TOP | Gravity.START;
@@ -43,12 +44,9 @@ public class PanelView{
 		thePanel.setOnLongClickListener(listener);
 	}
 
-	public void setOnKeyListener(OnKeyListener listener){
-		thePanel.setOnKeyListener(listener);
-	}
-
 	public void setColor(int color){
 		thePanel.setBackgroundColor(color);
+		theService.updateViewLayout(thePanel, clickParams);
 	}
 
 	public void removeView(){
@@ -70,21 +68,29 @@ public class PanelView{
 			}
 		}
 	}
-	
+
 	public void updateView(){
-		if(thePanel != null && theService!=  null){
+		try{
+			if(thePanel != null && theService!=  null){
 				theService.removeView(thePanel);
 				clickParams = new WindowManager.LayoutParams(
 						WindowManager.LayoutParams.MATCH_PARENT,
 						WindowManager.LayoutParams.MATCH_PARENT,
 						WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
 						WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL|
+						WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|
 						WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
 						PixelFormat.TRANSLUCENT); 
 				theService.addView(thePanel, clickParams);
+			}
 		}
+		catch(RuntimeException e){}
 	}
-
+	
+	public void updateViewLayout(){
+		theService.updateViewLayout(thePanel, clickParams);
+	}
+	
 	public void setVisible(boolean paramBoolean){
 		if (paramBoolean){
 			thePanel.setVisibility(View.VISIBLE);

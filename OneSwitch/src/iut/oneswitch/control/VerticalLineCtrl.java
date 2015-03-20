@@ -72,7 +72,7 @@ public class VerticalLineCtrl{
 		verticalParams = new WindowManager.LayoutParams(
 				WindowManager.LayoutParams.MATCH_PARENT,
 				theService.getStatusBarHeight(),
-				WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
+				WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
 				WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|
 				WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL|
 				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,

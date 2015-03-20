@@ -17,7 +17,7 @@ public class ActionGesture {
 	
 	public static void swipe(int x, int y, int x2, int y2){
 		try{
-			Runtime.getRuntime().exec("su -c input swipe " + x + " " + y + " " + x2 + " " + y2 + " 300");
+			Runtime.getRuntime().exec("su -c input swipe " + x + " " + y + " " + x2 + " " + y2);
 		}
 		catch (IOException e){
 			e.printStackTrace();
@@ -36,7 +36,7 @@ public class ActionGesture {
 	
 	public static void pageUp(int x, int y, Point screenSize){
 		try{
-			Runtime.getRuntime().exec("su -c input swipe " + x + " " + y + " " + x + " " + screenSize.y + " 300");
+			Runtime.getRuntime().exec("su -c input swipe " + x + " " + y + " " + x + " " + screenSize.y);
 		}
 		catch (IOException e){
 			e.printStackTrace();
@@ -45,7 +45,7 @@ public class ActionGesture {
 	
 	public static void pageDown(int x, int y, Point screenSize){
 		try{
-			Runtime.getRuntime().exec("su -c input swipe " + x + " " + y + " " + x + " " + 0 + " 300");
+			Runtime.getRuntime().exec("su -c input swipe " + x + " " + y + " " + x + " " + 0);
 		}
 		catch (IOException e){
 			e.printStackTrace();

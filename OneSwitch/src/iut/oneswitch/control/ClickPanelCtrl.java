@@ -2,15 +2,13 @@ package iut.oneswitch.control;
 
 import iut.oneswitch.action.ActionButton;
 import iut.oneswitch.action.ActionGesture;
-import iut.oneswitch.app.OneSwitchService;
 import iut.oneswitch.action.SpeakAText;
+import iut.oneswitch.app.OneSwitchService;
 import iut.oneswitch.view.PanelView;
 import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.preference.PreferenceManager;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnKeyListener;
 import android.widget.Toast;
 
 public class ClickPanelCtrl{
@@ -43,31 +41,10 @@ public class ClickPanelCtrl{
 
 	private void init(){
 		thePanel = new PanelView(theService);
-		//thePanel.setColor(0xCC000000);
+		thePanel.setColor(0xCC000000);
 	}
 
 	private void listener(){
-		thePanel.setOnKeyListener(new OnKeyListener(){
-
-			@Override
-			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				if(keyCode == 58){
-					int delay = 500;
-					
-					currentClick = System.currentTimeMillis();
-					if(currentClick-lastClick<delay && lastClick != 0){
-						System.out.println("trop de key");
-					}
-					else{
-						thePanel.performClick();
-						lastClick = System.currentTimeMillis();
-					}
-					
-				}
-				return true;
-			}
-		});
-
 		thePanel.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View paramAnonymousView){
 				int delay = Integer.parseInt(sp.getString("reboundDelay","200"));
@@ -135,7 +112,7 @@ public class ClickPanelCtrl{
 
 		thePanel.setOnLongClickListener(new View.OnLongClickListener(){
 			public boolean onLongClick(View paramAnonymousView){
-				if(!shortcutMenuVisible){
+				if(!shortcutMenuVisible && !popupVisible){
 					if ((!horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)) {
 						openShortcutMenu();
 					}
@@ -147,38 +124,36 @@ public class ClickPanelCtrl{
 						//Inverse lignes
 						if((horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)) {
 							horizLine().setInverse();
-							return true;
 						}
 						else if ((!horizLine().isMoving()) && (verticalLine().isMoving()) && (!popupVisible)) {
 							verticalLine().setInverse();
-							return true;
 						}
 						break;
 					case 2:
 						//Recommence au début
 						if((horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)) {
 							horizLine().restart();
-							return true;
 						}
 						else if ((!horizLine().isMoving()) && (verticalLine().isMoving()) && (!popupVisible)) {
 							verticalLine().restart();
-							return true;
 						}
 						break;
 					case 3:
 						if(!popupVisible) {
 							removeLines();
-							return true;
 						}
 						break;
 					default:
 						break;
 					}
 				}
-				else{
+				else if(shortcutMenuVisible){
 					closeShortcutMenu();
 				}
-				return false;
+				else if(popupVisible){
+					closePopupCtrl();
+				}
+				return true;
 			}
 		});
 	}
@@ -239,6 +214,7 @@ public class ClickPanelCtrl{
 
 	public void clickDone(){
 		setVisible(true);
+		removeTouchDetection();
 		screenTouch = null;
 	}
 
@@ -248,6 +224,7 @@ public class ClickPanelCtrl{
 				popupCtrl.removeAllViews();
 				popupCtrl = null;
 			}
+			removeTouchDetection();
 			popupVisible = false;
 			removeLines();
 		}
@@ -268,9 +245,13 @@ public class ClickPanelCtrl{
 	}
 
 	public void reloadPanel(){
+		PanelView tempPanel = new PanelView(theService);
+		tempPanel.setColor(0xCCEEEEEE);
 		if(thePanel!=null){
 			thePanel.reloadPanel();
 		}
+		tempPanel.removeView();
+		tempPanel = null;
 	}
 
 	public void removeLines(){
