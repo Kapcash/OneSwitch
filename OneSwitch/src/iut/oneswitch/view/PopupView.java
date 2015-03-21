@@ -82,7 +82,6 @@ public class PopupView extends View{
 		btList.get(0).getButton().setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v){
-				clickPanel().setVisible(false);
 				theCtrl.removeAllViews();
 				clickPanel().gestureDone();
 				int x = clickPanel().getPos().x;
@@ -96,7 +95,7 @@ public class PopupView extends View{
 		btList.get(1).getButton().setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v){
-				clickPanel().setVisible(false);
+				
 				theCtrl.removeAllViews();
 				clickPanel().gestureDone();
 				int x = clickPanel().getPos().x;
@@ -147,7 +146,7 @@ public class PopupView extends View{
 		btList.get(0).getButton().setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v){
-				clickPanel().setVisible(false);
+				
 				theCtrl.removeAllViews();
 				clickPanel().gestureDone();
 				int x = clickPanel().getPos().x;
@@ -161,7 +160,7 @@ public class PopupView extends View{
 		btList.get(1).getButton().setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v){
-				clickPanel().setVisible(false);
+				
 				theCtrl.removeAllViews();
 				clickPanel().gestureDone();
 				int x = clickPanel().getPos().x;
@@ -175,7 +174,7 @@ public class PopupView extends View{
 		btList.get(2).getButton().setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v){
-				clickPanel().setVisible(false);
+				
 				theCtrl.removeAllViews();
 				clickPanel().gestureDone();
 				int x = clickPanel().getPos().x;
@@ -189,7 +188,7 @@ public class PopupView extends View{
 		btList.get(3).getButton().setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v){
-				clickPanel().setVisible(false);
+				
 				theCtrl.removeAllViews();
 				clickPanel().gestureDone();
 				int x = clickPanel().getPos().x;

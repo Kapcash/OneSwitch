@@ -81,7 +81,8 @@ public class ClickPanelCtrl{
 								screenTouch.giveCoord(posX,posY);
 							}
 							else{
-								setVisible(false);
+								//setVisible(false);
+								thePanel.removeView();
 								posX2 = verticalLine().getX();
 								forSwipe = false;
 								popupCtrl.removeCircle();
@@ -102,7 +103,7 @@ public class ClickPanelCtrl{
 				else{
 					if(shortcutMenuCtrl.getSelected()!=null)
 						shortcutMenuCtrl.getSelected().performClick();
-					
+
 					closeShortcutMenu();
 				}
 			}
@@ -157,7 +158,7 @@ public class ClickPanelCtrl{
 			}
 		});
 	}
-	
+
 	public void closeScreenTouchDetection(){
 		if(screenTouch != null){
 			screenTouch.close();
@@ -167,13 +168,14 @@ public class ClickPanelCtrl{
 	public void gestureDone(){
 		popupVisible = false;
 		removeLines();
+		removeView();
 	}
 
 	public void stopAll(){
 		removeView();
 		stopMove();
 	}
-	
+
 	public void stopMove(){
 		removeLines();
 		removeTouchDetection();
@@ -181,13 +183,14 @@ public class ClickPanelCtrl{
 		closeShortcutMenu();
 		removeCircle();
 	}
-	
-	
+
+
 	public void removeTouchDetection(){
 		if(screenTouch!=null){
 			screenTouch.removeView();
+			screenTouch = null;
 		}
-		screenTouch = null;
+		
 	}
 
 	public void removeCircle(){
@@ -213,9 +216,9 @@ public class ClickPanelCtrl{
 	}
 
 	public void clickDone(){
-		setVisible(true);
+		//setVisible(true);
+		thePanel.addView();
 		removeTouchDetection();
-		screenTouch = null;
 	}
 
 	public void closePopupCtrl(){
@@ -245,13 +248,9 @@ public class ClickPanelCtrl{
 	}
 
 	public void reloadPanel(){
-		PanelView tempPanel = new PanelView(theService);
-		tempPanel.setColor(0xCCEEEEEE);
 		if(thePanel!=null){
 			thePanel.reloadPanel();
 		}
-		tempPanel.removeView();
-		tempPanel = null;
 	}
 
 	public void removeLines(){
@@ -262,7 +261,6 @@ public class ClickPanelCtrl{
 	public void removeView(){
 		if (thePanel != null) {
 			thePanel.removeView();
-			thePanel = null;
 		}
 	}
 

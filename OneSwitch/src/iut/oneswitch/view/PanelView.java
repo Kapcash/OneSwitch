@@ -99,6 +99,10 @@ public class PanelView{
 			thePanel.setVisibility(View.INVISIBLE);
 		}
 	}
+	
+	public void addView(){
+		theService.addView(thePanel, clickParams);
+	}
 
 
 
