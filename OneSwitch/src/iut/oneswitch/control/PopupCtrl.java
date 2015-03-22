@@ -40,7 +40,7 @@ public class PopupCtrl
 		density = theService.getResources().getDisplayMetrics().density;
 		circle = new CircleView(theService, this);
 		circleParams = new WindowManager.LayoutParams(0,0,
-				WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
+				WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
 				WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|
 				WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL|
 				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
@@ -54,7 +54,7 @@ public class PopupCtrl
 
 		thePopup = new PopupView(theService, this);
 		popupParams = new WindowManager.LayoutParams(0,0,
-				WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
+				WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
 				WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|
 				WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL|
 				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,

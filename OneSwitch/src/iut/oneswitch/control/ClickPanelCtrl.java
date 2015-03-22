@@ -41,7 +41,7 @@ public class ClickPanelCtrl{
 
 	private void init(){
 		thePanel = new PanelView(theService);
-		thePanel.setColor(0xCC000000);
+		//thePanel.setColor(0xCC000000);
 	}
 
 	private void listener(){

@@ -26,8 +26,7 @@ import android.widget.PopupWindow;
 public class ShortcutMenuView extends View{
 	private int iterations = 0;
 	private PopupWindow popUp;
-	private ButtonGroup selected;
-	private int selectedIndex;
+	private int selectedIndex = -1;
 	private ShortcutMenuCtrl theCtrl;
 	private View view;
 	private SparseArray<ButtonGroup> btList = new SparseArray<ButtonGroup>();
@@ -131,11 +130,9 @@ public class ShortcutMenuView extends View{
 	public ClickPanelCtrl clickPanel(){
 		return theCtrl.getService().getClickPanelCtrl();
 	}
-
-
-
-	public Button getSelected(){
-		return selected.getButton();
+	
+	public Button getButton(int index){
+		return btList.get(index).getButton();
 	}
 
 	public void onDraw(Canvas canvas){
@@ -144,8 +141,11 @@ public class ShortcutMenuView extends View{
 		popUp.showAtLocation(this, Gravity.CENTER, 0, 0);
 		popUp.update(0, 0, (canvas.getWidth()), canvas.getHeight());
 
-		selectedIndex = btList.size()-1;
-		selected = btList.get(selectedIndex);
+		for(int i=0; i<btList.size();i++)
+			btList.get(i).setNotSelectedStyle();
+		
+		//btList.get(0).setNotSelectedStyle();
+		
 		listener();
 		theCtrl.startThread();
 	}
@@ -155,21 +155,16 @@ public class ShortcutMenuView extends View{
 			clickPanel().closeShortcutMenu();
 		}
 		else{
+			if(selectedIndex<(btList.size()-1)) selectedIndex++;
+			else selectedIndex=0;
+			
 			for(int i=0; i<btList.size();i++)
 				btList.get(i).setNotSelectedStyle();
 
-
-			int current = selectedIndex+1;
-			if(current>(btList.size()-1)) current = 0;
-
-			btList.get(current).setSelectedStyle();
-
-			if(selectedIndex<(btList.size()-1)) selectedIndex++;
-			else selectedIndex=0;
+			btList.get(selectedIndex).setSelectedStyle();
 
 			if(selectedIndex==(btList.size()-1)) iterations++;
-
-			selected = btList.get(selectedIndex);
+			
 			if(sp.getBoolean("vocal", false)) {
 				SpeakAText.speak(context, btList.get(selectedIndex).getButton().getText().toString());
 			}
@@ -187,28 +182,8 @@ public class ShortcutMenuView extends View{
 			blackIcon = getResources().getDrawable(idIconBlack);
 		}
 
-		public ButtonGroup(int btID) {
-			button = (Button) view.findViewById(btID);
-		}
-
 		public Button getButton(){
 			return button;
-		}
-
-		public void setData(String textButton, int idIconWhite, int idIconBlack){
-			if(button!=null){
-				button.setText(textButton);
-				whiteIcon = getResources().getDrawable(idIconWhite);
-				blackIcon = getResources().getDrawable(idIconBlack);
-			}
-		}
-
-		public void setData(String textButton){
-			if(button!=null){
-				button.setText(textButton);
-				whiteIcon = null;
-				blackIcon = null;
-			}
 		}
 
 		public void setNotSelectedStyle(){

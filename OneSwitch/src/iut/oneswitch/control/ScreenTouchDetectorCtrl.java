@@ -83,9 +83,10 @@ public class ScreenTouchDetectorCtrl{
 		//bas.setBackgroundColor(Color.WHITE);
 
 		theService.addView(touchLayout, mParams);
-		theService.addView(avoidStatusBar, paramStatusBar);
+		
 		theService.addView(bas, panelBas);
 		theService.addView(haut, panelHaut);
+		theService.addView(avoidStatusBar, paramStatusBar);
 	}
 
 	private void listener(){

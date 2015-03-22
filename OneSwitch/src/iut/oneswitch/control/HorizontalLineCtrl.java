@@ -3,6 +3,7 @@ package iut.oneswitch.control;
 import iut.oneswitch.app.OneSwitchService;
 import iut.oneswitch.view.HorizontalLine;
 import android.content.SharedPreferences;
+import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.Handler;
@@ -11,8 +12,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 
-public class HorizontalLineCtrl
-{
+public class HorizontalLineCtrl {
 	private Handler handler;
 	private WindowManager.LayoutParams horizParams;
 	private boolean isMoving = false;
@@ -26,6 +26,7 @@ public class HorizontalLineCtrl
 	private OneSwitchService theService;
 	private Point size;
 	private SharedPreferences sp;
+	private int posY = 0;
 
 	public HorizontalLineCtrl(OneSwitchService paramOneSwitchService){
 		theService = paramOneSwitchService;
@@ -71,7 +72,7 @@ public class HorizontalLineCtrl
 		
 		horizParams = new WindowManager.LayoutParams(
 				WindowManager.LayoutParams.MATCH_PARENT,
-				theService.getStatusBarHeight(),
+				WindowManager.LayoutParams.MATCH_PARENT,
 				WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
 				WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|
 				WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL|
@@ -80,7 +81,7 @@ public class HorizontalLineCtrl
 
 		horizParams.gravity = Gravity.TOP | Gravity.START;
 		horizParams.x = 0;
-		horizParams.y = 0;
+		horizParams.y = posY;
 		horizParams.height = lineThickness;
 		horizParams.width = theService.getScreenSize().x;
 		
@@ -145,12 +146,14 @@ public class HorizontalLineCtrl
 				if(isMoving){
 					if((horizParams.y <= size.y)&&(isMovingDown)){
 						horizParams.y += speed;
+						posY++;
 						
 						if(horizParams.y >= (size.y-speed))
 							isMovingDown = false;
 					}
 					else{
 						horizParams.y -= speed;
+						//posY--;
 						if(horizParams.y <= speed){
 							isMovingDown = true;
 							addIterations();
@@ -158,7 +161,8 @@ public class HorizontalLineCtrl
 					}
 					theService.updateViewLayout(theLine, horizParams);
 					handler.postDelayed(this, 10);
-				}	
+				}
+				
 			}
 			catch (Exception localException) {}
 		}

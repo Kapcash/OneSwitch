@@ -14,6 +14,7 @@ public class ShortcutMenuCtrl{
 	private WindowManager.LayoutParams shortcutMenuParams;
 	private OneSwitchService theService;
 	private ShortcutMenuView theShortcutMenu;
+	private int selectedIndex=-1;
 
 	public ShortcutMenuCtrl(OneSwitchService service){
 		theService = service;
@@ -46,7 +47,7 @@ public class ShortcutMenuCtrl{
 
 
 	public Button getSelected(){
-		return theShortcutMenu.getSelected();
+		return theShortcutMenu.getButton(selectedIndex);
 	}
 
 	public OneSwitchService getService(){
@@ -63,7 +64,12 @@ public class ShortcutMenuCtrl{
 
 	public void startThread(){
 		isRunning = true;
-		handler.postDelayed(runnable, 1000);
+		handler.postDelayed(runnable, 1);
+	}
+	
+	private void nextIndex(){
+		if(selectedIndex<5) selectedIndex++;
+		else selectedIndex = 0;
 	}
 
 	class PopupMenuRunnable implements Runnable{
@@ -71,6 +77,7 @@ public class ShortcutMenuCtrl{
 		public void run(){
 			try{
 				if(isRunning){
+					nextIndex();
 					theShortcutMenu.selectNext();
 					handler.postDelayed(this, 1000);
 				}

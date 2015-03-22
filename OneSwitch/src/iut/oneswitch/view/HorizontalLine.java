@@ -10,6 +10,7 @@ import android.view.View;
 public class HorizontalLine extends View {
   Paint paint = new Paint();
   private SharedPreferences sp;
+  private int y = 10;
   
   public HorizontalLine(Context paramContext)
   {
@@ -24,5 +25,9 @@ public class HorizontalLine extends View {
 
     this.paint.setStrokeWidth(2 * paramCanvas.getHeight());
     paramCanvas.drawLine(0.0F, 0.0F, paramCanvas.getWidth(), 0.0F, this.paint);
+    invalidate();
   }
+  
+  
+  
 }
