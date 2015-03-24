@@ -6,7 +6,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-
+/**
+ * Permet le boot Auto du service.
+ * @author OneSwitch B
+ *
+ */
 public class BootUpReceiver extends BroadcastReceiver {
 	
 	@Override

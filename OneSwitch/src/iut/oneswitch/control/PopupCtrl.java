@@ -11,6 +11,11 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
+/**
+ * Classe permettant de gèrer la popUp sur un appuie simple.
+ * @author OneSwitch B
+ *
+ */
 public class PopupCtrl
 {
 	private CircleView circle;
@@ -25,6 +30,12 @@ public class PopupCtrl
 	private PopupView thePopup;
 	private OneSwitchService theService;
 
+	/**
+	 * Constructeur de la classe.
+	 * @param service
+	 * @param x
+	 * @param y
+	 */
 	public PopupCtrl(OneSwitchService service, int x, int y){
 		posX = x;
 		posY = y;
@@ -32,6 +43,9 @@ public class PopupCtrl
 		init();
 	}
 
+	/**
+	 * Permet d'initialiser la popUp.
+	 */
 	private void init(){
 		int widthCircle = 28;
 		int heightCircle = 28;
@@ -112,14 +126,19 @@ public class PopupCtrl
 
 	public void closePopup(){
 		isStarted = false;
+		handler.removeCallbacksAndMessages(runnable);
 		if (thePopup != null) {
 			theService.removeView(thePopup);
 			thePopup = null;
 		}
 	}
 
+	/**
+	 * Permet de supprimer les vues.
+	 */
 	public void removeAllViews(){
 		isStarted = false;
+		handler.removeCallbacksAndMessages(runnable);
 		if (thePopup != null) {
 			theService.removeView(thePopup);
 			thePopup = null;
@@ -133,6 +152,10 @@ public class PopupCtrl
 	public void start(){
 		isStarted = true;
 		handler.post(runnable);
+	}
+	
+	public void stop(){
+		
 	}
 
 	class PopupRunnable implements Runnable{

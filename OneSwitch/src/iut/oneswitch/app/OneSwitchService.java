@@ -31,6 +31,11 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+/**
+ * Service du projet OneSwitch
+ * @author OneSwitch B
+ *
+ */
 public class OneSwitchService extends Service implements SensorEventListener{
 	private ClickPanelCtrl clickCtrl;
 	private HorizontalLineCtrl horizCtrl;
@@ -81,6 +86,9 @@ public class OneSwitchService extends Service implements SensorEventListener{
 		}
 	}
 
+	/**
+	 * Permet d'initialiser le service
+	 */
 	private void init(){
 		if(sp.getBoolean("vocal", false)) {
 			SpeakAText.speak(getApplicationContext(), "Synthèse vocale initialisée");
@@ -118,7 +126,9 @@ public class OneSwitchService extends Service implements SensorEventListener{
 
 	//-------------- ACTIONS SUR LE SERVICE ------------------------
 
-	//Stop le service
+	/**
+	 * Permet de stopper le sevice
+	 */
 	public void stopService(){
 		if (isStarted){
 			if(windowManager != null){
@@ -133,7 +143,9 @@ public class OneSwitchService extends Service implements SensorEventListener{
 		}
 	}
 
-	//Met le service en pause
+	/**
+	 * Permet de mettre en pause le service
+	 */
 	private void pauseService(){
 		if(clickCtrl!=null){
 			clickCtrl.stopAll();
@@ -141,7 +153,9 @@ public class OneSwitchService extends Service implements SensorEventListener{
 		}
 	}
 
-	//Relance le service en pause
+	/**
+	 * Permet de relancer le service.
+	 */
 	private void resumeService(){
 		if(paused){
 			horizCtrl = new HorizontalLineCtrl(service);
@@ -151,12 +165,19 @@ public class OneSwitchService extends Service implements SensorEventListener{
 		}
 	}
 
-	//Ajoute une vue
+	/**
+	 * Permet d'ajouter une vue
+	 * @param paramView les paramètres de la vue
+	 * @param paramLayoutParams
+	 */
 	public void addView(View paramView, WindowManager.LayoutParams paramLayoutParams){
 		if (windowManager != null) windowManager.addView(paramView, paramLayoutParams);
 	}
 
-	//Supprime une vue
+	/**
+	 * Permet de supprimer une vue
+	 * @param paramView la vue à supprimer
+	 */
 	public void removeView(View paramView){
 		try{
 			if(paramView != null && windowManager!=null)
@@ -164,7 +185,11 @@ public class OneSwitchService extends Service implements SensorEventListener{
 		}catch(RuntimeException e){}
 	}
 
-	//Met à jour une vue
+	/**
+	 * Permet de mettre à jour une vue
+	 * @param paramView
+	 * @param paramLayoutParams
+	 */
 	public void updateViewLayout(View paramView, WindowManager.LayoutParams paramLayoutParams){
 		windowManager.updateViewLayout(paramView, paramLayoutParams);
 	}
@@ -205,7 +230,9 @@ public class OneSwitchService extends Service implements SensorEventListener{
 
 	//-------------- LES BROADCAST RECEIVER ------------------------
 
-	//DETECTION DE LA ROTATION DE L'ECRAN
+	/**
+	 * Permet la détection de la rotation de l'écran
+	 */
 	public BroadcastReceiver onOrientationChanged = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent myIntent) {
@@ -225,7 +252,9 @@ public class OneSwitchService extends Service implements SensorEventListener{
 	};
 
 
-	//DETECTION DE L'ECRAN DEVEROUILLE (encore sur le lockscreen)
+	/**
+	 * Permet de détecter l'écran déverouillé.
+	 */
 	public BroadcastReceiver unlockDetector = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -241,7 +270,9 @@ public class OneSwitchService extends Service implements SensorEventListener{
 		}
 	};
 
-	//DETECTION DE L'ECRAN COMPLETEMENT DEVEROUILLE
+	/**
+	 * Permet de vérifier l'écran complètement déverouillé.
+	 */
 	public BroadcastReceiver userPresentDetector = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -258,7 +289,9 @@ public class OneSwitchService extends Service implements SensorEventListener{
 		}
 	};
 
-	//DETECTION DE L'ECRAN VERROUILLE
+	/**
+	 * Permet de détecter l'écran vérouillé
+	 */
 	public BroadcastReceiver lockDetector = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -275,8 +308,11 @@ public class OneSwitchService extends Service implements SensorEventListener{
 		}
 	};
 
-	//DETECTION D'APPELS
-	//Classe interne pour un appel
+	/**
+	 * Classe permettant de détecter un appel
+	 * @author OneSwitch B
+	 *
+	 */
 	public class MyReceiver extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -336,6 +372,11 @@ public class OneSwitchService extends Service implements SensorEventListener{
 			listeners(context,intent);
 		}
 
+		/**
+		 * Les listenners sur le nouveau panel créé pour les appels
+		 * @param context
+		 * @param intent
+		 */
 		private void listeners(final Context context, final Intent intent) {
 			//Sur un clic simple, on décroche.
 			thePanel.setOnClickListener(new View.OnClickListener(){
@@ -400,19 +441,28 @@ public class OneSwitchService extends Service implements SensorEventListener{
 
 
 	//-------------- INUTILE A PAS CHANGER ------------------------
+	/**
+	 * Arrêter l'écoute d'un broadCastReceiver.
+	 */
 	private void unregisterListener() {
 		mSensorManager.unregisterListener(this);
 	}
+	
+	/**
+	 * Enregistrer un listenner
+	 */
 	private void registerListener() {
 		mSensorManager.registerListener(this,
 				mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 				SensorManager.SENSOR_DELAY_NORMAL);
 	}
+	
+	/**
+	 * Ajout du broadcast receiver sur un appel
+	 */
 	public void bindCallReceiver(){
-		//Ajout du broadcastReceiver sur un appel
 		IntentFilter filterCall = new IntentFilter();
 		filterCall.addAction("android.intent.action.PHONE_STATE");
-		//      filterCall.addAction("android.intent.action.NEW_OUTGOING_CALL");
 		callReceive = new MyReceiver();
 		registerReceiver(callReceive, filterCall);
 	}

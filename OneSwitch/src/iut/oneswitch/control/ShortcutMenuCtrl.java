@@ -7,6 +7,11 @@ import android.os.Handler;
 import android.view.WindowManager;
 import android.widget.Button;
 
+/**
+ * Classe permettant de gèrer la popUp sur un appuie long.
+ * @author OneSwitch B
+ *
+ */
 public class ShortcutMenuCtrl{
 	private Handler handler;
 	private boolean isRunning = false;
@@ -22,6 +27,9 @@ public class ShortcutMenuCtrl{
 		init();
 	}
 
+	/**
+	 * Permet d'initialiser la popUp.
+	 */
 	private void init(){
 		float density = theService.getResources().getDisplayMetrics().density;
 		int width = 305;
@@ -47,13 +55,16 @@ public class ShortcutMenuCtrl{
 
 
 	public Button getSelected(){
-		return theShortcutMenu.getButton(selectedIndex);
+		return theShortcutMenu.getSelected();
 	}
 
 	public OneSwitchService getService(){
 		return theService;
 	}
 
+	/**
+	 * Permet de supprimer les vues.
+	 */
 	public void removeView(){
 		isRunning = false;
 		if (theShortcutMenu != null){
@@ -64,12 +75,7 @@ public class ShortcutMenuCtrl{
 
 	public void startThread(){
 		isRunning = true;
-		handler.postDelayed(runnable, 1);
-	}
-	
-	private void nextIndex(){
-		if(selectedIndex<5) selectedIndex++;
-		else selectedIndex = 0;
+		handler.postDelayed(runnable, 1000);
 	}
 
 	class PopupMenuRunnable implements Runnable{
@@ -77,7 +83,6 @@ public class ShortcutMenuCtrl{
 		public void run(){
 			try{
 				if(isRunning){
-					nextIndex();
 					theShortcutMenu.selectNext();
 					handler.postDelayed(this, 1000);
 				}

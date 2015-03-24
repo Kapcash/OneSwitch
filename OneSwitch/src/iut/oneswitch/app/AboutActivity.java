@@ -7,6 +7,11 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+/**
+ * Permettant l'affichage de l'activité A propos.
+ * @author OneSwitch B
+ *
+ */
 public class AboutActivity extends Activity {
 
 	@Override
@@ -14,7 +19,6 @@ public class AboutActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_about);
 		
-		getActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#229efb")));
 		getActionBar().setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setTitle("A propos");

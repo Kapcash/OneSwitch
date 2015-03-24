@@ -8,16 +8,26 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
 
+/**
+ * Classe permettant l'implementation du panel clickable de notre sevice.
+ */
 public class PanelView{
 	private OneSwitchService theService;
 	private View thePanel;
 	private WindowManager.LayoutParams clickParams;
 
+	/**
+	 * Constructeur de la classe
+	 * @param service
+	 */
 	public PanelView(OneSwitchService service) {
 		theService = service;
 		init();
 	}
 
+	/**
+	 * Initialise le panel
+	 */
 	private void init(){
 		thePanel = new View(theService);
 		clickParams = new WindowManager.LayoutParams(
@@ -36,19 +46,34 @@ public class PanelView{
 		theService.addView(thePanel, clickParams);
 	}
 
+	/**
+	 * Listener sur un clic normal (sur le panel)
+	 * @param listener
+	 */
 	public void setOnClickListener(OnClickListener listener){
 		thePanel.setOnClickListener(listener);
 	}
 
+	/**
+	 * Listener sur un long click (sur le panel)
+	 * @param listener
+	 */
 	public void setOnLongClickListener(OnLongClickListener listener){
 		thePanel.setOnLongClickListener(listener);
 	}
 
+	/**
+	 * change la couleur de fond du panel
+	 * @param color La nouvelle couleur
+	 */
 	public void setColor(int color){
 		thePanel.setBackgroundColor(color);
 		theService.updateViewLayout(thePanel, clickParams);
 	}
 
+	/**
+	 * Permet de supprimer le panel
+	 */
 	public void removeView(){
 		if(thePanel!=null){
 			if(theService!=null)
@@ -56,10 +81,16 @@ public class PanelView{
 		}
 	}
 
+	/**
+	 * Renvoies un évènement de click sur la vue
+	 */
 	public void performClick(){
 		thePanel.performClick();
 	}
 
+	/**
+	 * Supprimes et remet le panel
+	 */
 	public void reloadPanel(){
 		if(thePanel!=null){
 			if(theService!=null){
@@ -69,6 +100,9 @@ public class PanelView{
 		}
 	}
 
+	/**
+	 * Permet de mettre à jour le panel
+	 */
 	public void updateView(){
 		try{
 			if(thePanel != null && theService!=  null){
@@ -87,10 +121,17 @@ public class PanelView{
 		catch(RuntimeException e){}
 	}
 	
+	/**
+	 * Met à jour le panel
+	 */
 	public void updateViewLayout(){
 		theService.updateViewLayout(thePanel, clickParams);
 	}
 	
+	/**
+	 * Permet de changer la visibilité du panel
+	 * @param paramBoolean true, le panel est visible, false le panel est invisible.
+	 */
 	public void setVisible(boolean paramBoolean){
 		if (paramBoolean){
 			thePanel.setVisibility(View.VISIBLE);
@@ -100,6 +141,9 @@ public class PanelView{
 		}
 	}
 	
+	/**
+	 * Permet d'ajouter le panel au service.
+	 */
 	public void addView(){
 		theService.addView(thePanel, clickParams);
 	}

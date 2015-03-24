@@ -19,6 +19,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.PopupWindow;
 
+/**
+ * Classe permettant de dessiner la popUp sur un clic simple.
+ * @author OneSwitch B
+ *
+ */
 public class PopupView extends View{
 
 	private int iterations = 0;
@@ -30,6 +35,11 @@ public class PopupView extends View{
 	private SparseArray<ButtonGroup> btList = new SparseArray<ButtonGroup>();
 	private SharedPreferences sp;
 
+	/**
+	 * COnstructeur de la classe
+	 * @param paramContext
+	 * @param paramPopupCtrl
+	 */
 	public PopupView(Context paramContext, PopupCtrl paramPopupCtrl){
 		super(paramContext);
 		theCtrl = paramPopupCtrl;
@@ -37,6 +47,9 @@ public class PopupView extends View{
 		init();
 	}
 
+	/**
+	 * Initialise la popUp avec les différents boutons.
+	 */
 	private void init(){
 		popUp = new PopupWindow(getContext());
 		LayoutInflater inflater = (LayoutInflater)getContext().getSystemService
@@ -59,6 +72,9 @@ public class PopupView extends View{
 		addButton(R.id.but_popup_05);
 	}
 
+	/**
+	 * Permet de dessiner la popUp
+	 */
 	public void onDraw(Canvas canvas){
 		popUp.setContentView(view);
 		popUp.setBackgroundDrawable(getResources().getDrawable(R.drawable.popupbackground));
@@ -72,10 +88,17 @@ public class PopupView extends View{
 		prevPage();
 	}
 
+	/**
+	 * Permet d'ajouter un bouton à la popUp
+	 * @param btId l'id du nouveau bouton
+	 */
 	private void addButton(int btId){
 		btList.put(btList.size(), new ButtonGroup(btId));
 	}
 
+	/**
+	 * Méthode avec les différents listenners sur les boutons : Click, Click Long, Glisser, Autres et pages suivante.
+	 */
 	private void prevPage(){
 		//BOUTON CLIC
 		btList.get(0).setData("Clic", R.drawable.clic, R.drawable.clicblack);
@@ -115,14 +138,15 @@ public class PopupView extends View{
 			}
 		});
 
-		//BOUTON AUTRES
-		btList.get(3).setData("Autres", R.drawable.autres, R.drawable.autresblack);
+		//BOUTON ACTIONS
+		btList.get(3).setData("Actions", R.drawable.actions, R.drawable.actionsblack);
 		btList.get(3).getButton().setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v){
 				theCtrl.removeAllViews();
 				clickPanel().gestureDone();
-				theCtrl.getService().stopService();
+				clickPanel().removeTouchDetection();
+				clickPanel().openShortcutMenu();
 			}
 		});
 
@@ -140,6 +164,9 @@ public class PopupView extends View{
 			btList.get(i).setNotSelectedStyle();
 	}
 
+	/**
+	 * Méthode avec les différents listenners sur les boutons : En haut, En bas, A gauche, A droite et pages précédente.
+	 */
 	public void nextPage(){
 		//BOUTON EN HAUT
 		btList.get(0).setData("En haut", R.drawable.haut, R.drawable.hautblack);
@@ -212,6 +239,9 @@ public class PopupView extends View{
 
 	}
 
+	/**
+	 * Permet de changer d'item actuellement sélectionné.
+	 */
 	public void selectNext(){
 		if (iterations == Integer.parseInt(sp.getString("iterations","3"))){
 			clickPanel().closePopupCtrl();
@@ -256,6 +286,10 @@ public class PopupView extends View{
 		return selected.getButton();
 	}
 
+	/**
+	 * Permet d'associer un bouton avec son image, son texte.
+	 * @author OneSwitch B
+	 */
 	private class ButtonGroup {
 		private Button button;
 		private Drawable blackIcon, whiteIcon;
@@ -268,6 +302,12 @@ public class PopupView extends View{
 			return button;
 		}
 
+		/**
+		 * Permet de modifier un bouton
+		 * @param textButton Change le texte du bouton
+		 * @param idIconWhite Icone blanche (quand ce n'est pas sélectionné)
+		 * @param idIconBlack Icone noir (quand le bouton est sélectionné)
+		 */
 		public void setData(String textButton, int idIconWhite, int idIconBlack){
 			if(button!=null){
 				button.setText(textButton);
@@ -276,6 +316,10 @@ public class PopupView extends View{
 			}
 		}
 
+		/**
+		 * Modifie un bouton
+		 * @param textButton
+		 */
 		public void setData(String textButton){
 			if(button!=null){
 				button.setText(textButton);
@@ -284,12 +328,18 @@ public class PopupView extends View{
 			}
 		}
 
+		/**
+		 * Change le bouton automatiquement pour un bouton sélectionné
+		 */
 		public void setNotSelectedStyle(){
 			button.setBackground(getResources().getDrawable(R.drawable.buttonpopup));
 			button.setTextColor(Color.WHITE);
 			button.setCompoundDrawablesWithIntrinsicBounds(null, whiteIcon, null, null);
 		}
 
+		/**
+		 * Change le bouton automatiquement pour un bouton non sélectionné
+		 */
 		public void setSelectedStyle(){
 			button.setCompoundDrawablesWithIntrinsicBounds(null, blackIcon, null, null);
 			button.setBackground(getResources().getDrawable(R.drawable.buttonpopupselected));

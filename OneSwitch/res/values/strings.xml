@@ -37,5 +37,9 @@
     <string name="notif_title">One Switch Running</string>
     <string name="notif_desc">One Switch is currently running</string>
     <string name="title_activity_about">AboutActivity</string>
+    
+    <!-- Clavier -->
+    <string name="simple_ime">Simple IME</string>
+    <string name="subtype_en_FR">English (US)</string>
 
 </resources>

@@ -23,16 +23,27 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.PopupWindow;
 
+/**
+ * Classe permettant de dessiner la popUp sur un long clic..
+ * @author OneSwitch B
+ *
+ */
 public class ShortcutMenuView extends View{
 	private int iterations = 0;
 	private PopupWindow popUp;
-	private int selectedIndex = -1;
+	private ButtonGroup selected;
+	private int selectedIndex;
 	private ShortcutMenuCtrl theCtrl;
 	private View view;
 	private SparseArray<ButtonGroup> btList = new SparseArray<ButtonGroup>();
 	private Context context;
 	private SharedPreferences sp;
 
+	/**
+	 * Constructeur de la classe permettant d'initialiser la popUp Window et d'ajouter les boutons.
+	 * @param paramContext
+	 * @param paramShortcutMenuCtrl
+	 */
 	public ShortcutMenuView(Context paramContext, ShortcutMenuCtrl paramShortcutMenuCtrl){
 		super(paramContext);
 		context = paramContext;
@@ -62,10 +73,19 @@ public class ShortcutMenuView extends View{
 		addButton(R.id.but_okgoogle, R.drawable.okgoogle, R.drawable.okgoogleblack);
 	}
 
+	/**
+	 * Permet d'ajouter un bouton
+	 * @param btId
+	 * @param idIconWhite
+	 * @param idIconBlack
+	 */
 	private void addButton(int btId, int idIconWhite, int idIconBlack){
 		btList.put(btList.size(), new ButtonGroup(btId, idIconWhite, idIconBlack));
 	}
 
+	/**
+	 * Les listenners sur tout les boutons du menu.
+	 */
 	private void listener(){
 		//LISTENER MENU
 		btList.get(0).getButton().setOnClickListener(new OnClickListener(){
@@ -131,47 +151,62 @@ public class ShortcutMenuView extends View{
 		return theCtrl.getService().getClickPanelCtrl();
 	}
 	
-	public Button getButton(int index){
-		return btList.get(index).getButton();
+	
+	public Button getSelected(){
+		return selected.getButton();
 	}
 
+	/**
+	 * Permet de dessiner la popUp
+	 */
 	public void onDraw(Canvas canvas){
 		popUp.setContentView(view);
 		popUp.setBackgroundDrawable(getResources().getDrawable(R.drawable.popupbackground));
 		popUp.showAtLocation(this, Gravity.CENTER, 0, 0);
 		popUp.update(0, 0, (canvas.getWidth()), canvas.getHeight());
 
-		for(int i=0; i<btList.size();i++)
-			btList.get(i).setNotSelectedStyle();
-		
-		//btList.get(0).setNotSelectedStyle();
-		
+		selectedIndex = btList.size()-1;
+		selected = btList.get(selectedIndex);
 		listener();
 		theCtrl.startThread();
 	}
 
+
+	/**
+	 * Permet de changer d'item actuellement sélectionné.
+	 */
 	public void selectNext(){
 		if (iterations == Integer.parseInt(sp.getString("iterations","3"))){
 			clickPanel().closeShortcutMenu();
 		}
 		else{
-			if(selectedIndex<(btList.size()-1)) selectedIndex++;
-			else selectedIndex=0;
-			
 			for(int i=0; i<btList.size();i++)
 				btList.get(i).setNotSelectedStyle();
 
-			btList.get(selectedIndex).setSelectedStyle();
+
+			int current = selectedIndex+1;
+			if(current>(btList.size()-1)) current = 0;
+
+			btList.get(current).setSelectedStyle();
+
+			if(selectedIndex<(btList.size()-1)) selectedIndex++;
+			else selectedIndex=0;
 
 			if(selectedIndex==(btList.size()-1)) iterations++;
-			
+
+			selected = btList.get(selectedIndex);
 			if(sp.getBoolean("vocal", false)) {
 				SpeakAText.speak(context, btList.get(selectedIndex).getButton().getText().toString());
 			}
 			popUp.setContentView(view);
 		}
 	}
+	
 
+	/**
+	 * Permet d'associer un bouton avec son image, son texte.
+	 * @author OneSwitch B
+	 */
 	private class ButtonGroup {
 		private Button button;
 		private Drawable blackIcon, whiteIcon;
@@ -182,16 +217,42 @@ public class ShortcutMenuView extends View{
 			blackIcon = getResources().getDrawable(idIconBlack);
 		}
 
+		public ButtonGroup(int btID) {
+			button = (Button) view.findViewById(btID);
+		}
+
 		public Button getButton(){
 			return button;
 		}
 
+		/**
+		 * Change le bouton automatiquement pour un bouton sélectionné
+		 */
 		public void setNotSelectedStyle(){
 			button.setBackground(getResources().getDrawable(R.drawable.buttonpopup));
 			button.setTextColor(Color.WHITE);
 			button.setCompoundDrawablesWithIntrinsicBounds(null, whiteIcon, null, null);
 		}
+		
+		public void setData(String textButton, int idIconWhite, int idIconBlack){
+			if(button!=null){
+				button.setText(textButton);
+				whiteIcon = getResources().getDrawable(idIconWhite);
+				blackIcon = getResources().getDrawable(idIconBlack);
+			}
+		}
 
+		public void setData(String textButton){
+			if(button!=null){
+				button.setText(textButton);
+				whiteIcon = null;
+				blackIcon = null;
+			}
+		}
+
+		/**
+		 * Change le bouton automatiquement pour un bouton non sélectionné
+		 */
 		public void setSelectedStyle(){
 			button.setCompoundDrawablesWithIntrinsicBounds(null, blackIcon, null, null);
 			button.setBackground(getResources().getDrawable(R.drawable.buttonpopupselected));

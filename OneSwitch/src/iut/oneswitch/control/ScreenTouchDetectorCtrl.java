@@ -1,7 +1,6 @@
 package iut.oneswitch.control;
 
 import iut.oneswitch.app.OneSwitchService;
-import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -11,6 +10,11 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 
+/**
+ * Permet de s'assurer que le clic est bien simulé sur la tablette.
+ * @author OneSwitch B
+ *
+ */
 public class ScreenTouchDetectorCtrl{
 	private OneSwitchService theService;
 	private LinearLayout touchLayout;
@@ -18,12 +22,19 @@ public class ScreenTouchDetectorCtrl{
 	private WindowManager.LayoutParams panelBas,panelHaut;
 	private View haut, bas;
 
+	/**
+	 * Constructeur de la classe.
+	 * @param service
+	 */
 	public ScreenTouchDetectorCtrl(OneSwitchService service){
 		theService = service;
 		init();
 		listener();
 	}
 
+	/**
+	 * Permet d'initialiser le panel.
+	 */
 	private void init(){
 		touchLayout = new LinearLayout(theService);
 		avoidStatusBar = new View(theService);
@@ -89,6 +100,9 @@ public class ScreenTouchDetectorCtrl{
 		theService.addView(avoidStatusBar, paramStatusBar);
 	}
 
+	/**
+	 * Listenner sur le panel
+	 */
 	private void listener(){
 		touchLayout.setOnTouchListener(new View.OnTouchListener(){
 			@Override
@@ -112,6 +126,11 @@ public class ScreenTouchDetectorCtrl{
 		removeView();
 	}
 
+	/**
+	 * Donne les coordonnées
+	 * @param x
+	 * @param y
+	 */
 	public void giveCoord(int x, int y){
 		panelBas.y = y+2;
 		panelBas.x = 0;
@@ -127,6 +146,9 @@ public class ScreenTouchDetectorCtrl{
 		theService.updateViewLayout(bas, panelBas);
 	}
 
+	/**
+	 * Supprimes les vues
+	 */
 	public void removeView(){
 		if(touchLayout!=null){
 			touchLayout.setOnClickListener(null);

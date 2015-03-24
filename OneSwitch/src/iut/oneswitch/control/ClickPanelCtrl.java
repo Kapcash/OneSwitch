@@ -11,23 +11,41 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Toast;
 
+/**
+ * Classe permettant de gèrer les actions sur le panel.
+ * @author OneSwitch B
+ *
+ */
 public class ClickPanelCtrl{
 	private boolean forSwipe = false;
+	/**
+	 * Popup affichant les gestes (clic, clic long, glisser etc.)
+	 */
 	private PopupCtrl popupCtrl;
+	/**
+	 * Panel affichant les raccourcis (Menu, Accueil, Retour etc.)
+	 */
+	private ScreenTouchDetectorCtrl screenTouch;
 	private boolean popupVisible = false;
 	private int posX = 0;
 	private int posX2 = 0;
 	private int posY = 0;
 	private int posY2 = 0;
-	private ScreenTouchDetectorCtrl screenTouch;
 	private ShortcutMenuCtrl shortcutMenuCtrl;
 	private boolean shortcutMenuVisible = false;
+	/**
+	 * Panel invisible, au premier plan, capturant les clics
+	 */
 	private PanelView thePanel;
 	private OneSwitchService theService;
 	protected long currentClick;
 	protected long lastClick = 0;
 	private SharedPreferences sp;
 
+	/**
+	 * Constructeur de la classe
+	 * @param service
+	 */
 	public ClickPanelCtrl(OneSwitchService service){
 		theService = service;
 		sp = PreferenceManager.getDefaultSharedPreferences(theService);
@@ -39,11 +57,18 @@ public class ClickPanelCtrl{
 		return theService.getHorizontalLineCtrl();
 	}
 
+	/**
+	 * Instancie PanelView
+	 * -->Initialise le panel.
+	 */
 	private void init(){
 		thePanel = new PanelView(theService);
 		//thePanel.setColor(0xCC000000);
 	}
 
+	/**
+	 * Listenner du clic sur le panel.
+	 */
 	private void listener(){
 		thePanel.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View paramAnonymousView){
@@ -51,7 +76,9 @@ public class ClickPanelCtrl{
 				if (!shortcutMenuVisible){
 					if(ActionButton.getVolumeStop()) {
 						//PREMIER CLICK
-						SpeakAText.playSound(theService);
+						if(sp.getBoolean("vocal", false)) {
+							SpeakAText.playSound(theService);
+						}
 						currentClick = System.currentTimeMillis();
 
 						if(currentClick-lastClick<delay && lastClick != 0){
@@ -159,23 +186,35 @@ public class ClickPanelCtrl{
 		});
 	}
 
+	/**
+	 * Permet de désactiver le sreenTouch.
+	 */
 	public void closeScreenTouchDetection(){
 		if(screenTouch != null){
 			screenTouch.close();
 		}
 	}
 
+	/**
+	 * Permet de supprimer les vues.
+	 */
 	public void gestureDone(){
 		popupVisible = false;
 		removeLines();
 		removeView();
 	}
 
+	/**
+	 * Permet de supprimer le panel.
+	 */
 	public void stopAll(){
 		removeView();
 		stopMove();
 	}
 
+	/**
+	 * Permet de stoper les barres, popUP.
+	 */
 	public void stopMove(){
 		removeLines();
 		removeTouchDetection();
@@ -185,42 +224,66 @@ public class ClickPanelCtrl{
 	}
 
 
+	/**
+	 * Supprimes le screenTouch.
+	 */
 	public void removeTouchDetection(){
 		if(screenTouch!=null){
 			screenTouch.removeView();
 			screenTouch = null;
 		}
-		
+
 	}
 
+	/**
+	 * Permet de supprimer le cercle.
+	 */
 	public void removeCircle(){
 		if(forSwipe){
 			popupCtrl.removeCircle();
 		}
 	}
 
+	/**
+	 * Permet de lancer la popUp sur appuie simple.
+	 */
 	private void openPopupCtrl(){
 		popupCtrl = new PopupCtrl(theService, posX, posY);
 		popupVisible = true;
 		reloadPanel();
 	}
 
-	private void openShortcutMenu(){
+	/**
+	 * Permet de lancer la popUp sur appuie long.
+	 */
+	public void openShortcutMenu(){
 		shortcutMenuCtrl = new ShortcutMenuCtrl(theService);
 		shortcutMenuVisible = true;
 		reloadPanel();
 	}
 
+	
 	private VerticalLineCtrl verticalLine(){
 		return theService.getVerticalLineCtrl();
 	}
 
+	/**
+	 * Indique au service qu'un clic a été effectué
+	 */
 	public void clickDone(){
 		//setVisible(true);
-		thePanel.addView();
+		try{
+			thePanel.addView();
+		}
+		catch(Exception e){
+
+		}
 		removeTouchDetection();
 	}
 
+	/**
+	 * Ferme la popup de gestes
+	 */
 	public void closePopupCtrl(){
 		if(popupVisible){
 			if (popupCtrl != null) {
@@ -233,6 +296,9 @@ public class ClickPanelCtrl{
 		}
 	}
 
+	/**
+	 * Ferme la popup de raccourcis
+	 */
 	public void closeShortcutMenu(){
 		if(shortcutMenuVisible){
 			if (shortcutMenuCtrl != null) {
@@ -243,31 +309,57 @@ public class ClickPanelCtrl{
 		}
 	}
 
+	/**
+	 * Donne la position  l'intersection des lignes de pointage
+	 * @return Retourne le point formé par les lignes
+	 */
 	public Point getPos(){
 		return new Point(posX, posY);
 	}
-
+	
+	/**
+	 * Rafraichit le panel
+	 */
 	public void reloadPanel(){
 		if(thePanel!=null){
 			thePanel.reloadPanel();
 		}
 	}
 
+	/**
+	 * Supprime les lignes de pointage
+	 */
 	public void removeLines(){
 		verticalLine().stop();
 		horizLine().stop();
 	}
 
+	/**
+	 * Supprime le panel de capture du clic
+	 */
 	public void removeView(){
 		if (thePanel != null) {
 			thePanel.removeView();
 		}
 	}
 
+	/**
+	 * Indique si le service doit effectuer un glisser
+	 * @param paramBoolean "True" si l'action à effectuer est un glisser, "false" sinon
+	 */
 	public void setForSwipe(boolean paramBoolean){
 		forSwipe = paramBoolean;
+		this.removeTouchDetection();
+		try{
+			thePanel.addView();
+		}
+		catch(Exception e){}
 	}
 
+	/**
+	 * Modifie la visibilité du panel de capture du clic
+	 * @param paramBoolean "True" si le panel doit être visible et actif, "false" sinon
+	 */
 	public void setVisible(boolean paramBoolean){
 		if(thePanel!=null)
 			thePanel.setVisible(paramBoolean);

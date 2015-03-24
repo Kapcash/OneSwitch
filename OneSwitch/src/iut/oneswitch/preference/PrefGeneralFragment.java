@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
@@ -19,6 +21,11 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
 
+/**
+ * Gère toutes les préférences
+ * @author OneSwitch B
+ *
+ */
 public class PrefGeneralFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener{
 	
 	private Intent globalService;
@@ -85,6 +92,11 @@ public class PrefGeneralFragment extends PreferenceFragment implements OnSharedP
 		sw.setChecked(false);
 	}
 	
+	/**
+	 * Permet de savoir si le service est actif ou non.
+	 * @param serviceClass Le service du projet.
+	 * @return true ou false suivant que le service est actif ou non
+	 */
 	private boolean isMyServiceRunning(Class<?> serviceClass) {
 	    ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
 	    for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {

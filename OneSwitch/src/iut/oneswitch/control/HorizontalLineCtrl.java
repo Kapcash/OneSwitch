@@ -2,57 +2,106 @@ package iut.oneswitch.control;
 
 import iut.oneswitch.app.OneSwitchService;
 import iut.oneswitch.view.HorizontalLine;
+import android.animation.ObjectAnimator;
 import android.content.SharedPreferences;
-import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
-import android.os.Handler;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 
+/**
+ * Controlleur de la ligne horizontale
+ * Indique ses différents états, initialise ses paramètres, l'active ou la désactive
+ */
 public class HorizontalLineCtrl {
-	private Handler handler;
 	private WindowManager.LayoutParams horizParams;
+	/**
+	 * Indique si la ligne se déplace
+	 */
 	private boolean isMoving = false;
+	/**
+	 * Indique si la ligne se déplace vers le bas (vers la navigation bar)
+	 */
 	private boolean isMovingDown = true;
+	/**
+	 * Indique si la ligne est affichée ou non
+	 */
 	private boolean isShown = false;
+	/**
+	 * Nombre d'itérations (aller-retours) de la ligne depuis son lancement
+	 */
 	private int iterations;
+	/**
+	 * Epaisseur de la ligne, en pixel
+	 */
 	private int lineThickness;
-	private Runnable runnable;
+	
+	/**
+	 * Vitesse de déplacement de la ligne
+	 */
 	private float speed;
 	private HorizontalLine theLine;
 	private OneSwitchService theService;
 	private Point size;
-	private SharedPreferences sp;
 	private int posY = 0;
+	private SharedPreferences sp;
+	private HorizLineTask horizTask;
 
+	/**
+	 * Initialise le controlleur avec le service
+	 * @param paramOneSwitchService Le service (contexte) de l'application
+	 */
 	public HorizontalLineCtrl(OneSwitchService paramOneSwitchService){
 		theService = paramOneSwitchService;
 		init();
 	}
 
+	/**
+	 * Ajoute une iterations à la ligne, lorsqu'elle a terminé un aller-retour
+	 */
 	public void addIterations(){
 		iterations++;
 	}
 
+	/**
+	 * 
+	 * @return Retourne le nombre d'itérations actuel de la ligne
+	 */
 	public int getIterations(){
 		return iterations;
 	}
 
+	/**
+	 * 
+	 * @return Retourne l'épaisseur de la ligne
+	 */
 	public int getThickness(){
 		return lineThickness;
 	}
 
+	/**
+	 * 
+	 * @return Retourne la position horizontale de la ligne (en pixel)
+	 */
 	public int getX(){
 		return horizParams.x;
 	}
 
+	/**
+	 * 
+	 * @return Retourne la position verticale de la ligne (en pixel)
+	 */
 	public int getY(){
 		return horizParams.y;
 	}
 
+	/**
+	 * Initialise la ligne sur le coin supérieur gauche de l'écran
+	 * Lance la ligne
+	 */
 	public void init(){
 		//The object containing all preferences
 		sp = PreferenceManager.getDefaultSharedPreferences(theService);
@@ -81,62 +130,142 @@ public class HorizontalLineCtrl {
 
 		horizParams.gravity = Gravity.TOP | Gravity.START;
 		horizParams.x = 0;
-		horizParams.y = posY;
+		horizParams.y = 0;
 		horizParams.height = lineThickness;
 		horizParams.width = theService.getScreenSize().x;
 		
 		theService.addView(theLine, horizParams);
-		handler = new Handler();
-		runnable = new HorizLineRunnable();
+		
+		//runnable = new HorizLineRunnable();
 	}
 
+	/**
+	 * 
+	 * @return Retourne "true" si la ligne se déplace, "false" sinon
+	 */
 	public boolean isMoving(){
 		return isMoving;
 	}
 
+	/**
+	 * 
+	 * @return Retourne "true" si la ligne est visible
+	 */
 	public boolean isShown(){
 		return isShown;
 	}
 
+	/**
+	 * Met la ligne en pause (stop le mouvement)
+	 */
 	public void pause(){
 		isMoving = false;
 	}
-
+	
+	/**
+	 * Supprime la ligne
+	 */
 	public void removeView(){
 		if (theLine != null) {
 			theService.removeView(theLine);
 		}
 	}
 
+	/**
+	 * Lance le déplacement de la ligne
+	 */
 	protected void start(){
+		stopIteration = false;
 		isMoving = true;
 		theLine.setVisibility(View.VISIBLE);
-		handler.postDelayed(runnable, Integer.parseInt(sp.getString("Delay", "1000")));
+		horizTask = new HorizLineTask();
+		horizTask.execute();
 		iterations = 0;
 	}
 
+	/**
+	 * Arrête le déplacement de la ligne
+	 */
 	public void stop(){
+		if(isMoving && horizTask!=null)
+			horizTask.cancel(true);
 		isMoving = false;
 		theLine.setVisibility(View.INVISIBLE);
-		horizParams.x = 0;
-		horizParams.y = 0;
-		theService.updateViewLayout(theLine, horizParams);
+		restart();
 	}
 	
+	/**
+	 * Déplace la ligne en sens inverse (de bas en haut)
+	 */
 	public void setInverse() {
 		iterations = 0;
-		if(isMovingDown) isMovingDown = false;
-		else isMovingDown = true;
-		
+		isMovingDown = !isMovingDown;
 	}
-	
 
+	/**
+	 * Replace la ligne dans le coin supérieur supérieur gauche
+	 */
 	public void restart() {
 		horizParams.x = 0;
 		horizParams.y = 0;
 		theService.updateViewLayout(theLine, horizParams);
 	}
+	
+private boolean stopIteration = false;
+	
+	class HorizLineTask extends AsyncTask<Void, Void, Void>{
 
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+		}
+
+		@Override
+		protected void onProgressUpdate(Void... values){
+			super.onProgressUpdate(values);
+			if(!stopIteration){
+				theService.updateViewLayout(theLine, horizParams);
+			}
+			else{
+				stop();
+			}
+		}
+
+		@Override
+		protected Void doInBackground(Void... arg0) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e1) {}
+			while(isMoving){
+				if (getIterations()== Integer.parseInt(sp.getString("iterations","3"))){
+					this.publishProgress(arg0);
+				}
+				if((horizParams.y <= size.y)&&(isMovingDown)){
+					horizParams.y += speed;
+					
+					if(horizParams.y >= (size.y-speed))
+						isMovingDown = false;
+				}
+				else{
+					horizParams.y -= speed;
+					if(horizParams.y <= speed){
+						isMovingDown = true;
+						addIterations();
+					}
+				}
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {}
+				this.publishProgress(arg0);
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+		}
+	}
+	/*
 	class HorizLineRunnable implements Runnable{
 		public void run(){
 			try{
@@ -166,6 +295,7 @@ public class HorizontalLineCtrl {
 			}
 			catch (Exception localException) {}
 		}
-	}
+		
+	}*/
 
 }

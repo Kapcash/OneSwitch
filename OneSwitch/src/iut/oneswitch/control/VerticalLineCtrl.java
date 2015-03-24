@@ -5,28 +5,53 @@ import iut.oneswitch.view.VerticalLine;
 import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
-import android.os.Handler;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 
+/**
+ * Controlleur de la ligne verticale
+ * Indique ses différents états, initialise ses paramètres, l'active ou la désactive
+ */
 public class VerticalLineCtrl{
+	/**
+	 * Indique si la ligne se déplace
+	 */
 	private boolean isMoving = false;
+	/**
+	 * Indique si la ligne se déplace vers le bas (vers la navigation bar)
+	 */
 	private boolean isMovingRight = true;
+	/**
+	 * Indique si la ligne est affichée ou non
+	 */
 	private boolean isShown = false;
+	/**
+	 * Nombre d'itérations (aller-retours) de la ligne depuis son lancement
+	 */
 	private int iterations;
+	/**
+	 * Epaisseur de la ligne, en pixel
+	 */
 	private int lineThickness;
-	//private VerticalLineTask mTask;
-	private VerticalLineRunnable runnable;
-	private Handler handler = new Handler();
+	
+	/**
+	 * Vitesse de déplacement de la ligne
+	 */
 	private float speed;
 	private VerticalLine theLine;
 	private OneSwitchService theService;
 	private WindowManager.LayoutParams verticalParams;
 	private Point size;
 	private SharedPreferences sp;
+	private VerticalLineTask verticalTask;
 
+	/**
+	 * Initialise le controlleur avec le service
+	 * @param paramOneSwitchService Le service (contexte) de l'application
+	 */
 	public VerticalLineCtrl(OneSwitchService service){
 		theService = service;
 		init();
@@ -52,6 +77,10 @@ public class VerticalLineCtrl{
 		return verticalParams.y;
 	}
 
+	/**
+	 * Initialise la ligne
+	 * Lance la ligne
+	 */
 	public void init(){
 		//The object containing all preferences
 		sp = PreferenceManager.getDefaultSharedPreferences(theService);
@@ -85,55 +114,141 @@ public class VerticalLineCtrl{
 		verticalParams.width = lineThickness;
 
 		theService.addView(theLine, verticalParams);
-		runnable = new VerticalLineRunnable();
 	}
 
+	/**
+	 * 
+	 * @return Retourne "true" si la ligne se déplace, "false" sinon
+	 */
 	public boolean isMoving(){
 		return isMoving;
 	}
 
+	
+	/**
+	 * 
+	 * @return Retourne "true" si la ligne est visible
+	 */
 	public boolean isShown(){
 		return isShown;
 	}
 
+	/**
+	 * Met la ligne en pause (stop le mouvement)
+	 */
 	public void pause(){
 		isMoving = false;
 	}
 
+	/**
+	 * Supprime la ligne
+	 */
 	public void removeView(){
 		if (theLine != null) {
 			theService.removeView(theLine);
 		}
 	}
 
+	/**
+	 * Lance le déplacement de la ligne
+	 */
 	protected void start(){
 		isMoving = true;
+		stopIteration = false;
 		theLine.setVisibility(View.VISIBLE);
-		handler.postDelayed(runnable, Integer.parseInt(sp.getString("Delay", "1000")));
+		verticalTask = new VerticalLineTask();
+		verticalTask.execute();
 		iterations = 0;
 	}
 
+	/**
+	 * Arrête le déplacement de la ligne
+	 */
 	public void stop(){
 		isMoving = false;
-		//mTask.cancel(true);
-		theLine.setVisibility(View.INVISIBLE);
-		verticalParams.x = 0;
-		verticalParams.y = 0;
-		theService.updateViewLayout(theLine, verticalParams);
+		if(isMoving && verticalTask!=null)
+			verticalTask.cancel(true);
+		
+		if(theLine!=null)
+			theLine.setVisibility(View.INVISIBLE);
+		
+		restart();
 	}
 
+	/**
+	 * Déplace la ligne en sens inverse (de bas en haut)
+	 */
 	public void setInverse() {
 		iterations = 0;
 		if(isMovingRight) isMovingRight = false;
 		else isMovingRight = true;
 	}
 
+	/**
+	 * Replace la ligne dans le coin supérieur supérieur gauche
+	 */
 	public void restart() {
 		verticalParams.x = 0;
 		verticalParams.y = 0;
 		theService.updateViewLayout(theLine, verticalParams);
 	}
+	
+private boolean stopIteration = false;
+	
+	class VerticalLineTask extends AsyncTask<Void, Void, Void>{
 
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+		}
+
+		@Override
+		protected void onProgressUpdate(Void... values){
+			super.onProgressUpdate(values);
+			if(!stopIteration)
+				theService.updateViewLayout(theLine, verticalParams);
+			else{
+				stop();
+				theService.getHorizontalLineCtrl().restart();
+			}
+		}
+
+		@Override
+		protected Void doInBackground(Void... arg0) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e1) {}
+			while(isMoving){
+				if (getIterations()== Integer.parseInt(sp.getString("iterations","3"))){
+					stopIteration = true;
+					this.publishProgress(arg0);
+				}
+				if((verticalParams.x <= size.x)&&(isMovingRight)){
+					verticalParams.x += speed;
+					
+					if(verticalParams.x >= (size.x-speed))
+						isMovingRight = false;
+				}
+				else{
+					verticalParams.x -= speed;
+					if(verticalParams.x <= speed){
+						isMovingRight = true;
+						addIterations();
+					}
+				}
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {}
+				this.publishProgress(arg0);
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+		}
+	}
+/*
 	class VerticalLineRunnable implements Runnable {
 		@Override
 		public void run(){
@@ -163,5 +278,5 @@ public class VerticalLineCtrl{
 			}
 		}
 	}
-
+*/
 }
