@@ -11,7 +11,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputConnection;
 
-public class SimpleIME extends InputMethodService
+public class OneSwitchKeyBoard extends InputMethodService
 implements OnKeyboardActionListener{
 
 	private KeyboardView kv;

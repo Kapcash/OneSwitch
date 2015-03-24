@@ -54,7 +54,7 @@
             </intent-filter>
         </service>
         
-        <service android:name=".app.SimpleIME"
+        <service android:name=".app.OneSwitchKeyBoard"
 		    android:label="@string/simple_ime"
 		    android:permission="android.permission.BIND_INPUT_METHOD"
 		    >

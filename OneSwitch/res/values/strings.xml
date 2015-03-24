@@ -39,7 +39,7 @@
     <string name="title_activity_about">AboutActivity</string>
     
     <!-- Clavier -->
-    <string name="simple_ime">Simple IME</string>
-    <string name="subtype_en_FR">English (US)</string>
+    <string name="simple_ime">Clavier OneSwitch</string>
+    <string name="subtype_fr_FR">Français (FR)</string>
 
 </resources>

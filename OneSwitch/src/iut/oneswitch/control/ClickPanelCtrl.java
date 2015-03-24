@@ -5,10 +5,12 @@ import iut.oneswitch.action.ActionGesture;
 import iut.oneswitch.action.SpeakAText;
 import iut.oneswitch.app.OneSwitchService;
 import iut.oneswitch.view.PanelView;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 /**
@@ -41,6 +43,11 @@ public class ClickPanelCtrl{
 	protected long currentClick;
 	protected long lastClick = 0;
 	private SharedPreferences sp;
+	
+	/**
+	 * Boolean pour savoir si le clavier est présent ou non.
+	 */
+	private boolean keyboard=false;
 
 	/**
 	 * Constructeur de la classe
@@ -65,6 +72,18 @@ public class ClickPanelCtrl{
 		thePanel = new PanelView(theService);
 		//thePanel.setColor(0xCC000000);
 	}
+	
+	private boolean keyboardOpen(){
+		InputMethodManager imm = (InputMethodManager) theService.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+	    if (imm.isAcceptingText()) {
+	       keyboard=true;
+	       
+	    } else {
+	        keyboard=false;
+	    }
+	    return keyboard;
+	}
 
 	/**
 	 * Listenner du clic sur le panel.
@@ -72,6 +91,7 @@ public class ClickPanelCtrl{
 	private void listener(){
 		thePanel.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View paramAnonymousView){
+				System.out.println("gvfdbgrsgvrdgbrdgvre             "+keyboardOpen());
 				int delay = Integer.parseInt(sp.getString("reboundDelay","200"));
 				if (!shortcutMenuVisible){
 					if(ActionButton.getVolumeStop()) {

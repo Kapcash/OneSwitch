@@ -132,7 +132,7 @@ int string reboundDelay_title 0x7f050038
 int string sacha 0x7f05001d
 int string simple_ime 0x7f050027
 int string startDelay_title 0x7f050037
-int string subtype_en_FR 0x7f050028
+int string subtype_fr_FR 0x7f050028
 int string switch_auto_summary 0x7f050030
 int string switch_summary 0x7f05002e
 int string taches_button 0x7f050008
