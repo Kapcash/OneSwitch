@@ -195,9 +195,13 @@ public class ShortcutMenuView extends View{
 			if(selectedIndex==(btList.size()-1)) iterations++;
 
 			selected = btList.get(selectedIndex);
-			if(sp.getBoolean("vocal", false)) {
-				SpeakAText.speak(context, btList.get(selectedIndex).getButton().getText().toString());
+			if(sp.getBoolean("vocal", false) && btList.get(selectedIndex).getButton() == btList.get(btList.size()-1).getButton()) {
+				SpeakAText.resetSpeak(context, btList.get(selectedIndex).getButton().getText().toString().replaceAll("[^A-Za-z0-9éà\\s]", ""));
 			}
+			else if(sp.getBoolean("vocal", false)) {
+				SpeakAText.speak(context, btList.get(selectedIndex).getButton().getText().toString().replaceAll("[^A-Za-z0-9éà\\s]", ""));
+			}
+
 			popUp.setContentView(view);
 		}
 	}

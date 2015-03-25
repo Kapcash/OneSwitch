@@ -55,9 +55,19 @@ public class SpeakAText{
 			init(context, text);
 		}              
 	}
+	
+	public static void resetSpeak(Context context, final String text) {
+		if(ready){
+			ttobj.speak(text, TextToSpeech.QUEUE_ADD, null);
+		}
+		else{
+			init(context,text);
+		}
+	}
+
 
 	/**
-	 * Perme de retrouver le nom du contact qui appelle
+	 * Permet de retrouver le nom du contact qui appelle
 	 * @param context
 	 * @param number le numéro du téléphone
 	 * @return le nom de la personne qui appelle.

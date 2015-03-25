@@ -273,9 +273,13 @@ public class PopupView extends View{
 			if(selectedIndex==(btList.size()-1)) iterations++;
 			
 			selected = btList.get(selectedIndex);
-			if(sp.getBoolean("vocal", false)) {
-				SpeakAText.speak(theCtrl.getService(), btList.get(selectedIndex).getButton().getText().toString().replaceAll("[^A-Za-z0-9éà ]", ""));
+			if(sp.getBoolean("vocal", false) && btList.get(selectedIndex).getButton() == btList.get(btList.size()-1).getButton()) {
+				SpeakAText.resetSpeak(theCtrl.getService(), btList.get(selectedIndex).getButton().getText().toString().replaceAll("[^A-Za-z0-9éà\\s]", ""));
 			}
+			else if(sp.getBoolean("vocal", false)) {
+				SpeakAText.speak(theCtrl.getService(), btList.get(selectedIndex).getButton().getText().toString().replaceAll("[^A-Za-z0-9éà\\s ]", ""));
+			}
+
 			popUp.setContentView(view);
 		}
 	}

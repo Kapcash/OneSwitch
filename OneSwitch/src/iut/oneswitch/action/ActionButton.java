@@ -80,17 +80,25 @@ public class ActionButton {
 		sp = PreferenceManager.getDefaultSharedPreferences(context);
 		final int iterations = Integer.parseInt(sp.getString("iterations","3"));
 		count = 0;
+		
+		final AudioManager myAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+		boolean bool = myAudioManager.isMusicActive();
+		int s = 0;
+		if(bool)
+			s = AudioManager.STREAM_MUSIC;
+		else
+			s = AudioManager.STREAM_RING;
+		final int stream = s;
 
 		Runnable a = new Runnable() {
 
 			public void run() {
-				
-				AudioManager myAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+		
 				try {
 					if(count != iterations && !volumeStop) {
 						if(!changeWay) {
-							if(myAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC) != myAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)) {
-								myAudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC,
+							if(myAudioManager.getStreamVolume(stream) != myAudioManager.getStreamMaxVolume(stream)) {
+								myAudioManager.adjustStreamVolume(stream,
 			                        AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI);
 							}
 							else {
@@ -98,8 +106,8 @@ public class ActionButton {
 							}
 						}
 						if(changeWay && count != iterations) {
-							if(myAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC) != 0) {
-								myAudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC,
+							if(myAudioManager.getStreamVolume(stream) != 0) {
+								myAudioManager.adjustStreamVolume(stream,
 				                        AudioManager.ADJUST_LOWER, AudioManager.FLAG_SHOW_UI);
 								
 							}
@@ -124,6 +132,7 @@ public class ActionButton {
 		};
 		a.run();
 	}
+
 
 
 	/**
