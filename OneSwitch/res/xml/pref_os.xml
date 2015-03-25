@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:robobunny="http://robobunny.com">
 
     <PreferenceCategory android:title="@string/pref_header_service" >
 
@@ -24,6 +25,7 @@
     
     
     <PreferenceCategory android:title="@string/pref_header_ligns" >
+        
           <!-- Size -->
         <iut.oneswitch.preference.AutoSummaryListPreference
             android:defaultValue="5"
@@ -31,16 +33,15 @@
             android:entryValues="@array/pref_lign_size_values"
             android:key="lign_size"
             android:title="@string/lign_size_title" />
-
-        <!-- Speed -->
-        <iut.oneswitch.preference.AutoSummaryListPreference
-            android:defaultValue="4"
-            android:entries="@array/pref_lign_speed_entries"
-            android:entryValues="@array/pref_lign_speed_values"
+        
+         <iut.oneswitch.preference.SeekBarPreference
             android:key="lign_speed"
-            android:title="@string/lign_speed_title" />
-        
-        
+            android:title="@string/lign_speed_title"
+            android:summary="Adjust reading speed"
+            android:defaultValue="5"
+            robobunny:min="1"
+            android:max="10"/>
+
         <net.margaritov.preference.colorpicker.ColorPickerPreference
             alphaSlider="false"
             android:defaultValue="0xff0000ff"

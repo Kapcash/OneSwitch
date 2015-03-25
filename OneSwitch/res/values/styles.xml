@@ -17,4 +17,18 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
+    <!-- ActionBar theme pour AboutActivity -->
+    <style name="AboutTheme" parent="@android:style/Theme.Holo.Light">
+        <item name="android:actionBarStyle">@style/AboutActionBar</item>
+    </style>
+
+    <style name="AboutActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:background">#368aff</item>
+        <item name="android:titleTextStyle">@style/AboutTitleText</item>
+    </style>
+
+    <style name="AboutTitleText" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
 </resources>

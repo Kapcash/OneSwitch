@@ -2,7 +2,6 @@ package iut.oneswitch.control;
 
 import iut.oneswitch.app.OneSwitchService;
 import iut.oneswitch.view.HorizontalLine;
-import android.animation.ObjectAnimator;
 import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
@@ -112,7 +111,7 @@ public class HorizontalLineCtrl {
 		theLine.setId(200);
 		
 		//Get the speed from preferences
-		speed = Integer.parseInt(sp.getString("lign_speed","4"));
+		speed = sp.getInt("lign_speed",5);
 		speed *= theLine.getResources().getDisplayMetrics().density;
 		
 		//Get the line size from preferences
@@ -242,7 +241,7 @@ private boolean stopIteration = false;
 				}
 				if((horizParams.y <= size.y)&&(isMovingDown)){
 					horizParams.y += speed;
-					
+					//TODO Changer utilisation de la vitesse
 					if(horizParams.y >= (size.y-speed))
 						isMovingDown = false;
 				}
@@ -254,7 +253,7 @@ private boolean stopIteration = false;
 					}
 				}
 				try {
-					Thread.sleep(10);
+					Thread.sleep(10); //TODO ?
 				} catch (InterruptedException e) {}
 				this.publishProgress(arg0);
 			}

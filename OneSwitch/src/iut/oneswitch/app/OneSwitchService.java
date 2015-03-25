@@ -34,30 +34,45 @@ import android.widget.Toast;
 /**
  * Service du projet OneSwitch
  * @author OneSwitch B
- *
  */
 public class OneSwitchService extends Service implements SensorEventListener{
+	
+	private OneSwitchService service;
+	
 	private ClickPanelCtrl clickCtrl;
 	private HorizontalLineCtrl horizCtrl;
-	private boolean isStarted = false;
 	private VerticalLineCtrl verticalCtrl;
+	
+	/**
+	 * True si le service est démarré, false sinon
+	 */
+	private boolean isStarted = false;
+	/**
+	 * True si le service est mis en pause, false sinon
+	 */
+	private boolean paused = false;
 	private WindowManager windowManager;
-	private OneSwitchService service;
+	private SensorManager mSensorManager = null;
+	
+	private SharedPreferences sp;
+	
 	public static final String TAG = OneSwitchService.class.getName();
 	public static final int SCREEN_OFF_RECEIVER_DELAY = 500;
-	private boolean paused = false;
-	private SharedPreferences sp;
-
-	private SensorManager mSensorManager = null;
 
 	private static final String BCAST_CONFIGCHANGED = "android.intent.action.CONFIGURATION_CHANGED";
 
-	//Broadcast pour l'appel
+	/**
+	 * Broadcast pour détecter un appel téléphonique
+	 */
 	private BroadcastReceiver callReceive;
-	//Panel pour appel
+	/**
+	 * Panel ajouté pour détecter les clics sur l'appel
+	 */
 	private PanelView thePanel;
+	/**
+	 * True si un appel est en cours, false sinon
+	 */
 	private boolean call=false;
-
 
 	public IBinder onBind(Intent paramIntent){
 		return null;
@@ -67,7 +82,7 @@ public class OneSwitchService extends Service implements SensorEventListener{
 	public void onCreate() {
 		super.onCreate();
 		service = this;
-
+		//Récupère les valeurs de préférences
 		sp = PreferenceManager.getDefaultSharedPreferences(service);
 
 		windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
@@ -77,7 +92,8 @@ public class OneSwitchService extends Service implements SensorEventListener{
 		registerReceiver(lockDetector, new IntentFilter(Intent.ACTION_SCREEN_OFF));
 		registerReceiver(unlockDetector, new IntentFilter(Intent.ACTION_SCREEN_ON));
 		registerReceiver(userPresentDetector, new IntentFilter(Intent.ACTION_USER_PRESENT));
-
+		
+		//Initialise le service (notification, toast, booleen)
 		if(!isStarted){
 			isStarted = true;
 			Notif.getInstance(this).createRunningNotification();
@@ -100,20 +116,16 @@ public class OneSwitchService extends Service implements SensorEventListener{
 		horizCtrl = new HorizontalLineCtrl(this);
 		verticalCtrl = new VerticalLineCtrl(this);
 		clickCtrl = new ClickPanelCtrl(this);
+		
 		bindCallReceiver();
-
 	}
-
-
-
-
-
 
 	@Override
 	public void onDestroy(){
 		super.onDestroy();
 		PrefGeneralFragment.stop(); //Set the switchview to "off"
 		stopService();
+		/* --- Supprime les receiver --- */
 		unregisterReceiver(onOrientationChanged);
 		unregisterReceiver(unlockDetector);
 		unregisterReceiver(lockDetector);
@@ -149,6 +161,8 @@ public class OneSwitchService extends Service implements SensorEventListener{
 	private void pauseService(){
 		if(clickCtrl!=null){
 			clickCtrl.stopAll();
+			Notif.getInstance(this).removeRunningNotification();
+			
 			paused = true;
 		}
 	}
@@ -161,6 +175,8 @@ public class OneSwitchService extends Service implements SensorEventListener{
 			horizCtrl = new HorizontalLineCtrl(service);
 			verticalCtrl = new VerticalLineCtrl(service);
 			clickCtrl = new ClickPanelCtrl(service);
+			Notif.getInstance(this).createRunningNotification();
+			
 			paused = false;
 		}
 	}
@@ -182,7 +198,10 @@ public class OneSwitchService extends Service implements SensorEventListener{
 		try{
 			if(paramView != null && windowManager!=null)
 				windowManager.removeView(paramView);
-		}catch(RuntimeException e){}
+		}
+		catch(RuntimeException e){
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -195,7 +214,6 @@ public class OneSwitchService extends Service implements SensorEventListener{
 	}
 
 	//-------------- FIN DES ACTIONS SUR LE SERVICE ------------------------
-
 
 
 
@@ -214,6 +232,10 @@ public class OneSwitchService extends Service implements SensorEventListener{
 		return localPoint;
 	}
 
+	/**
+	 * Retourne la hauteur de la status bar (barre de notifications en haut)
+	 * @return Retourne la hauteur en pixel
+	 */
 	public int getStatusBarHeight(){
 		int i = getResources().getIdentifier("status_bar_height", "dimen", "android");
 		int j = 0;
@@ -271,7 +293,7 @@ public class OneSwitchService extends Service implements SensorEventListener{
 	};
 
 	/**
-	 * Permet de vérifier l'écran complètement déverouillé.
+	 * Permet de vérifier l'écran complètement déverouillée.
 	 */
 	public BroadcastReceiver userPresentDetector = new BroadcastReceiver() {
 		@Override
@@ -290,7 +312,7 @@ public class OneSwitchService extends Service implements SensorEventListener{
 	};
 
 	/**
-	 * Permet de détecter l'écran vérouillé
+	 * Permet de détecter l'écran vérouillée
 	 */
 	public BroadcastReceiver lockDetector = new BroadcastReceiver() {
 		@Override
@@ -329,6 +351,8 @@ public class OneSwitchService extends Service implements SensorEventListener{
 				if(sp.getBoolean("vocal", false)) {
 					String incNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
 					String contactName = SpeakAText.retrieveContact(getApplicationContext(), incNumber);
+					
+					/* --- Synthèse Vocale --- */
 					if(incNumber == null)
 						SpeakAText.speak(getApplicationContext(), "Appel entrant d'un numéro masqué");
 					else if(contactName == null)
@@ -336,6 +360,7 @@ public class OneSwitchService extends Service implements SensorEventListener{
 					else SpeakAText.speak(getApplicationContext(), "Appel entrant de "+contactName+".");
 					SpeakAText.speak(getApplicationContext(), "Clic court pour décrocher.");
 					SpeakAText.speak(getApplicationContext(), "Clic long pour refuser l'appel.");
+					/* ----------------------- */
 				}
 				for(int i=0;i<4;i++)
 					Toast.makeText(context, "Clic court : Décrocher\nClic long : Raccrocher", Toast.LENGTH_LONG).show();
@@ -350,7 +375,6 @@ public class OneSwitchService extends Service implements SensorEventListener{
 
 					clickCtrl.stopMove();
 					thePanel = new PanelView(service);
-					System.out.println("TU RENTRE DANS LE IF");
 					for(int i=0;i<4;i++)
 						Toast.makeText(context, "Clic long : Raccrocher", Toast.LENGTH_LONG).show();
 				}
@@ -365,7 +389,6 @@ public class OneSwitchService extends Service implements SensorEventListener{
 					&& intent.getStringExtra(TelephonyManager.EXTRA_STATE).equals(TelephonyManager.EXTRA_STATE_IDLE)){
 				unregisterReceiver(this);
 				thePanel.removeView();
-				System.out.println("on remove le panel");
 				bindCallReceiver();
 				call=false;
 			}
@@ -387,11 +410,10 @@ public class OneSwitchService extends Service implements SensorEventListener{
 						try {
 							Runtime.getRuntime().exec("su -c input keyevent " + KeyEvent.KEYCODE_HEADSETHOOK);
 						} catch (IOException e) {
-							// Runtime.exec(String) had an I/O problem, try to fall back
 							Intent buttonDown = new Intent(Intent.ACTION_MEDIA_BUTTON);
 							buttonDown.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_HEADSETHOOK));
 							context.sendOrderedBroadcast(buttonDown,"android.permission.CALL_PRIVILEGED");
-							// froyo and beyond trigger on buttonUp instead of buttonDown
+
 							Intent buttonUp = new Intent(Intent.ACTION_MEDIA_BUTTON);
 							buttonUp.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_HEADSETHOOK));
 							context.sendOrderedBroadcast(buttonUp,"android.permission.CALL_PRIVILEGED");
@@ -406,32 +428,34 @@ public class OneSwitchService extends Service implements SensorEventListener{
 				public boolean onLongClick(View v) {
 					//raccroche
 					try {
-						// Get the boring old TelephonyManager
 						TelephonyManager telephonyManager =
 								(TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-						// Get the getITelephony() method
+
 						Class<?> classTelephony = Class.forName(telephonyManager.getClass().getName());
 						Method methodGetITelephony = classTelephony.getDeclaredMethod("getITelephony");
-						// Ignore that the method is supposed to be private
+
 						methodGetITelephony.setAccessible(true);
-						// Invoke getITelephony() to get the ITelephony interface
+
 						Object telephonyInterface = methodGetITelephony.invoke(telephonyManager);
-						// Get the endCall method from ITelephony
+
 						Class<?> telephonyInterfaceClass =  
 								Class.forName(telephonyInterface.getClass().getName());
 						Method methodEndCall = telephonyInterfaceClass.getDeclaredMethod("endCall");
-						// Invoke endCall()
+
 						methodEndCall.invoke(telephonyInterface);
 					}
-					catch (Exception ex) { // Many things can go wrong with reflection calls
+					catch (Exception ex) {
 						return false;
 					}
 					return true;
 				}
 			});
 		}
-		// constructor
-		public MyReceiver(){}
+		
+		//Constructeur vide
+		public MyReceiver(){
+			;
+		}
 	}
 
 	//-------------- FIN DES BROADCAST RECEIVER ------------------------
@@ -440,7 +464,7 @@ public class OneSwitchService extends Service implements SensorEventListener{
 
 
 
-	//-------------- INUTILE A PAS CHANGER ------------------------
+	//-------------- A NE PAS CHANGER ------------------------
 	/**
 	 * Arrêter l'écoute d'un broadCastReceiver.
 	 */
@@ -466,6 +490,7 @@ public class OneSwitchService extends Service implements SensorEventListener{
 		callReceive = new MyReceiver();
 		registerReceiver(callReceive, filterCall);
 	}
+	
 	@Override
 	public void onSensorChanged(SensorEvent event) {}
 	@Override

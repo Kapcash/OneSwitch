@@ -15,7 +15,7 @@ public class BootUpReceiver extends BroadcastReceiver {
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		
+		//Vérifie que l'option est activée
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
 		if(sp.getBoolean("key_switch_auto", false)){
 			Intent i = new Intent(context, OneSwitchService.class);

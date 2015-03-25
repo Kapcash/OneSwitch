@@ -91,7 +91,7 @@ public class VerticalLineCtrl{
 		theLine.setId(200);
 
 		//Get the speed from preferences
-		speed = Integer.parseInt(sp.getString("lign_speed","4"));
+		speed = sp.getInt("lign_speed",5);
 		speed = speed *theLine.getResources().getDisplayMetrics().density;
 
 		//Get the line size from preferences

@@ -11,8 +11,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
@@ -22,21 +20,26 @@ import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
 
 /**
+ * Initialise la principale activité (PreferenceActivity)
  * Gère toutes les préférences
  * @author OneSwitch B
- *
  */
 public class PrefGeneralFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener{
 	
 	private Intent globalService;
 	private SharedPreferences sp;
+	/**
+	 * Switch pour lancer le service
+	 */
 	private static SwitchPreference sw;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		//Charge le .xml de la vue
 		addPreferencesFromResource(R.xml.pref_os);
 		
+		//Intent pour lancer le service OneSwitchService
 		globalService = new Intent(getActivity(), OneSwitchService.class);
 		sp = getPreferenceManager().getSharedPreferences();
 		
@@ -44,7 +47,8 @@ public class PrefGeneralFragment extends PreferenceFragment implements OnSharedP
 	    sw.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 	        @Override
 	        public boolean onPreferenceChange(Preference preference, Object newValue) {
-	            if(newValue.equals(true)){
+	            //Lance le service quand le switch est sur "Oui", le stop sinon
+	        	if(newValue.equals(true)){
 	            	getActivity().startService(globalService);
 	            }
 	            else{
@@ -54,10 +58,12 @@ public class PrefGeneralFragment extends PreferenceFragment implements OnSharedP
 	        }
 	    });
 	    
+	    //Preference de remise à zéro
 	    Preference reset = (Preference) findPreference("reset");
 	    reset.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
+				//Remet les valeurs par défaut
 				PrefGeneralFragment.this.reloadPref();
 				return true;
 			}
@@ -67,6 +73,7 @@ public class PrefGeneralFragment extends PreferenceFragment implements OnSharedP
 	    about.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
+				//Ouvre l'activité "A propos"
 				Intent intent = new Intent(PrefGeneralFragment.this.getActivity(),AboutActivity.class);
 				PrefGeneralFragment.this.getActivity().startActivity(intent);
 				return false;
@@ -78,7 +85,7 @@ public class PrefGeneralFragment extends PreferenceFragment implements OnSharedP
 	public void onResume() {
 		super.onResume();
 		if(sw != null){
-			//Check is the service is currently running and update the switch
+			//Vérifie si le service est activé et met à jour le switch sur la bonne valeur
 			if(isMyServiceRunning(OneSwitchService.class)){
 				sw.setChecked(true);
 			}
@@ -95,7 +102,7 @@ public class PrefGeneralFragment extends PreferenceFragment implements OnSharedP
 	/**
 	 * Permet de savoir si le service est actif ou non.
 	 * @param serviceClass Le service du projet.
-	 * @return true ou false suivant que le service est actif ou non
+	 * @return Retourne true si le service est actif, false sinon
 	 */
 	private boolean isMyServiceRunning(Class<?> serviceClass) {
 	    ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
@@ -111,11 +118,13 @@ public class PrefGeneralFragment extends PreferenceFragment implements OnSharedP
 	 * Remet les préférences par défaut (switch et color)
 	 */
 	private void reloadPref(){
+		//Remet les valeurs par défaut, mais ne rafraichit pas l'interface
 		Editor editor = getPreferenceScreen().getSharedPreferences().edit();
 		editor.clear();
 		editor.commit();
 		PreferenceManager.setDefaultValues(PrefGeneralFragment.this.getActivity(), R.xml.pref_os, true);
 		
+		/* --- Remet les valeurs par défaut des switch et des PickColor manuellement --- */
 		SwitchPreference switchPref = (SwitchPreference) findPreference("key_switch_auto");
 		switchPref.setChecked(false);
 		
@@ -128,6 +137,10 @@ public class PrefGeneralFragment extends PreferenceFragment implements OnSharedP
 		ColorPickerPreference colorV = (ColorPickerPreference) findPreference("color2");
 		colorV.onColorChanged(0xff00ffff);
 		
+		SeekBarPreference seek = (SeekBarPreference) findPreference ("lign_speed");
+		seek.onSetInitialValue(false, 5);
+		
+		//Indique que les valeurs ont changé
 		getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(PrefGeneralFragment.this);
 	}
 	
@@ -135,6 +148,7 @@ public class PrefGeneralFragment extends PreferenceFragment implements OnSharedP
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,String key) {
 		Preference pref = findPreference(key);
 		if (pref instanceof AutoSummaryListPreference) {
+			//Met à jour les summary des ListPreference
 	        AutoSummaryListPreference listPref = (AutoSummaryListPreference) pref;
 	        listPref.setValue(sp.getString(key,"0"));
 	    }

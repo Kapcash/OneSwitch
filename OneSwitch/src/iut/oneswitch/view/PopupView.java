@@ -26,9 +26,18 @@ import android.widget.PopupWindow;
  */
 public class PopupView extends View{
 
+	/**
+	 * Nombre d'itérations effectuées après un lancement
+	 */
 	private int iterations = 0;
+	/**
+	 * Index du bouton sélectionné
+	 */
 	private int selectedIndex = 0;
 	private PopupWindow popUp;
+	/**
+	 * ButtonGroup sélectionné
+	 */
 	private ButtonGroup selected;
 	private PopupCtrl theCtrl;
 	private View view;
@@ -165,7 +174,8 @@ public class PopupView extends View{
 	}
 
 	/**
-	 * Méthode avec les différents listenners sur les boutons : En haut, En bas, A gauche, A droite et pages précédente.
+	 * Méthode avec les différents listeners sur les boutons :
+	 * En haut, En bas, A gauche, A droite et pages précédente.
 	 */
 	public void nextPage(){
 		//BOUTON EN HAUT
@@ -240,7 +250,7 @@ public class PopupView extends View{
 	}
 
 	/**
-	 * Permet de changer d'item actuellement sélectionné.
+	 * Permet de sélectionner le bouton suivant sur la page (pop-up).
 	 */
 	public void selectNext(){
 		if (iterations == Integer.parseInt(sp.getString("iterations","3"))){

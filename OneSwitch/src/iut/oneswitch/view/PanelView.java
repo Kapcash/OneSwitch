@@ -38,11 +38,13 @@ public class PanelView{
 				WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|
 				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
 				PixelFormat.TRANSLUCENT); 
+		
 		clickParams.gravity = Gravity.TOP | Gravity.START;
 		clickParams.x = 0;
 		clickParams.y = 0;
 		clickParams.height = theService.getScreenSize().y;
 		clickParams.width = theService.getScreenSize().x;
+		
 		theService.addView(thePanel, clickParams);
 	}
 
@@ -115,6 +117,7 @@ public class PanelView{
 						WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|
 						WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
 						PixelFormat.TRANSLUCENT); 
+				
 				theService.addView(thePanel, clickParams);
 			}
 		}
@@ -147,7 +150,5 @@ public class PanelView{
 	public void addView(){
 		theService.addView(thePanel, clickParams);
 	}
-
-
 
 }
