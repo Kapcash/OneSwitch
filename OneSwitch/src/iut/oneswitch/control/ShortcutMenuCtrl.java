@@ -2,8 +2,10 @@ package iut.oneswitch.control;
 
 import iut.oneswitch.app.OneSwitchService;
 import iut.oneswitch.view.ShortcutMenuView;
+import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.view.WindowManager;
 import android.widget.Button;
 
@@ -19,11 +21,13 @@ public class ShortcutMenuCtrl{
 	private WindowManager.LayoutParams shortcutMenuParams;
 	private OneSwitchService theService;
 	private ShortcutMenuView theShortcutMenu;
+	private SharedPreferences sp;
 	private int selectedIndex=-1;
 
 	public ShortcutMenuCtrl(OneSwitchService service){
 		theService = service;
 		isRunning = false;
+		sp = PreferenceManager.getDefaultSharedPreferences(service);
 		init();
 	}
 
@@ -84,6 +88,10 @@ public class ShortcutMenuCtrl{
 			try{
 				if(isRunning){
 					theShortcutMenu.selectNext();
+					if(sp.getBoolean("vocal",false)) {
+						handler.postDelayed(this, 1700);
+					}
+					else
 					handler.postDelayed(this, 1000);
 				}
 			}

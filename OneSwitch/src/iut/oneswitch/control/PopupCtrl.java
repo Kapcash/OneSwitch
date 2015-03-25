@@ -3,9 +3,11 @@ package iut.oneswitch.control;
 import iut.oneswitch.app.OneSwitchService;
 import iut.oneswitch.view.CircleView;
 import iut.oneswitch.view.PopupView;
+import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -29,6 +31,7 @@ public class PopupCtrl
 	private PopupRunnable runnable;
 	private PopupView thePopup;
 	private OneSwitchService theService;
+	private SharedPreferences sp;
 
 	/**
 	 * Constructeur de la classe.
@@ -40,6 +43,7 @@ public class PopupCtrl
 		posX = x;
 		posY = y;
 		theService = service;
+		sp = PreferenceManager.getDefaultSharedPreferences(service);
 		init();
 	}
 
@@ -162,7 +166,11 @@ public class PopupCtrl
 		public void run(){
 			if (isStarted){
 				thePopup.selectNext();
-				handler.postDelayed(this, 1000);
+				if(sp.getBoolean("vocal",false)) {
+					handler.postDelayed(this, 1700);
+				}
+				else
+					handler.postDelayed(this, 1000);
 			}
 		}
 	}

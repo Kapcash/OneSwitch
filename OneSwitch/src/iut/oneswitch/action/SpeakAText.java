@@ -58,7 +58,7 @@ public class SpeakAText{
 	
 	public static void resetSpeak(Context context, final String text) {
 		if(ready){
-			ttobj.speak(text, TextToSpeech.QUEUE_ADD, null);
+			ttobj.speak(text, TextToSpeech.QUEUE_FLUSH, null);
 		}
 		else{
 			init(context,text);
