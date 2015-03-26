@@ -41,7 +41,7 @@
         <Key android:codes="109" android:keyLabel="m" android:keyEdgeFlags="right"/>
     </Row>
     <Row>
-        <Key android:codes="-1" android:keyLabel="CAPS" android:keyWidth="20%p" android:keyEdgeFlags="left"/>
+        <Key android:codes="-1" android:keyLabel="MAJ" android:keyWidth="20%p" android:keyEdgeFlags="left"/>
         <Key android:codes="109" android:keyLabel="m"/>
         <Key android:codes="120" android:keyLabel="x"/>
         <Key android:codes="99" android:keyLabel="c"/>

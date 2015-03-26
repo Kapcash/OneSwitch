@@ -52,6 +52,9 @@ public class VerticalLineCtrl{
 	private VerticalLineRunnable runnable;
 	private boolean stopIteration = false;
 	private int ite;
+	private float speedKeyboard;
+	private int currentColumn = 0;
+	private boolean clavier = false;
 
 	/**
 	 * Initialise le controlleur avec le service
@@ -104,6 +107,7 @@ public class VerticalLineCtrl{
 
 		//Récupère la vitesse
 		speed = sp.getInt("lign_speed",5);
+		speedKeyboard = (theService.getScreenSize().x)/10;
 		
 		//Récupère le délai de départ de la ligne
 		delay = Integer.parseInt(sp.getString("delay","1000"));
@@ -164,13 +168,28 @@ public class VerticalLineCtrl{
 	 * Lance le déplacement de la ligne
 	 */
 	protected void start(){
+		clavier = theService.getClickPanelCtrl().getKeyboard();
+
+		if(clavier){
+			verticalParams.height = (int) (300*(theLine.getResources().getDisplayMetrics().density));
+			verticalParams.y = (int) (theService.getScreenSize().y-300*(theLine.getResources().getDisplayMetrics().density));
+			verticalParams.x = (int) (15*(theLine.getResources().getDisplayMetrics().density));
+
+		}
+		else{
+			verticalParams.height = theService.getScreenSize().y;
+			verticalParams.y = 0;
+			isMovingRight=true;
+		}
 		isMoving = true;
 		stopIteration = false;
 		theLine.setVisibility(View.VISIBLE);
 		if(speed > 4 && speed <= 7) density *= 2;
 		else if(speed > 7 && speed <= 10) density *= 3;
-		handler.postDelayed(runnable, delay);
+		currentColumn = 0;
 		iterations = 0;
+		theService.updateViewLayout(theLine, verticalParams);
+		handler.postDelayed(runnable, delay);
 	}
 
 	/**
@@ -201,6 +220,62 @@ public class VerticalLineCtrl{
 		verticalParams.y = 0;
 		theService.updateViewLayout(theLine, verticalParams);
 		density = theLine.getResources().getDisplayMetrics().density;
+	}
+	
+	
+
+	class VerticalLineRunnable implements Runnable {
+		@Override
+		public void run(){
+			try{
+				if(getIterations() == ite){
+					stop();
+					theService.getHorizontalLineCtrl().stop();
+				}
+				if(isMoving){
+					if((verticalParams.x <= size.x)&&(isMovingRight)){
+						if(!clavier)
+							verticalParams.x += density;
+						else{
+							if(currentColumn<9){
+								verticalParams.x += speedKeyboard;
+								currentColumn++;
+							}else{
+								isMovingRight = false;
+								addIterations();
+							}
+						}
+						if(verticalParams.x >= (size.x-density))
+							isMovingRight = false;
+					} 
+					else{
+						if(!clavier)
+							verticalParams.y -= density;
+						else{
+							if(currentColumn>0){
+								System.out.println("LIIINNNEEE    "+currentColumn);
+								verticalParams.x -= speedKeyboard;
+								currentColumn--;
+							}else{
+								isMovingRight = true;
+								addIterations();
+							}
+						}
+						if(verticalParams.x <= density){
+							isMovingRight = true;
+							addIterations();
+						}
+						
+
+					} 
+					theService.updateViewLayout(theLine, verticalParams);
+					if(!clavier)handler.postDelayed(this, (int) (55-(5*speed)));
+					else handler.postDelayed(this, 1000);
+				}
+			}
+			catch (Exception e) {}
+		}
+
 	}
 	
 	/*private class VerticalLineTask extends AsyncTask<Void, Void, Void>{
@@ -258,33 +333,5 @@ public class VerticalLineCtrl{
 		}
 	}*/
 
-	private class VerticalLineRunnable implements Runnable {
-		@Override
-		public void run(){
-			try{
-				if(getIterations() == ite){
-					stop();
-					theService.getHorizontalLineCtrl().stop();
-				}
-				if(isMoving){
-					if((verticalParams.x <= size.x)  && (isMovingRight)){
-						verticalParams.x += density;
-						if(verticalParams.x >= (size.x - density))
-							isMovingRight = false;
-					}
-					else{
-						verticalParams.x -= density;
-						if(verticalParams.x <= density){
-							isMovingRight = true;
-							addIterations();
-						}
-					}
-					theService.updateViewLayout(theLine, verticalParams);
-					handler.postDelayed(this, (int) (55-(5*speed)));
-				}	
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
+	
 }

@@ -42,6 +42,7 @@ public class HorizontalLineCtrl {
 	 * Vitesse de déplacement de la ligne
 	 */
 	private float speed;
+	private float speedKeyboard;
 	private HorizontalLine theLine;
 	private OneSwitchService theService;
 	private Point size;
@@ -52,6 +53,8 @@ public class HorizontalLineCtrl {
 	private int delay;
 	private boolean stopIteration = false;
 	private int ite;
+	private int currentLine=0;
+	private boolean clavier = false;
 
 	/**
 	 * Initialise le controlleur avec le service
@@ -111,7 +114,7 @@ public class HorizontalLineCtrl {
 
 		handler = new Handler();
 		runnable = new HorizLineRunnable();
-
+		
 		size = theService.getScreenSize();
 		theLine = new HorizontalLine(theService);
 		theLine.setVisibility(4);
@@ -121,7 +124,8 @@ public class HorizontalLineCtrl {
 
 
 		density = theLine.getResources().getDisplayMetrics().density;
-
+		speedKeyboard = 60;
+		speedKeyboard *= density;
 		//Récupère la vitesse
 		speed = sp.getInt("lign_speed",5);
 
@@ -184,6 +188,21 @@ public class HorizontalLineCtrl {
 	 * Lance le déplacement de la ligne
 	 */
 	protected void start(){
+		currentLine = 0;
+		clavier = theService.getClickPanelCtrl().keyboard();
+
+		if(clavier){
+			horizParams.y = (int) (theService.getScreenSize().y-30*(theLine.getResources().getDisplayMetrics().density));
+			isMovingDown=false;
+		}
+		else{
+			horizParams.y=0;
+			isMovingDown=true;
+		}
+		
+		theService.updateViewLayout(theLine, horizParams);
+
+		
 		stopIteration = false;
 		isMoving = true;
 		theLine.setVisibility(View.VISIBLE);
@@ -219,7 +238,60 @@ public class HorizontalLineCtrl {
 		theService.updateViewLayout(theLine, horizParams);
 		density = theLine.getResources().getDisplayMetrics().density;
 	}
+	
+	class HorizLineRunnable implements Runnable{
+		public void run(){
+			try{
+				if (getIterations()== ite){
+					stop();
+				}
+				if(isMoving){
+					if((horizParams.y <= size.y)&&(isMovingDown)){
+						if(!clavier)
+							horizParams.y += density;
+						else{
+							if(currentLine>0){
+								//System.out.println("LIIINNNEEE BDVKSBUVK    "+currentLine);
+								horizParams.y += speedKeyboard;
+								currentLine--;
+							}else{
+								isMovingDown = false;
+								addIterations();
+							}
+						}
+						if(horizParams.y >= (size.y-density))
+							isMovingDown = false;
+					}
+					else{
+						if(!clavier)
+							horizParams.y -= density;
+						else{
+							if(currentLine<4){
+								//System.out.println("LIIINNNEEE    "+currentLine);
+								horizParams.y -= speedKeyboard;
+								currentLine++;
+							}else{
+								isMovingDown = true;
+								addIterations();
+							}
+						}
+						if(horizParams.y <= density){
+							isMovingDown = true;
+							addIterations();
+						}
+					}
+					theService.updateViewLayout(theLine, horizParams);
+					if(!clavier)handler.postDelayed(this, (int) (55-(5*speed)));
+					else handler.postDelayed(this,1000);
+				}
+			}
 
+
+			catch (Exception localException) {}
+		}
+
+	}
+	
 	/*private class HorizLineTask extends AsyncTask<Void, Void, Void>{
 
 		@Override
@@ -275,32 +347,6 @@ public class HorizontalLineCtrl {
 	}
 	 */	
 
-	private class HorizLineRunnable implements Runnable{
-
-		public void run(){
-			try{
-				if (getIterations() == ite){
-					stop();
-				}
-				if(isMoving){
-					if((horizParams.y <= size.y)&&(isMovingDown)){
-						horizParams.y += density;
-						if(horizParams.y >= (size.y-density))
-							isMovingDown = false;
-					}
-					else{
-						horizParams.y -= density;
-						if(horizParams.y <= density){
-							isMovingDown = true;
-							addIterations();
-						}
-					}
-					theService.updateViewLayout(theLine, horizParams);
-					handler.postDelayed(this,(int) (55-(5*speed)));
-				} 
-			}
-			catch (Exception localException) {}
-		}
-	}
+	
 
 }

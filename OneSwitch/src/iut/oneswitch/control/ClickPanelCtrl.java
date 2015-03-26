@@ -5,12 +5,16 @@ import iut.oneswitch.action.ActionGesture;
 import iut.oneswitch.action.SpeakAText;
 import iut.oneswitch.app.OneSwitchService;
 import iut.oneswitch.view.PanelView;
-import android.content.Context;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+
 import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.preference.PreferenceManager;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 /**
@@ -43,7 +47,7 @@ public class ClickPanelCtrl{
 	protected long currentClick;
 	protected long lastClick = 0;
 	private SharedPreferences sp;
-	
+
 	/**
 	 * Boolean pour savoir si le clavier est présent ou non.
 	 */
@@ -72,17 +76,37 @@ public class ClickPanelCtrl{
 		thePanel = new PanelView(theService);
 		//thePanel.setColor(0xCC000000);
 	}
-	
-	private boolean keyboardOpen(){
-		InputMethodManager imm = (InputMethodManager) theService.getSystemService(Context.INPUT_METHOD_SERVICE);
 
-	    if (imm.isAcceptingText()) {
-	       keyboard=true;
-	       
-	    } else {
-	        keyboard=false;
-	    }
-	    return keyboard;
+	public boolean getKeyboard(){
+		return keyboard;
+	}
+
+	public boolean keyboard(){
+		try {
+			String line;
+			Process process = Runtime.getRuntime().exec("su");
+			OutputStream stdin = process.getOutputStream();
+			InputStream stdout = process.getInputStream();
+
+			stdin.write(("dumpsys window InputMethod | grep mHasSurface\n").getBytes());
+			stdin.write("exit\n".getBytes());
+			stdin.flush();
+
+			stdin.close();
+			BufferedReader br = new BufferedReader(new InputStreamReader(stdout));
+			while ((line = br.readLine()) != null) {
+				keyboard = Boolean.parseBoolean(line.split(" ")[6].split("=")[1]);
+			}
+			br.close();
+
+
+			process.waitFor();
+
+			process.destroy();
+
+		} catch (Exception ex) {
+		}
+		return keyboard;
 	}
 
 	/**
@@ -91,7 +115,6 @@ public class ClickPanelCtrl{
 	private void listener(){
 		thePanel.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View paramAnonymousView){
-				System.out.println("gvfdbgrsgvrdgbrdgvre             "+keyboardOpen());
 				int delay = Integer.parseInt(sp.getString("reboundDelay","200"));
 				if (!shortcutMenuVisible){
 					if(ActionButton.getVolumeStop()) {
@@ -124,8 +147,17 @@ public class ClickPanelCtrl{
 							verticalLine().pause();
 							if (!forSwipe){
 								posX = verticalLine().getX();
-								openPopupCtrl();
-								screenTouch.giveCoord(posX,posY);
+								if(getKeyboard()){
+									screenTouch.giveCoord(posX,posY);
+									gestureDone();
+									ActionGesture.click(posX, posY);
+								}
+								else{
+									openPopupCtrl();
+									screenTouch.giveCoord(posX,posY);
+								}
+
+
 							}
 							else{
 								//setVisible(false);
@@ -139,7 +171,7 @@ public class ClickPanelCtrl{
 						}
 						//QUATRIEME CLICK QUAND LA POPUP EST AFFICHEE
 						else if((!horizLine().isMoving()) && (!verticalLine().isMoving()) && (popupVisible)){
-							//closePopupCtrl();
+							//closePopupCtrl(); 
 							popupCtrl.getSelected().performClick();
 						}
 					}
@@ -161,49 +193,61 @@ public class ClickPanelCtrl{
 
 		thePanel.setOnLongClickListener(new View.OnLongClickListener(){
 			public boolean onLongClick(View paramAnonymousView){
-				if(!shortcutMenuVisible && !popupVisible){
-					if ((!horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)) {
-						openShortcutMenu();
+				keyboard();
+				if(!getKeyboard()){
+					if(!shortcutMenuVisible && !popupVisible){
+						if ((!horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)) {
+							openShortcutMenu();
+						}
+						switch (Integer.parseInt(sp.getString("longPressAction","1"))) {
+						case 0:
+							//Ne fait rien
+							break;
+						case 1:
+							//Inverse lignes
+							if((horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)) {
+								horizLine().setInverse();
+							}
+							else if ((!horizLine().isMoving()) && (verticalLine().isMoving()) && (!popupVisible)) {
+								verticalLine().setInverse();
+							}
+							break;
+						case 2:
+							//Recommence au début
+							if((horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)) {
+								horizLine().restart();
+							}
+							else if ((!horizLine().isMoving()) && (verticalLine().isMoving()) && (!popupVisible)) {
+								verticalLine().restart();
+							}
+							break;
+						case 3:
+							if(!popupVisible) {
+								removeLines();
+							}
+							break;
+						default:
+							break;
+						}
 					}
-					switch (Integer.parseInt(sp.getString("longPressAction","1"))) {
-					case 0:
-						//Ne fait rien
-						break;
-					case 1:
-						//Inverse lignes
-						if((horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)) {
-							horizLine().setInverse();
-						}
-						else if ((!horizLine().isMoving()) && (verticalLine().isMoving()) && (!popupVisible)) {
-							verticalLine().setInverse();
-						}
-						break;
-					case 2:
-						//Recommence au début
-						if((horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)) {
-							horizLine().restart();
-						}
-						else if ((!horizLine().isMoving()) && (verticalLine().isMoving()) && (!popupVisible)) {
-							verticalLine().restart();
-						}
-						break;
-					case 3:
-						if(!popupVisible) {
-							removeLines();
-						}
-						break;
-					default:
-						break;
+					else if(shortcutMenuVisible){
+						closeShortcutMenu();
 					}
+					else if(popupVisible){
+						closePopupCtrl();
+					}
+
 				}
-				else if(shortcutMenuVisible){
-					closeShortcutMenu();
+				else{
+					removeLines();
+					keyboard=false;
+					ActionButton.back();
+
 				}
-				else if(popupVisible){
-					closePopupCtrl();
-				}
+
 				return true;
 			}
+
 		});
 	}
 
@@ -283,7 +327,7 @@ public class ClickPanelCtrl{
 		reloadPanel();
 	}
 
-	
+
 	private VerticalLineCtrl verticalLine(){
 		return theService.getVerticalLineCtrl();
 	}
@@ -337,7 +381,7 @@ public class ClickPanelCtrl{
 	public Point getPos(){
 		return new Point(posX, posY);
 	}
-	
+
 	/**
 	 * Rafraichit le panel
 	 */
