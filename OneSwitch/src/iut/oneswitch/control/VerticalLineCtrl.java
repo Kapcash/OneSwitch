@@ -5,7 +5,6 @@ import iut.oneswitch.view.VerticalLine;
 import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.Gravity;
@@ -48,8 +47,7 @@ public class VerticalLineCtrl{
 	private WindowManager.LayoutParams verticalParams;
 	private Point size;
 	private SharedPreferences sp;
-	//private VerticalLineTask verticalTask;
-	private int density;
+	private float density;
 	private Handler handler;
 	private VerticalLineRunnable runnable;
 	private boolean stopIteration = false;
@@ -89,11 +87,11 @@ public class VerticalLineCtrl{
 	 * Lance la ligne
 	 */
 	public void init(){
-		//The object containing all preferences
+		//Objet contenant les préférences
 		sp = PreferenceManager.getDefaultSharedPreferences(theService);
 		
-		runnable = new VerticalLineRunnable();
 		handler = new Handler();
+		runnable = new VerticalLineRunnable();
 
 		size = theService.getScreenSize();
 		theLine = new VerticalLine(theService);
@@ -102,15 +100,15 @@ public class VerticalLineCtrl{
 		
 		ite = Integer.parseInt(sp.getString("iterations","3"));
 		
-		density = (int) theLine.getResources().getDisplayMetrics().density;
+		density = theLine.getResources().getDisplayMetrics().density;
 
-		//Get the speed from preferences
+		//Récupère la vitesse
 		speed = sp.getInt("lign_speed",5);
 		
-		//Get delay from preferences
+		//Récupère le délai de départ de la ligne
 		delay = Integer.parseInt(sp.getString("delay","1000"));
 
-		//Get the line size from preferences
+		//Récupère l'épaisseur de la ligne
 		lineThickness = Integer.parseInt(sp.getString("lign_size","3"));
 		lineThickness *= density;
 
@@ -133,16 +131,13 @@ public class VerticalLineCtrl{
 	}
 
 	/**
-	 * 
 	 * @return Retourne "true" si la ligne se déplace, "false" sinon
 	 */
 	public boolean isMoving(){
 		return isMoving;
 	}
-
 	
 	/**
-	 * 
 	 * @return Retourne "true" si la ligne est visible
 	 */
 	public boolean isShown(){
@@ -172,9 +167,8 @@ public class VerticalLineCtrl{
 		isMoving = true;
 		stopIteration = false;
 		theLine.setVisibility(View.VISIBLE);
-		//verticalTask = new VerticalLineTask();
-		//verticalTask.execute();
-		density *= 2;
+		if(speed > 4 && speed <= 7) density *= 2;
+		else if(speed > 7 && speed <= 10) density *= 3;
 		handler.postDelayed(runnable, delay);
 		iterations = 0;
 	}
@@ -184,9 +178,6 @@ public class VerticalLineCtrl{
 	 */
 	public void stop(){
 		isMoving = false;
-		//if(isMoving && verticalTask!=null)
-			//verticalTask.cancel(true);
-		
 		if(theLine!=null)
 			theLine.setVisibility(View.INVISIBLE);
 		
@@ -209,6 +200,7 @@ public class VerticalLineCtrl{
 		verticalParams.x = 0;
 		verticalParams.y = 0;
 		theService.updateViewLayout(theLine, verticalParams);
+		density = theLine.getResources().getDisplayMetrics().density;
 	}
 	
 	/*private class VerticalLineTask extends AsyncTask<Void, Void, Void>{

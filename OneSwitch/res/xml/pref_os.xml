@@ -37,7 +37,6 @@
          <iut.oneswitch.preference.SeekBarPreference
             android:key="lign_speed"
             android:title="@string/lign_speed_title"
-            android:summary="Adjust reading speed"
             android:defaultValue="5"
             robobunny:min="1"
             android:max="10"/>

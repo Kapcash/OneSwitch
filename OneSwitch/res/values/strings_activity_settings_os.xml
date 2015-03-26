@@ -47,16 +47,7 @@
     <!-- Nom de la liste choissisant la vitesse des lignes -->
     <string name="lign_speed_title">Vitesse des lignes</string>
 
-    <string-array name="pref_lign_speed_entries">
-        <item>Lent</item>
-        <item>Moyen</item>
-        <item>Rapide</item>
-    </string-array>
-    <string-array name="pref_lign_speed_values">
-        <item>2</item>
-        <item>4</item>
-        <item>6</item>
-    </string-array>
+    <string name="lign_speed_summary">Vitesse entre 1 et 10</string>
 
     <!-- Nom de la liste choissisant le nombre d'itérations des lignes -->
     <string name="iterations_title">Nombres d\'itérations</string>

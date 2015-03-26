@@ -5,7 +5,6 @@ import iut.oneswitch.view.HorizontalLine;
 import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.Gravity;
@@ -38,7 +37,7 @@ public class HorizontalLineCtrl {
 	 * Epaisseur de la ligne, en pixel
 	 */
 	private int lineThickness;
-	
+
 	/**
 	 * Vitesse de déplacement de la ligne
 	 */
@@ -46,10 +45,8 @@ public class HorizontalLineCtrl {
 	private HorizontalLine theLine;
 	private OneSwitchService theService;
 	private Point size;
-	private int posY = 0;
 	private SharedPreferences sp;
-	//private HorizLineTask horizTask;
-	private int density;
+	private float density;
 	private Handler handler;
 	private HorizLineRunnable runnable;
 	private int delay;
@@ -109,30 +106,32 @@ public class HorizontalLineCtrl {
 	 * Lance la ligne
 	 */
 	public void init(){
-		//The object containing all preferences
+		//Object contenant les préférences
 		sp = PreferenceManager.getDefaultSharedPreferences(theService);
-		
+
+		handler = new Handler();
+		runnable = new HorizLineRunnable();
+
 		size = theService.getScreenSize();
 		theLine = new HorizontalLine(theService);
 		theLine.setVisibility(4);
 		theLine.setId(200);
 		
-		handler = new Handler();
-
-		density = (int) theLine.getResources().getDisplayMetrics().density;
-		
-		//Get the speed from preferences
-		speed = sp.getInt("lign_speed",5);
-		
 		ite = Integer.parseInt(sp.getString("iterations","3"));
-		
-		//Get the speed from preferences
+
+
+		density = theLine.getResources().getDisplayMetrics().density;
+
+		//Récupère la vitesse
+		speed = sp.getInt("lign_speed",5);
+
+		//Récupère le délai de départ de la ligne
 		delay = Integer.parseInt(sp.getString("delay","1000"));
-		
-		//Get the line size from preferences
+
+		//Récupère l'épaisseur de la ligne
 		lineThickness = Integer.parseInt(sp.getString("lign_size","3"));
 		lineThickness *= density;
-		
+
 		horizParams = new WindowManager.LayoutParams(
 				WindowManager.LayoutParams.MATCH_PARENT,
 				WindowManager.LayoutParams.MATCH_PARENT,
@@ -147,14 +146,11 @@ public class HorizontalLineCtrl {
 		horizParams.y = 0;
 		horizParams.height = lineThickness;
 		horizParams.width = theService.getScreenSize().x;
-		
+
 		theService.addView(theLine, horizParams);
-		
-		runnable = new HorizLineRunnable();
 	}
 
 	/**
-	 * 
 	 * @return Retourne "true" si la ligne se déplace, "false" sinon
 	 */
 	public boolean isMoving(){
@@ -162,7 +158,6 @@ public class HorizontalLineCtrl {
 	}
 
 	/**
-	 * 
 	 * @return Retourne "true" si la ligne est visible
 	 */
 	public boolean isShown(){
@@ -175,7 +170,7 @@ public class HorizontalLineCtrl {
 	public void pause(){
 		isMoving = false;
 	}
-	
+
 	/**
 	 * Supprime la ligne
 	 */
@@ -192,9 +187,8 @@ public class HorizontalLineCtrl {
 		stopIteration = false;
 		isMoving = true;
 		theLine.setVisibility(View.VISIBLE);
-		//horizTask = new HorizLineTask();
-		//horizTask.execute();
-		density *= 2;
+		if(speed > 4 && speed <= 7) density *= 2;
+		else if(speed > 7 && speed <= 10) density *= 3;
 		handler.postDelayed(runnable, delay);
 		iterations = 0;
 	}
@@ -203,13 +197,11 @@ public class HorizontalLineCtrl {
 	 * Arrête le déplacement de la ligne
 	 */
 	public void stop(){
-		//if(isMoving && horizTask!=null)
-			//horizTask.cancel(true);
 		isMoving = false;
 		theLine.setVisibility(View.INVISIBLE);
 		restart();
 	}
-	
+
 	/**
 	 * Déplace la ligne en sens inverse (de bas en haut)
 	 */
@@ -225,8 +217,9 @@ public class HorizontalLineCtrl {
 		horizParams.x = 0;
 		horizParams.y = 0;
 		theService.updateViewLayout(theLine, horizParams);
+		density = theLine.getResources().getDisplayMetrics().density;
 	}
-	
+
 	/*private class HorizLineTask extends AsyncTask<Void, Void, Void>{
 
 		@Override
@@ -280,8 +273,8 @@ public class HorizontalLineCtrl {
 		protected void onPostExecute(Void result) {
 		}
 	}
-*/	
-	
+	 */	
+
 	private class HorizLineRunnable implements Runnable{
 
 		public void run(){
