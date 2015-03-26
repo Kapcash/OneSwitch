@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.View;
@@ -41,12 +42,18 @@ public class VerticalLineCtrl{
 	 * Vitesse de déplacement de la ligne
 	 */
 	private float speed;
+	private int delay;
 	private VerticalLine theLine;
 	private OneSwitchService theService;
 	private WindowManager.LayoutParams verticalParams;
 	private Point size;
 	private SharedPreferences sp;
-	private VerticalLineTask verticalTask;
+	//private VerticalLineTask verticalTask;
+	private int density;
+	private Handler handler;
+	private VerticalLineRunnable runnable;
+	private boolean stopIteration = false;
+	private int ite;
 
 	/**
 	 * Initialise le controlleur avec le service
@@ -84,19 +91,28 @@ public class VerticalLineCtrl{
 	public void init(){
 		//The object containing all preferences
 		sp = PreferenceManager.getDefaultSharedPreferences(theService);
+		
+		runnable = new VerticalLineRunnable();
+		handler = new Handler();
 
 		size = theService.getScreenSize();
 		theLine = new VerticalLine(theService);
 		theLine.setVisibility(4);
 		theLine.setId(200);
+		
+		ite = Integer.parseInt(sp.getString("iterations","3"));
+		
+		density = (int) theLine.getResources().getDisplayMetrics().density;
 
 		//Get the speed from preferences
 		speed = sp.getInt("lign_speed",5);
-		speed = speed *theLine.getResources().getDisplayMetrics().density;
+		
+		//Get delay from preferences
+		delay = Integer.parseInt(sp.getString("delay","1000"));
 
 		//Get the line size from preferences
 		lineThickness = Integer.parseInt(sp.getString("lign_size","3"));
-		lineThickness *= theLine.getResources().getDisplayMetrics().density;
+		lineThickness *= density;
 
 		verticalParams = new WindowManager.LayoutParams(
 				WindowManager.LayoutParams.MATCH_PARENT,
@@ -156,8 +172,10 @@ public class VerticalLineCtrl{
 		isMoving = true;
 		stopIteration = false;
 		theLine.setVisibility(View.VISIBLE);
-		verticalTask = new VerticalLineTask();
-		verticalTask.execute();
+		//verticalTask = new VerticalLineTask();
+		//verticalTask.execute();
+		density *= 2;
+		handler.postDelayed(runnable, delay);
 		iterations = 0;
 	}
 
@@ -166,8 +184,8 @@ public class VerticalLineCtrl{
 	 */
 	public void stop(){
 		isMoving = false;
-		if(isMoving && verticalTask!=null)
-			verticalTask.cancel(true);
+		//if(isMoving && verticalTask!=null)
+			//verticalTask.cancel(true);
 		
 		if(theLine!=null)
 			theLine.setVisibility(View.INVISIBLE);
@@ -193,9 +211,7 @@ public class VerticalLineCtrl{
 		theService.updateViewLayout(theLine, verticalParams);
 	}
 	
-private boolean stopIteration = false;
-	
-	class VerticalLineTask extends AsyncTask<Void, Void, Void>{
+	/*private class VerticalLineTask extends AsyncTask<Void, Void, Void>{
 
 		@Override
 		protected void onPreExecute() {
@@ -224,20 +240,21 @@ private boolean stopIteration = false;
 					this.publishProgress(arg0);
 				}
 				if((verticalParams.x <= size.x)&&(isMovingRight)){
-					verticalParams.x += speed;
+					verticalParams.x += density;
 					
-					if(verticalParams.x >= (size.x-speed))
+					if(verticalParams.x >= (size.x - density))
 						isMovingRight = false;
 				}
 				else{
-					verticalParams.x -= speed;
-					if(verticalParams.x <= speed){
+					verticalParams.x -= density;
+					if(verticalParams.x <= density){
 						isMovingRight = true;
 						addIterations();
 					}
 				}
+				
 				try {
-					Thread.sleep(10);
+					Thread.sleep((int)(50/speed));
 				} catch (InterruptedException e) {}
 				this.publishProgress(arg0);
 			}
@@ -247,36 +264,35 @@ private boolean stopIteration = false;
 		@Override
 		protected void onPostExecute(Void result) {
 		}
-	}
-/*
-	class VerticalLineRunnable implements Runnable {
+	}*/
+
+	private class VerticalLineRunnable implements Runnable {
 		@Override
 		public void run(){
 			try{
-				if(getIterations() == Integer.parseInt(sp.getString("iterations","3"))){
+				if(getIterations() == ite){
 					stop();
 					theService.getHorizontalLineCtrl().stop();
 				}
 				if(isMoving){
 					if((verticalParams.x <= size.x)  && (isMovingRight)){
-						verticalParams.x += speed;
-						if(verticalParams.x >= (size.x -speed))
+						verticalParams.x += density;
+						if(verticalParams.x >= (size.x - density))
 							isMovingRight = false;
 					}
 					else{
-						verticalParams.x -= speed;
-						if(verticalParams.x <= (0+speed)){
+						verticalParams.x -= density;
+						if(verticalParams.x <= density){
 							isMovingRight = true;
 							addIterations();
 						}
 					}
 					theService.updateViewLayout(theLine, verticalParams);
-					handler.postDelayed(this, 10);
+					handler.postDelayed(this, (int) (55-(5*speed)));
 				}	
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 	}
-*/
 }

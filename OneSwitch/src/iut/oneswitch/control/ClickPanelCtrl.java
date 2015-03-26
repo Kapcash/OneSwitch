@@ -148,9 +148,10 @@ public class ClickPanelCtrl{
 					}
 				}
 				else{
-					if(shortcutMenuCtrl.getSelected()!=null)
-						shortcutMenuCtrl.getSelected().performClick();
-
+					if(shortcutMenuCtrl!= null){
+						if(shortcutMenuCtrl.getSelected()!=null)
+							shortcutMenuCtrl.getSelected().performClick();
+					}
 					closeShortcutMenu();
 				}
 			}

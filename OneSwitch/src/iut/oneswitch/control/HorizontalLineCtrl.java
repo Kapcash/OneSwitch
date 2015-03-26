@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.View;
@@ -47,7 +48,13 @@ public class HorizontalLineCtrl {
 	private Point size;
 	private int posY = 0;
 	private SharedPreferences sp;
-	private HorizLineTask horizTask;
+	//private HorizLineTask horizTask;
+	private int density;
+	private Handler handler;
+	private HorizLineRunnable runnable;
+	private int delay;
+	private boolean stopIteration = false;
+	private int ite;
 
 	/**
 	 * Initialise le controlleur avec le service
@@ -110,13 +117,21 @@ public class HorizontalLineCtrl {
 		theLine.setVisibility(4);
 		theLine.setId(200);
 		
+		handler = new Handler();
+
+		density = (int) theLine.getResources().getDisplayMetrics().density;
+		
 		//Get the speed from preferences
 		speed = sp.getInt("lign_speed",5);
-		speed *= theLine.getResources().getDisplayMetrics().density;
+		
+		ite = Integer.parseInt(sp.getString("iterations","3"));
+		
+		//Get the speed from preferences
+		delay = Integer.parseInt(sp.getString("delay","1000"));
 		
 		//Get the line size from preferences
 		lineThickness = Integer.parseInt(sp.getString("lign_size","3"));
-		lineThickness *= theLine.getResources().getDisplayMetrics().density;
+		lineThickness *= density;
 		
 		horizParams = new WindowManager.LayoutParams(
 				WindowManager.LayoutParams.MATCH_PARENT,
@@ -135,7 +150,7 @@ public class HorizontalLineCtrl {
 		
 		theService.addView(theLine, horizParams);
 		
-		//runnable = new HorizLineRunnable();
+		runnable = new HorizLineRunnable();
 	}
 
 	/**
@@ -177,8 +192,10 @@ public class HorizontalLineCtrl {
 		stopIteration = false;
 		isMoving = true;
 		theLine.setVisibility(View.VISIBLE);
-		horizTask = new HorizLineTask();
-		horizTask.execute();
+		//horizTask = new HorizLineTask();
+		//horizTask.execute();
+		density *= 2;
+		handler.postDelayed(runnable, delay);
 		iterations = 0;
 	}
 
@@ -186,8 +203,8 @@ public class HorizontalLineCtrl {
 	 * Arrête le déplacement de la ligne
 	 */
 	public void stop(){
-		if(isMoving && horizTask!=null)
-			horizTask.cancel(true);
+		//if(isMoving && horizTask!=null)
+			//horizTask.cancel(true);
 		isMoving = false;
 		theLine.setVisibility(View.INVISIBLE);
 		restart();
@@ -210,9 +227,7 @@ public class HorizontalLineCtrl {
 		theService.updateViewLayout(theLine, horizParams);
 	}
 	
-private boolean stopIteration = false;
-	
-	class HorizLineTask extends AsyncTask<Void, Void, Void>{
+	/*private class HorizLineTask extends AsyncTask<Void, Void, Void>{
 
 		@Override
 		protected void onPreExecute() {
@@ -240,21 +255,22 @@ private boolean stopIteration = false;
 					this.publishProgress(arg0);
 				}
 				if((horizParams.y <= size.y)&&(isMovingDown)){
-					horizParams.y += speed;
-					//TODO Changer utilisation de la vitesse
-					if(horizParams.y >= (size.y-speed))
+					horizParams.y += density;
+					if(horizParams.y >= (size.y-density))
 						isMovingDown = false;
 				}
 				else{
-					horizParams.y -= speed;
-					if(horizParams.y <= speed){
+					horizParams.y -= density;
+					if(horizParams.y <= density){
 						isMovingDown = true;
 						addIterations();
 					}
 				}
 				try {
-					Thread.sleep(10); //TODO ?
-				} catch (InterruptedException e) {}
+					Thread.sleep((int) (50/speed));
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				this.publishProgress(arg0);
 			}
 			return null;
@@ -264,37 +280,34 @@ private boolean stopIteration = false;
 		protected void onPostExecute(Void result) {
 		}
 	}
-	/*
-	class HorizLineRunnable implements Runnable{
+*/	
+	
+	private class HorizLineRunnable implements Runnable{
+
 		public void run(){
 			try{
-				if (getIterations()== Integer.parseInt(sp.getString("iterations","3"))){
+				if (getIterations() == ite){
 					stop();
 				}
 				if(isMoving){
 					if((horizParams.y <= size.y)&&(isMovingDown)){
-						horizParams.y += speed;
-						posY++;
-						
-						if(horizParams.y >= (size.y-speed))
+						horizParams.y += density;
+						if(horizParams.y >= (size.y-density))
 							isMovingDown = false;
 					}
 					else{
-						horizParams.y -= speed;
-						//posY--;
-						if(horizParams.y <= speed){
+						horizParams.y -= density;
+						if(horizParams.y <= density){
 							isMovingDown = true;
 							addIterations();
 						}
 					}
 					theService.updateViewLayout(theLine, horizParams);
-					handler.postDelayed(this, 10);
-				}
-				
+					handler.postDelayed(this,(int) (55-(5*speed)));
+				} 
 			}
 			catch (Exception localException) {}
 		}
-		
-	}*/
+	}
 
 }
