@@ -3,6 +3,7 @@ package iut.oneswitch.control;
 import iut.oneswitch.action.ActionButton;
 import iut.oneswitch.action.ActionGesture;
 import iut.oneswitch.action.SpeakAText;
+import iut.oneswitch.app.OneSwitchKeyBoard;
 import iut.oneswitch.app.OneSwitchService;
 import iut.oneswitch.view.PanelView;
 
@@ -11,9 +12,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 
+import android.content.ComponentName;
 import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.Toast;
 
@@ -80,8 +83,28 @@ public class ClickPanelCtrl{
 	public boolean getKeyboard(){
 		return keyboard;
 	}
+	
+	/**
+	 * Vérifie si le clavier OneSwitch est activé ou non
+	 * @return
+	 */
+	public boolean isInputMethodEnabled() {
+	    String id = Settings.Secure.getString(theService.getContentResolver(), Settings.Secure.DEFAULT_INPUT_METHOD);
 
+	    ComponentName defaultInputMethod = ComponentName.unflattenFromString(id);
+
+	    ComponentName myInputMethod = new ComponentName(theService, OneSwitchKeyBoard.class);
+
+	    return myInputMethod.equals(defaultInputMethod);
+	}
+	
+	/**
+	 * Vérifie si un clavier est ouvert ou non
+	 * @return
+	 */
 	public boolean keyboard(){
+		//Si le clavier OneSwitch n'est pas activé, on stop l'adaptation du clavier
+		if(!isInputMethodEnabled()) return false;
 		try {
 			String line;
 			Process process = Runtime.getRuntime().exec("su");

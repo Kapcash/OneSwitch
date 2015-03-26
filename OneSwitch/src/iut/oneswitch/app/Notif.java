@@ -65,13 +65,13 @@ public class Notif{
 		nBuild.setContentTitle(context.getResources().getString(R.string.notif_title));
 		nBuild.setContentText(context.getResources().getString(R.string.notif_desc));
 		
-		//Action of the notification
+		//Action de la notification
 		final Intent launchNotificationIntent = new Intent(context, OneSwitchActivity.class);
 		final PendingIntent pendingIntent = PendingIntent.getActivity(context,
 					1, launchNotificationIntent,
 					PendingIntent.FLAG_ONE_SHOT);
 		
-		//Add the notification
+		//Ajout de la notification
 		nBuild.setContentIntent(pendingIntent);
 		nManager.notify(ID_RUNNING_NOTIF, nBuild.build());
 	}

@@ -161,8 +161,6 @@ public class OneSwitchService extends Service implements SensorEventListener{
 	private void pauseService(){
 		if(clickCtrl!=null){
 			clickCtrl.stopAll();
-			Notif.getInstance(this).removeRunningNotification();
-			
 			paused = true;
 		}
 	}
@@ -175,8 +173,6 @@ public class OneSwitchService extends Service implements SensorEventListener{
 			horizCtrl = new HorizontalLineCtrl(service);
 			verticalCtrl = new VerticalLineCtrl(service);
 			clickCtrl = new ClickPanelCtrl(service);
-			Notif.getInstance(this).createRunningNotification();
-			
 			paused = false;
 		}
 	}
