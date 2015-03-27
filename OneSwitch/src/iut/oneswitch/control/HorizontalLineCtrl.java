@@ -144,6 +144,8 @@ public class HorizontalLineCtrl {
 				WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL|
 				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
 				PixelFormat.TRANSLUCENT);
+		theLine.setFocusable(false);
+		theLine.setFocusableInTouchMode(false);
 
 		horizParams.gravity = Gravity.TOP | Gravity.START;
 		horizParams.x = 0;
@@ -190,9 +192,10 @@ public class HorizontalLineCtrl {
 	protected void start(){
 		currentLine = 0;
 		clavier = theService.getClickPanelCtrl().keyboard();
+		float theDensity = theLine.getResources().getDisplayMetrics().density;
 
 		if(clavier){
-			horizParams.y = (int) (theService.getScreenSize().y-30*(theLine.getResources().getDisplayMetrics().density));
+			horizParams.y = (int) (theService.getScreenSize().y-18*theDensity);
 			isMovingDown=false;
 		}
 		else{
@@ -251,7 +254,6 @@ public class HorizontalLineCtrl {
 							horizParams.y += density;
 						else{
 							if(currentLine>0){
-								//System.out.println("LIIINNNEEE BDVKSBUVK    "+currentLine);
 								horizParams.y += speedKeyboard;
 								currentLine--;
 							}else{
@@ -267,7 +269,6 @@ public class HorizontalLineCtrl {
 							horizParams.y -= density;
 						else{
 							if(currentLine<4){
-								//System.out.println("LIIINNNEEE    "+currentLine);
 								horizParams.y -= speedKeyboard;
 								currentLine++;
 							}else{

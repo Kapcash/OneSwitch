@@ -88,7 +88,9 @@ public class ScreenTouchDetectorCtrl{
 				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
 				PixelFormat.TRANSLUCENT);
 		panelHaut.gravity = Gravity.START | Gravity.TOP; 
-		
+		bas.invalidate();
+		haut.invalidate();
+		avoidStatusBar.invalidate();
 		//avoidStatusBar.setBackgroundColor(Color.WHITE);
 		//haut.setBackgroundColor(Color.BLACK);
 		//bas.setBackgroundColor(Color.WHITE);

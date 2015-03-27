@@ -36,13 +36,13 @@ import android.widget.Toast;
  * @author OneSwitch B
  */
 public class OneSwitchService extends Service implements SensorEventListener{
-	
+
 	private OneSwitchService service;
-	
+
 	private ClickPanelCtrl clickCtrl;
 	private HorizontalLineCtrl horizCtrl;
 	private VerticalLineCtrl verticalCtrl;
-	
+
 	/**
 	 * True si le service est démarré, false sinon
 	 */
@@ -53,9 +53,9 @@ public class OneSwitchService extends Service implements SensorEventListener{
 	private boolean paused = false;
 	private WindowManager windowManager;
 	private SensorManager mSensorManager = null;
-	
+
 	private SharedPreferences sp;
-	
+
 	public static final String TAG = OneSwitchService.class.getName();
 	public static final int SCREEN_OFF_RECEIVER_DELAY = 500;
 
@@ -92,7 +92,7 @@ public class OneSwitchService extends Service implements SensorEventListener{
 		registerReceiver(lockDetector, new IntentFilter(Intent.ACTION_SCREEN_OFF));
 		registerReceiver(unlockDetector, new IntentFilter(Intent.ACTION_SCREEN_ON));
 		registerReceiver(userPresentDetector, new IntentFilter(Intent.ACTION_USER_PRESENT));
-		
+
 		//Initialise le service (notification, toast, booleen)
 		if(!isStarted){
 			isStarted = true;
@@ -116,7 +116,7 @@ public class OneSwitchService extends Service implements SensorEventListener{
 		horizCtrl = new HorizontalLineCtrl(this);
 		verticalCtrl = new VerticalLineCtrl(this);
 		clickCtrl = new ClickPanelCtrl(this);
-		
+
 		bindCallReceiver();
 	}
 
@@ -206,7 +206,10 @@ public class OneSwitchService extends Service implements SensorEventListener{
 	 * @param paramLayoutParams
 	 */
 	public void updateViewLayout(View paramView, WindowManager.LayoutParams paramLayoutParams){
-		windowManager.updateViewLayout(paramView, paramLayoutParams);
+		try{
+			windowManager.updateViewLayout(paramView, paramLayoutParams);
+		}
+		catch(Exception e){}
 	}
 
 	//-------------- FIN DES ACTIONS SUR LE SERVICE ------------------------
@@ -278,13 +281,15 @@ public class OneSwitchService extends Service implements SensorEventListener{
 		public void onReceive(Context context, Intent intent) {
 			if (!intent.getAction().equals(Intent.ACTION_SCREEN_ON))
 				return;
-			Runnable runnable = new Runnable() {
+			/*Runnable runnable = new Runnable() {
 				public void run() {
 					unregisterListener();
 					registerListener();
 				}
 			};
-			new Handler().postDelayed(runnable, SCREEN_OFF_RECEIVER_DELAY);
+			new Handler().postDelayed(runnable, SCREEN_OFF_RECEIVER_DELAY);*/
+			unregisterListener();
+			registerListener();
 		}
 	};
 
@@ -296,14 +301,17 @@ public class OneSwitchService extends Service implements SensorEventListener{
 		public void onReceive(Context context, Intent intent) {
 			if (!intent.getAction().equals(Intent.ACTION_USER_PRESENT))
 				return;
-			Runnable runnable = new Runnable() {
+			/*Runnable runnable = new Runnable() {
 				public void run() {
 					resumeService();
 					unregisterListener();
 					registerListener();
 				}
 			};
-			new Handler().postDelayed(runnable, SCREEN_OFF_RECEIVER_DELAY);
+			new Handler().postDelayed(runnable, SCREEN_OFF_RECEIVER_DELAY);*/
+			resumeService();
+			unregisterListener();
+			registerListener();
 		}
 	};
 
@@ -315,14 +323,17 @@ public class OneSwitchService extends Service implements SensorEventListener{
 		public void onReceive(Context context, Intent intent) {
 			if (!intent.getAction().equals(Intent.ACTION_SCREEN_OFF))
 				return;
-			Runnable runnable = new Runnable() {
+			/*Runnable runnable = new Runnable() {
 				public void run() {
 					pauseService();
 					unregisterListener();
 					registerListener();
 				}
 			};
-			new Handler().postDelayed(runnable, SCREEN_OFF_RECEIVER_DELAY);
+			new Handler().postDelayed(runnable, SCREEN_OFF_RECEIVER_DELAY);*/
+			pauseService();
+			unregisterListener();
+			registerListener();
 		}
 	};
 
@@ -347,7 +358,7 @@ public class OneSwitchService extends Service implements SensorEventListener{
 				if(sp.getBoolean("vocal", false)) {
 					String incNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
 					String contactName = SpeakAText.retrieveContact(getApplicationContext(), incNumber);
-					
+
 					/* --- Synthèse Vocale --- */
 					if(incNumber == null)
 						SpeakAText.speak(getApplicationContext(), "Appel entrant d'un numéro masqué");
@@ -447,7 +458,7 @@ public class OneSwitchService extends Service implements SensorEventListener{
 				}
 			});
 		}
-		
+
 		//Constructeur vide
 		public MyReceiver(){
 			;
@@ -467,7 +478,7 @@ public class OneSwitchService extends Service implements SensorEventListener{
 	private void unregisterListener() {
 		mSensorManager.unregisterListener(this);
 	}
-	
+
 	/**
 	 * Enregistrer un listenner
 	 */
@@ -476,7 +487,7 @@ public class OneSwitchService extends Service implements SensorEventListener{
 				mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 				SensorManager.SENSOR_DELAY_NORMAL);
 	}
-	
+
 	/**
 	 * Ajout du broadcast receiver sur un appel
 	 */
@@ -484,9 +495,15 @@ public class OneSwitchService extends Service implements SensorEventListener{
 		IntentFilter filterCall = new IntentFilter();
 		filterCall.addAction("android.intent.action.PHONE_STATE");
 		callReceive = new MyReceiver();
-		registerReceiver(callReceive, filterCall);
+		try{
+			registerReceiver(callReceive, filterCall);
+		}
+		catch(Exception e){
+			unregisterReceiver(callReceive);
+			registerReceiver(callReceive, filterCall);
+		}
 	}
-	
+
 	@Override
 	public void onSensorChanged(SensorEvent event) {}
 	@Override

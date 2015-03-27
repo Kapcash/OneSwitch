@@ -124,7 +124,8 @@ public class VerticalLineCtrl{
 				WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL|
 				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
 				PixelFormat.TRANSLUCENT);
-
+		theLine.setFocusable(false);
+		theLine.setFocusableInTouchMode(false);
 		verticalParams.gravity = Gravity.TOP | Gravity.START;
 		verticalParams.x = 0;
 		verticalParams.y = 0;
@@ -169,11 +170,12 @@ public class VerticalLineCtrl{
 	 */
 	protected void start(){
 		clavier = theService.getClickPanelCtrl().getKeyboard();
+		float theDensity = theLine.getResources().getDisplayMetrics().density;
 
 		if(clavier){
-			verticalParams.height = (int) (300*(theLine.getResources().getDisplayMetrics().density));
-			verticalParams.y = (int) (theService.getScreenSize().y-300*(theLine.getResources().getDisplayMetrics().density));
-			verticalParams.x = (int) (15*(theLine.getResources().getDisplayMetrics().density));
+			verticalParams.height = (int) (300*theDensity);
+			verticalParams.y = (int) (theService.getScreenSize().y-300*theDensity);
+			verticalParams.x = (int) ((size.x/20)-12*theDensity);
 
 		}
 		else{
@@ -247,19 +249,16 @@ public class VerticalLineCtrl{
 						}
 						if(verticalParams.x >= (size.x-density)){
 							isMovingRight = false;
-							System.out.println("RENTRER");
 						}
 							
 					} 
 					else{
 						if(!clavier){
 							verticalParams.x -= density;
-							System.out.println("WAAAATTTTT");
 						}
 							
 						else{
 							if(currentColumn>0){
-								System.out.println("LIIINNNEEE    "+currentColumn);
 								verticalParams.x -= speedKeyboard;
 								currentColumn--;
 							}else{

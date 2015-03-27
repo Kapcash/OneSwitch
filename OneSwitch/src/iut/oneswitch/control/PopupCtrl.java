@@ -18,8 +18,7 @@ import android.widget.Button;
  * @author OneSwitch B
  *
  */
-public class PopupCtrl
-{
+public class PopupCtrl{
 	private CircleView circle;
 	private WindowManager.LayoutParams circleParams;
 	private float density;
@@ -63,7 +62,7 @@ public class PopupCtrl
 				WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL|
 				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
 				PixelFormat.TRANSLUCENT);
-		circleParams.gravity = Gravity.TOP | Gravity.LEFT;
+		circleParams.gravity = Gravity.TOP | Gravity.START;
 		circleParams.x = (int) (this.posX-((widthCircle/largeurTrait)*density));
 		circleParams.y = (int) (this.posY-((heightCircle/largeurTrait)*density));
 		circleParams.height = (int) (density*heightCircle);
@@ -77,8 +76,7 @@ public class PopupCtrl
 				WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL|
 				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
 				PixelFormat.TRANSLUCENT);
-		popupParams.gravity = Gravity.TOP | Gravity.LEFT;
-
+		popupParams.gravity = Gravity.TOP | Gravity.START;
 		
 		//TAILLE DE LA POPUP (en DP)
 		int widthPopup = 170;
@@ -156,10 +154,6 @@ public class PopupCtrl
 	public void start(){
 		isStarted = true;
 		handler.post(runnable);
-	}
-	
-	public void stop(){
-		
 	}
 
 	class PopupRunnable implements Runnable{

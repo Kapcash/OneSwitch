@@ -15,7 +15,7 @@ import android.view.View;
  *
  */
 public class CircleView extends View{
-	
+
 	/**
 	 * Constructeur de CircleView. Nous faisons appel au constructeur de la classe View.
 	 * Pour plus d'informations sur l'affichage du cercle :
@@ -29,26 +29,29 @@ public class CircleView extends View{
 
 	@Override
 	public void onDraw(Canvas canvas) {
-		float density = getResources().getDisplayMetrics().density;
+		try{
+			float density = getResources().getDisplayMetrics().density;
+			LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		System.out.println("Drawing Popup View");
+			inflater.inflate(R.layout.popup,null);
 
-		LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			Paint paintCircle = new Paint();
+			paintCircle.setColor(Color.BLACK);
+			paintCircle.setAlpha(255);
+			paintCircle.setStrokeWidth((int)(2*density));
+			paintCircle.setStyle(Paint.Style.STROKE);
+			paintCircle.setAntiAlias(true);
 
-		inflater.inflate(R.layout.popup,null);
+			canvas.drawCircle(14*density, (canvas.getHeight()/2), 12*density, paintCircle);
+			canvas.drawCircle(14*density, (canvas.getHeight()/2), 1*density, paintCircle);
 
-		Paint paintCircle = new Paint();
-		paintCircle.setColor(Color.BLACK);
-		paintCircle.setAlpha(255);
-		paintCircle.setStrokeWidth((int)(2*density));
-		paintCircle.setStyle(Paint.Style.STROKE);
-		paintCircle.setAntiAlias(true);
-
-		canvas.drawCircle(14*density, (canvas.getHeight()/2), 12*density, paintCircle);
-		canvas.drawCircle(14*density, (canvas.getHeight()/2), 1*density, paintCircle);
-
-		paintCircle.setAlpha(64);
-		paintCircle.setStyle(Paint.Style.FILL);
-		canvas.drawCircle(14*density, (canvas.getHeight()/2), 12*density, paintCircle);
+			paintCircle.setAlpha(64);
+			paintCircle.setStyle(Paint.Style.FILL);
+			canvas.drawCircle(14*density, (canvas.getHeight()/2), 12*density, paintCircle);
+			invalidate();
+		}
+		catch(Exception e){
+			System.out.println("Erreur dans le onDraw du CircleView");
+		}
 	}
 }

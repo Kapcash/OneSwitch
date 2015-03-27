@@ -6,6 +6,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
+import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 
 /**
@@ -37,15 +38,19 @@ public class PanelView{
 				WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL|
 				WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|
 				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
-				PixelFormat.TRANSLUCENT); 
+				PixelFormat.TRANSLUCENT);
 		
 		clickParams.gravity = Gravity.TOP | Gravity.START;
 		clickParams.x = 0;
 		clickParams.y = 0;
 		clickParams.height = theService.getScreenSize().y;
 		clickParams.width = theService.getScreenSize().x;
-		
+		thePanel.invalidate();
 		theService.addView(thePanel, clickParams);
+	}
+	
+	public void forceLayout(){
+		//thePanel.invalidate();
 	}
 
 	/**
@@ -99,6 +104,7 @@ public class PanelView{
 				theService.removeView(thePanel);
 				theService.addView(thePanel, clickParams);
 			}
+			thePanel.invalidate();
 		}
 	}
 
@@ -117,7 +123,7 @@ public class PanelView{
 						WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|
 						WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
 						PixelFormat.TRANSLUCENT); 
-				
+				thePanel.invalidate();
 				theService.addView(thePanel, clickParams);
 			}
 		}
@@ -149,6 +155,10 @@ public class PanelView{
 	 */
 	public void addView(){
 		theService.addView(thePanel, clickParams);
+	}
+
+	public void setOnTouchListener(OnTouchListener listener) {
+		thePanel.setOnTouchListener(listener);
 	}
 
 }

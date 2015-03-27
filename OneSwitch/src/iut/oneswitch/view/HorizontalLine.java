@@ -31,13 +31,15 @@ public class HorizontalLine extends View {
 	/**
 	 * Méthode qui permet de dessiner la barre horizontal.
 	 */
-	public void onDraw(Canvas paramCanvas)
-	{
-		this.paint.setColor(sp.getInt("color1", 16711681));
+	public void onDraw(Canvas paramCanvas){
+		try{
+			this.paint.setColor(sp.getInt("color1", 16711681));
 
-		this.paint.setStrokeWidth(2 * paramCanvas.getHeight());
-		paramCanvas.drawLine(0.0F, 0.0F, paramCanvas.getWidth(), 0.0F, this.paint);
-		invalidate();
+			this.paint.setStrokeWidth(2 * paramCanvas.getHeight());
+			paramCanvas.drawLine(0.0F, 0.0F, paramCanvas.getWidth(), 0.0F, this.paint);
+			invalidate();
+		}
+		catch(Exception e){}
 	}
 
 

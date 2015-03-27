@@ -15,6 +15,7 @@ import java.io.OutputStream;
 import android.content.ComponentName;
 import android.content.SharedPreferences;
 import android.graphics.Point;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.view.View;
@@ -40,6 +41,7 @@ public class ClickPanelCtrl{
 	private int posX2 = 0;
 	private int posY = 0;
 	private int posY2 = 0;
+	private int delayMillis = 900;
 	private ShortcutMenuCtrl shortcutMenuCtrl;
 	private boolean shortcutMenuVisible = false;
 	/**
@@ -50,6 +52,7 @@ public class ClickPanelCtrl{
 	protected long currentClick;
 	protected long lastClick = 0;
 	private SharedPreferences sp;
+	private boolean waitingGesture=false;
 
 	/**
 	 * Boolean pour savoir si le clavier est présent ou non.
@@ -111,14 +114,21 @@ public class ClickPanelCtrl{
 			OutputStream stdin = process.getOutputStream();
 			InputStream stdout = process.getInputStream();
 
-			stdin.write(("dumpsys window InputMethod | grep mHasSurface\n").getBytes());
+			stdin.write(("dumpsys window InputMethod\n").getBytes());
 			stdin.write("exit\n".getBytes());
 			stdin.flush();
 
 			stdin.close();
 			BufferedReader br = new BufferedReader(new InputStreamReader(stdout));
 			while ((line = br.readLine()) != null) {
-				keyboard = Boolean.parseBoolean(line.split(" ")[6].split("=")[1]);
+				if(line.contains("mHasSurface=true")){
+					keyboard = true;
+					break;
+				}
+				else{
+					keyboard = false;
+				}
+				//keyboard = Boolean.parseBoolean(line.split(" ")[6].split("=")[1]);
 			}
 			br.close();
 
@@ -155,7 +165,7 @@ public class ClickPanelCtrl{
 							lastClick = currentClick;
 
 						if ((!horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)){
-							screenTouch = new ScreenTouchDetectorCtrl(theService);
+							openScreenTouchDetection();
 							horizLine().start();
 						}
 						//DEUXIEME CLICK, QUAND LA LIGNE HORIZONTALE BOUGE
@@ -177,19 +187,29 @@ public class ClickPanelCtrl{
 								}
 								else{
 									openPopupCtrl();
-									screenTouch.giveCoord(posX,posY);
+									if(screenTouch!=null)
+										screenTouch.giveCoord(posX,posY);
 								}
 
 
 							}
 							else{
 								//setVisible(false);
-								thePanel.removeView();
+								removeView();
 								posX2 = verticalLine().getX();
 								forSwipe = false;
 								popupCtrl.removeCircle();
 								removeLines();
 								ActionGesture.swipe(posX, posY, posX2, posY2);
+								Runnable r = new Runnable(){
+									@Override
+									public void run() {
+										if(waitingGesture())
+											clickDone();
+									}
+								};
+								Handler handler = new Handler();
+								handler.postDelayed(r, delayMillis);
 							}
 						}
 						//QUATRIEME CLICK QUAND LA POPUP EST AFFICHEE
@@ -274,6 +294,7 @@ public class ClickPanelCtrl{
 		});
 	}
 
+
 	/**
 	 * Permet de désactiver le sreenTouch.
 	 */
@@ -281,6 +302,8 @@ public class ClickPanelCtrl{
 		if(screenTouch != null){
 			screenTouch.close();
 		}
+		reloadPanel();
+		waitingGesture = false;
 	}
 
 	/**
@@ -291,12 +314,21 @@ public class ClickPanelCtrl{
 		removeLines();
 		removeView();
 	}
+	
+	/**
+	 * Permet de savoir si nous sommes dans l'attente d'une gesture
+	 * @return True si nous sommes dans l'attente d'une gesture
+	 */
+	public boolean waitingGesture(){
+		return waitingGesture;
+	}
 
 	/**
 	 * Permet de supprimer le panel.
 	 */
 	public void stopAll(){
 		removeView();
+		thePanel = null;
 		stopMove();
 	}
 
@@ -305,23 +337,12 @@ public class ClickPanelCtrl{
 	 */
 	public void stopMove(){
 		removeLines();
-		removeTouchDetection();
+		closeScreenTouchDetection();
 		closePopupCtrl();
 		closeShortcutMenu();
 		removeCircle();
 	}
 
-
-	/**
-	 * Supprimes le screenTouch.
-	 */
-	public void removeTouchDetection(){
-		if(screenTouch!=null){
-			screenTouch.removeView();
-			screenTouch = null;
-		}
-
-	}
 
 	/**
 	 * Permet de supprimer le cercle.
@@ -359,14 +380,14 @@ public class ClickPanelCtrl{
 	 * Indique au service qu'un clic a été effectué
 	 */
 	public void clickDone(){
-		//setVisible(true);
 		try{
 			thePanel.addView();
 		}
-		catch(Exception e){
-
+		catch(Exception e){}
+		if(screenTouch != null){
+			screenTouch.removeView();
 		}
-		removeTouchDetection();
+		waitingGesture = false;
 	}
 
 	/**
@@ -376,9 +397,9 @@ public class ClickPanelCtrl{
 		if(popupVisible){
 			if (popupCtrl != null) {
 				popupCtrl.removeAllViews();
-				popupCtrl = null;
 			}
-			removeTouchDetection();
+			closeScreenTouchDetection();
+			thePanel.reloadPanel();
 			popupVisible = false;
 			removeLines();
 		}
@@ -391,9 +412,9 @@ public class ClickPanelCtrl{
 		if(shortcutMenuVisible){
 			if (shortcutMenuCtrl != null) {
 				shortcutMenuCtrl.removeView();
-				shortcutMenuCtrl = null;
 			}
 			shortcutMenuVisible = false;
+			thePanel.reloadPanel();
 		}
 	}
 
@@ -435,13 +456,19 @@ public class ClickPanelCtrl{
 	 * Indique si le service doit effectuer un glisser
 	 * @param paramBoolean "True" si l'action à effectuer est un glisser, "false" sinon
 	 */
-	public void setForSwipe(boolean paramBoolean){
-		forSwipe = paramBoolean;
-		this.removeTouchDetection();
+	public void swipeMode(){
+		forSwipe = true;
+		//this.closeScreenTouchDetection();
 		try{
 			thePanel.addView();
+			//thePanel.reloadPanel();
 		}
 		catch(Exception e){}
+	}
+	
+	public void openScreenTouchDetection(){
+		waitingGesture = true;
+		screenTouch = new ScreenTouchDetectorCtrl(theService);
 	}
 
 	/**
@@ -451,5 +478,9 @@ public class ClickPanelCtrl{
 	public void setVisible(boolean paramBoolean){
 		if(thePanel!=null)
 			thePanel.setVisible(paramBoolean);
+	}
+	
+	public int getDelayMillis(){
+		return delayMillis;
 	}
 }

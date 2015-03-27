@@ -11,6 +11,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.SparseArray;
 import android.view.Gravity;
@@ -18,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 
 /**
  * Classe permettant de dessiner la popUp sur un clic simple.
@@ -80,21 +82,25 @@ public class PopupView extends View{
 		//AJOUT BOUTON PAGE SUIVANTE, INDEX 4
 		addButton(R.id.but_popup_05);
 	}
-
+	
 	/**
 	 * Permet de dessiner la popUp
 	 */
 	public void onDraw(Canvas canvas){
-		popUp.setContentView(view);
-		popUp.setBackgroundDrawable(getResources().getDrawable(R.drawable.popupbackground));
-		popUp.showAtLocation(this, Gravity.NO_GRAVITY, 0, 0);
-		popUp.update(0, 0,(canvas.getWidth()), canvas.getHeight());
+		try{
+			popUp.setContentView(view);
+			popUp.setBackgroundDrawable(getResources().getDrawable(R.drawable.popupbackground));
+			popUp.showAtLocation(this, Gravity.NO_GRAVITY, 0, 0);
 
-		selectedIndex = btList.size()-1;
-		selected = btList.get(selectedIndex);
-		
-		theCtrl.start();
-		prevPage();
+			popUp.update(0, 0,(canvas.getWidth()), canvas.getHeight());
+
+			selectedIndex = btList.size()-1;
+			selected = btList.get(selectedIndex);
+
+			theCtrl.start();
+			prevPage();
+		}
+		catch(Exception e){}
 	}
 
 	/**
@@ -119,6 +125,7 @@ public class PopupView extends View{
 				int x = clickPanel().getPos().x;
 				int y = clickPanel().getPos().y;
 				ActionGesture.click(x, y);
+				waitGesture();
 			}
 		});
 
@@ -127,12 +134,23 @@ public class PopupView extends View{
 		btList.get(1).getButton().setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v){
-				
+
 				theCtrl.removeAllViews();
 				clickPanel().gestureDone();
 				int x = clickPanel().getPos().x;
 				int y = clickPanel().getPos().y;
 				ActionGesture.longClick(x, y);
+				Runnable r = new Runnable(){
+					@Override
+					public void run() {
+						if(clickPanel().waitingGesture()){
+							clickPanel().clickDone();
+							Toast.makeText(theCtrl.getService(), "Erreur: Votre appareil ne supporte pas le long clic.", Toast.LENGTH_LONG).show();
+						}
+					}
+				};
+				Handler handler = new Handler();
+				handler.postDelayed(r,  clickPanel().getDelayMillis());
 			}
 		});
 
@@ -143,7 +161,8 @@ public class PopupView extends View{
 			public void onClick(View v){
 				theCtrl.closePopup();
 				clickPanel().gestureDone();
-				clickPanel().setForSwipe(true);
+				clickPanel().swipeMode();
+				waitGesture();
 			}
 		});
 
@@ -154,8 +173,9 @@ public class PopupView extends View{
 			public void onClick(View v){
 				theCtrl.removeAllViews();
 				clickPanel().gestureDone();
-				clickPanel().removeTouchDetection();
+				clickPanel().closeScreenTouchDetection();
 				clickPanel().openShortcutMenu();
+				waitGesture();
 			}
 		});
 
@@ -183,12 +203,13 @@ public class PopupView extends View{
 		btList.get(0).getButton().setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v){
-				
+
 				theCtrl.removeAllViews();
 				clickPanel().gestureDone();
 				int x = clickPanel().getPos().x;
 				int y = clickPanel().getPos().y;
 				ActionGesture.pageUp(x, y, theCtrl.getService().getScreenSize());
+				waitGesture();
 			}
 		});
 
@@ -197,12 +218,13 @@ public class PopupView extends View{
 		btList.get(1).getButton().setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v){
-				
+
 				theCtrl.removeAllViews();
 				clickPanel().gestureDone();
 				int x = clickPanel().getPos().x;
 				int y = clickPanel().getPos().y;
 				ActionGesture.pageDown(x, y, theCtrl.getService().getScreenSize());
+				waitGesture();
 			}
 		});
 
@@ -211,12 +233,13 @@ public class PopupView extends View{
 		btList.get(2).getButton().setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v){
-				
+
 				theCtrl.removeAllViews();
 				clickPanel().gestureDone();
 				int x = clickPanel().getPos().x;
 				int y = clickPanel().getPos().y;
 				ActionGesture.pageLeft(x, y, theCtrl.getService().getScreenSize());
+				waitGesture();
 			}
 		});
 
@@ -225,12 +248,13 @@ public class PopupView extends View{
 		btList.get(3).getButton().setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v){
-				
+
 				theCtrl.removeAllViews();
 				clickPanel().gestureDone();
 				int x = clickPanel().getPos().x;
 				int y = clickPanel().getPos().y;
 				ActionGesture.pageRight(x, y, theCtrl.getService().getScreenSize());
+				waitGesture();
 			}
 		});
 
@@ -260,18 +284,18 @@ public class PopupView extends View{
 		else{
 			for(int i=0; i<btList.size();i++)
 				btList.get(i).setNotSelectedStyle();
-			
+
 
 			int current = selectedIndex+1;
 			if(current>(btList.size()-1)) current = 0;
-			
+
 			btList.get(current).setSelectedStyle();
-			
+
 			if(selectedIndex<(btList.size()-1)) selectedIndex++;
 			else selectedIndex=0;
-			
+
 			if(selectedIndex==(btList.size()-1)) iterations++;
-			
+
 			selected = btList.get(selectedIndex);
 			if(sp.getBoolean("vocal", false) && btList.get(selectedIndex).getButton() == btList.get(btList.size()-1).getButton()) {
 				SpeakAText.resetSpeak(theCtrl.getService(), btList.get(selectedIndex).getButton().getText().toString().replaceAll("[^A-Za-z0-9éà\\s]", ""));
@@ -282,6 +306,21 @@ public class PopupView extends View{
 
 			popUp.setContentView(view);
 		}
+	}
+
+	/**
+	 * Runnable qui vérifie, après un délai, que le panel n'est pas bloqué
+	 */
+	private void waitGesture(){
+		Runnable r = new Runnable(){
+			@Override
+			public void run() {
+				if(clickPanel().waitingGesture())
+					clickPanel().clickDone();
+			}
+		};
+		Handler handler = new Handler();
+		handler.postDelayed(r,  clickPanel().getDelayMillis());
 	}
 
 	public ClickPanelCtrl clickPanel(){
@@ -359,5 +398,6 @@ public class PopupView extends View{
 			button.setBackground(getResources().getDrawable(R.drawable.buttonpopupselected));
 			button.setTextColor(Color.BLACK);
 		}
+
 	}
 }

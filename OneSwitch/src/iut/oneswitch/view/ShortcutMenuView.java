@@ -150,8 +150,8 @@ public class ShortcutMenuView extends View{
 	public ClickPanelCtrl clickPanel(){
 		return theCtrl.getService().getClickPanelCtrl();
 	}
-	
-	
+
+
 	public Button getSelected(){
 		return selected.getButton();
 	}
@@ -160,15 +160,19 @@ public class ShortcutMenuView extends View{
 	 * Permet de dessiner la popUp
 	 */
 	public void onDraw(Canvas canvas){
-		popUp.setContentView(view);
-		popUp.setBackgroundDrawable(getResources().getDrawable(R.drawable.popupbackground));
-		popUp.showAtLocation(this, Gravity.CENTER, 0, 0);
-		popUp.update(0, 0, (canvas.getWidth()), canvas.getHeight());
+		try{
+			popUp.setContentView(view);
+			popUp.setBackgroundDrawable(getResources().getDrawable(R.drawable.popupbackground));
+			popUp.showAtLocation(this, Gravity.CENTER, 0, 0);
 
-		selectedIndex = btList.size()-1;
-		selected = btList.get(selectedIndex);
-		listener();
-		theCtrl.startThread();
+			popUp.update(0, 0, (canvas.getWidth()), canvas.getHeight());
+
+			
+			selectedIndex = btList.size()-1;
+			selected = btList.get(selectedIndex);
+			listener();
+			theCtrl.start();
+		}catch(Exception e){}
 	}
 
 
@@ -205,7 +209,7 @@ public class ShortcutMenuView extends View{
 			popUp.setContentView(view);
 		}
 	}
-	
+
 
 	/**
 	 * Permet d'associer un bouton avec son image, son texte.
@@ -221,10 +225,6 @@ public class ShortcutMenuView extends View{
 			blackIcon = getResources().getDrawable(idIconBlack);
 		}
 
-		public ButtonGroup(int btID) {
-			button = (Button) view.findViewById(btID);
-		}
-
 		public Button getButton(){
 			return button;
 		}
@@ -236,22 +236,6 @@ public class ShortcutMenuView extends View{
 			button.setBackground(getResources().getDrawable(R.drawable.buttonpopup));
 			button.setTextColor(Color.WHITE);
 			button.setCompoundDrawablesWithIntrinsicBounds(null, whiteIcon, null, null);
-		}
-		
-		public void setData(String textButton, int idIconWhite, int idIconBlack){
-			if(button!=null){
-				button.setText(textButton);
-				whiteIcon = getResources().getDrawable(idIconWhite);
-				blackIcon = getResources().getDrawable(idIconBlack);
-			}
-		}
-
-		public void setData(String textButton){
-			if(button!=null){
-				button.setText(textButton);
-				whiteIcon = null;
-				blackIcon = null;
-			}
 		}
 
 		/**

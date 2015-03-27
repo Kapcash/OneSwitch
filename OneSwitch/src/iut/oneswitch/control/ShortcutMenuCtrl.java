@@ -16,17 +16,15 @@ import android.widget.Button;
  */
 public class ShortcutMenuCtrl{
 	private Handler handler;
-	private boolean isRunning = false;
+	private boolean isStarted = false;
 	private Runnable runnable;
 	private WindowManager.LayoutParams shortcutMenuParams;
 	private OneSwitchService theService;
 	private ShortcutMenuView theShortcutMenu;
 	private SharedPreferences sp;
-	private int selectedIndex=-1;
 
 	public ShortcutMenuCtrl(OneSwitchService service){
 		theService = service;
-		isRunning = false;
 		sp = PreferenceManager.getDefaultSharedPreferences(service);
 		init();
 	}
@@ -38,17 +36,20 @@ public class ShortcutMenuCtrl{
 		float density = theService.getResources().getDisplayMetrics().density;
 		int width = 305;
 		int height = 245;
-		
+
 		theShortcutMenu = new ShortcutMenuView(theService, this);
 		shortcutMenuParams = new WindowManager.LayoutParams(
 				WindowManager.LayoutParams.MATCH_PARENT,
 				theService.getStatusBarHeight(),
-				WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
+				WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
 				WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|
 				WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL|
 				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
 				PixelFormat.TRANSLUCENT);
-		
+
+		theShortcutMenu.setFocusable(false);
+		theShortcutMenu.setFocusableInTouchMode(false);
+
 		shortcutMenuParams.height = (int)(height*density);
 		shortcutMenuParams.width = (int)(width*density);
 		theService.addView(theShortcutMenu, shortcutMenuParams);
@@ -59,45 +60,50 @@ public class ShortcutMenuCtrl{
 
 
 	public Button getSelected(){
-		return theShortcutMenu.getSelected();
+		Button localButton = null;
+		if(theShortcutMenu!=null)
+			localButton = theShortcutMenu.getSelected();
+		return localButton;
 	}
 
 	public OneSwitchService getService(){
 		return theService;
 	}
 
+	public boolean isShow(){
+		return isStarted;
+	}
+
 	/**
 	 * Permet de supprimer les vues.
 	 */
 	public void removeView(){
-		isRunning = false;
+		isStarted = false;
+		handler.removeCallbacksAndMessages(runnable);
 		if (theShortcutMenu != null){
 			theService.removeView(theShortcutMenu);
+			theShortcutMenu = null;
 			theService.getClickPanelCtrl().closePopupCtrl();
 		}
 	}
 
-	public void startThread(){
-		isRunning = true;
-		handler.postDelayed(runnable, 1000);
+	public void start(){
+		isStarted = true;
+		handler.post(runnable);
 	}
 
 	class PopupMenuRunnable implements Runnable{
 		@Override
 		public void run(){
-			try{
-				if(isRunning){
-					theShortcutMenu.selectNext();
-					if(sp.getBoolean("vocal",false)) {
-						handler.postDelayed(this, 1700);
-					}
-					else
-					handler.postDelayed(this, 1000);
+			if(isStarted){
+				theShortcutMenu.selectNext();
+				if(sp.getBoolean("vocal",false)) {
+					handler.postDelayed(this, 1700);
 				}
-			}
-			catch (Exception e){
-				e.printStackTrace();
+				else
+					handler.postDelayed(this, 1000);
 			}
 		}
+
 	}
 }
