@@ -245,12 +245,18 @@ public class VerticalLineCtrl{
 								addIterations();
 							}
 						}
-						if(verticalParams.x >= (size.x-density))
+						if(verticalParams.x >= (size.x-density)){
 							isMovingRight = false;
+							System.out.println("RENTRER");
+						}
+							
 					} 
 					else{
-						if(!clavier)
-							verticalParams.y -= density;
+						if(!clavier){
+							verticalParams.x -= density;
+							System.out.println("WAAAATTTTT");
+						}
+							
 						else{
 							if(currentColumn>0){
 								System.out.println("LIIINNNEEE    "+currentColumn);
