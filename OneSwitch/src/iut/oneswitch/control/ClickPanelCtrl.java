@@ -102,47 +102,6 @@ public class ClickPanelCtrl{
 	}
 	
 	/**
-	 * Vérifie si un clavier est ouvert ou non
-	 * @return
-	 */
-	public boolean keyboard(){
-		//Si le clavier OneSwitch n'est pas activé, on stop l'adaptation du clavier
-		if(!isInputMethodEnabled()) return false;
-		try {
-			String line;
-			Process process = Runtime.getRuntime().exec("su");
-			OutputStream stdin = process.getOutputStream();
-			InputStream stdout = process.getInputStream();
-
-			stdin.write(("dumpsys window InputMethod\n").getBytes());
-			stdin.write("exit\n".getBytes());
-			stdin.flush();
-
-			stdin.close();
-			BufferedReader br = new BufferedReader(new InputStreamReader(stdout));
-			while ((line = br.readLine()) != null) {
-				if(line.contains("mHasSurface=true")){
-					keyboard = true;
-					break;
-				}
-				else{
-					keyboard = false;
-				}
-				//keyboard = Boolean.parseBoolean(line.split(" ")[6].split("=")[1]);
-			}
-			br.close();
-
-
-			process.waitFor();
-
-			process.destroy();
-
-		} catch (Exception ex) {
-		}
-		return keyboard;
-	}
-
-	/**
 	 * Listenner du clic sur le panel.
 	 */
 	private void listener(){
@@ -178,7 +137,7 @@ public class ClickPanelCtrl{
 						//TROISIEME CLICK QUAND LA LIGNE VERTICAL BOUGE
 						else if ((!horizLine().isMoving()) && (verticalLine().isMoving()) && (!popupVisible)){
 							verticalLine().pause();
-							if (!forSwipe){
+							if (!forSwipe){ //Clic normal
 								posX = verticalLine().getX();
 								if(getKeyboard()){
 									screenTouch.giveCoord(posX,posY);
@@ -190,11 +149,9 @@ public class ClickPanelCtrl{
 									if(screenTouch!=null)
 										screenTouch.giveCoord(posX,posY);
 								}
-
-
 							}
-							else{
-								//setVisible(false);
+							else{ //Pour le Swipe
+								Toast.makeText(theService, "Sélectionnez un second point", Toast.LENGTH_SHORT).show();
 								removeView();
 								posX2 = verticalLine().getX();
 								forSwipe = false;
@@ -231,8 +188,6 @@ public class ClickPanelCtrl{
 				}
 			}
 		});
-
-
 
 		thePanel.setOnLongClickListener(new View.OnLongClickListener(){
 			public boolean onLongClick(View paramAnonymousView){
@@ -279,19 +234,54 @@ public class ClickPanelCtrl{
 					else if(popupVisible){
 						closePopupCtrl();
 					}
-
 				}
 				else{
 					removeLines();
 					keyboard=false;
 					ActionButton.back();
-
 				}
-
 				return true;
 			}
 
 		});
+	}
+	
+	
+	/**
+	 * Vérifie si un clavier est ouvert ou non
+	 * @return Retourne True si un clavier est affiché, false sinon
+	 */
+	public boolean keyboard(){
+		//Si le clavier OneSwitch n'est pas activé, on stop l'adaptation du clavier
+		if(!isInputMethodEnabled()) return false;
+		try {
+			String line;
+			Process process = Runtime.getRuntime().exec("su");
+			OutputStream stdin = process.getOutputStream();
+			InputStream stdout = process.getInputStream();
+
+			stdin.write(("dumpsys window InputMethod\n").getBytes());
+			stdin.write("exit\n".getBytes());
+			stdin.flush();
+
+			stdin.close();
+			BufferedReader br = new BufferedReader(new InputStreamReader(stdout));
+			while ((line = br.readLine()) != null) {
+				if(line.contains("mHasSurface=true")){
+					keyboard = true;
+					break;
+				}
+				else{
+					keyboard = false;
+				}
+				//keyboard = Boolean.parseBoolean(line.split(" ")[6].split("=")[1]);
+			}
+			br.close();
+			process.waitFor();
+			process.destroy();
+		} catch (Exception ex) {
+		}
+		return keyboard;
 	}
 
 
