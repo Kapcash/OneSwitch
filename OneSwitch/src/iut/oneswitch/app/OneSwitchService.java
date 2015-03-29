@@ -22,7 +22,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.AudioManager;
-import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
@@ -53,6 +52,7 @@ public class OneSwitchService extends Service implements SensorEventListener{
 	private boolean paused = false;
 	private WindowManager windowManager;
 	private SensorManager mSensorManager = null;
+	private boolean doAnimation=false;
 
 	private SharedPreferences sp;
 
@@ -82,6 +82,12 @@ public class OneSwitchService extends Service implements SensorEventListener{
 	public void onCreate() {
 		super.onCreate();
 		service = this;
+		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+		if (currentapiVersion >= 21){
+		    doAnimation = true;
+		} else{
+		    doAnimation = false;
+		}
 		//Récupère les valeurs de préférences
 		sp = PreferenceManager.getDefaultSharedPreferences(service);
 
@@ -148,6 +154,7 @@ public class OneSwitchService extends Service implements SensorEventListener{
 				horizCtrl.removeView();
 				verticalCtrl.removeView();
 			}
+			windowManager=null;
 			isStarted = false;
 			Notif.getInstance(this).removeRunningNotification();
 			Toast.makeText(this, "Service arrêté !", Toast.LENGTH_SHORT).show();
@@ -217,6 +224,10 @@ public class OneSwitchService extends Service implements SensorEventListener{
 
 
 	//-------------- LES GETTER ------------------------
+	public boolean doAnimation(){
+		return doAnimation;
+	}
+	
 	public ClickPanelCtrl getClickPanelCtrl(){
 		return clickCtrl;
 	}

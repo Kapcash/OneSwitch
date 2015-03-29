@@ -70,6 +70,10 @@ public class ClickPanelCtrl{
 		listener();
 	}
 
+	/**
+	 * Raccourcis permettant d'optenir la ligne horizontale
+	 * @return La ligne horizontale
+	 */
 	private HorizontalLineCtrl horizLine(){
 		return theService.getHorizontalLineCtrl();
 	}
@@ -82,7 +86,11 @@ public class ClickPanelCtrl{
 		thePanel = new PanelView(theService);
 		//thePanel.setColor(0xCC000000);
 	}
-
+	
+	/**
+	 * Permet de savoir si le clavier OneSwitch est ouvert
+	 * @return Retourne True si le clavier OneSwitch est ouvert, False sinon
+	 */
 	public boolean getKeyboard(){
 		return keyboard;
 	}
@@ -265,6 +273,7 @@ public class ClickPanelCtrl{
 							}
 							break;
 						case 3:
+							//Arret du balayage
 							if(!popupVisible) {
 								removeLines();
 							}
@@ -371,7 +380,10 @@ public class ClickPanelCtrl{
 		reloadPanel();
 	}
 
-
+	/**
+	 * Raccourcis permettant d'obtenir la ligne verticale
+	 * @return Retourne la ligne verticale
+	 */
 	private VerticalLineCtrl verticalLine(){
 		return theService.getVerticalLineCtrl();
 	}
@@ -457,6 +469,11 @@ public class ClickPanelCtrl{
 	 * @param paramBoolean "True" si l'action à effectuer est un glisser, "false" sinon
 	 */
 	public void swipeMode(){
+		if(sp.getBoolean("vocal", false)) {
+			SpeakAText.speak(theService.getApplicationContext(), "Appuyez sur l'écran pour choisir un deuxième point.");
+		}
+		Toast.makeText(theService, "Appuyez sur l'écran pour choisir un deuxième point.", Toast.LENGTH_LONG).show();
+		
 		forSwipe = true;
 		//this.closeScreenTouchDetection();
 		try{
@@ -466,6 +483,9 @@ public class ClickPanelCtrl{
 		catch(Exception e){}
 	}
 	
+	/**
+	 * Ouvre la vue qu détecte si un geste est effecué
+	 */
 	public void openScreenTouchDetection(){
 		waitingGesture = true;
 		screenTouch = new ScreenTouchDetectorCtrl(theService);
@@ -480,6 +500,10 @@ public class ClickPanelCtrl{
 			thePanel.setVisible(paramBoolean);
 	}
 	
+	/**
+	 * Permet d'optenir le delai de sécurité (dans le cas ou un geste est attendu trop longtemps)
+	 * @return Le délai de sécurité
+	 */
 	public int getDelayMillis(){
 		return delayMillis;
 	}

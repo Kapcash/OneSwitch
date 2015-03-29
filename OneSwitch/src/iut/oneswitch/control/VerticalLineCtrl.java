@@ -36,7 +36,7 @@ public class VerticalLineCtrl{
 	 * Epaisseur de la ligne, en pixel
 	 */
 	private int lineThickness;
-	
+
 	/**
 	 * Vitesse de déplacement de la ligne
 	 */
@@ -50,11 +50,11 @@ public class VerticalLineCtrl{
 	private float density;
 	private Handler handler;
 	private VerticalLineRunnable runnable;
-	private boolean stopIteration = false;
 	private int ite;
 	private float speedKeyboard;
 	private int currentColumn = 0;
 	private boolean clavier = false;
+	private Runnable slideLeft, slideRight;
 
 	/**
 	 * Initialise le controlleur avec le service
@@ -78,12 +78,12 @@ public class VerticalLineCtrl{
 	}
 
 	public int getX(){
-		return verticalParams.x;
+		if(theService.doAnimation() &&!clavier)
+			return (int)theLine.getX();
+		else
+			return verticalParams.x;
 	}
 
-	public int getY(){
-		return verticalParams.y;
-	}
 
 	/**
 	 * Initialise la ligne
@@ -92,23 +92,20 @@ public class VerticalLineCtrl{
 	public void init(){
 		//Objet contenant les préférences
 		sp = PreferenceManager.getDefaultSharedPreferences(theService);
-		
-		handler = new Handler();
-		runnable = new VerticalLineRunnable();
 
 		size = theService.getScreenSize();
 		theLine = new VerticalLine(theService);
 		theLine.setVisibility(4);
 		theLine.setId(200);
-		
+
 		ite = Integer.parseInt(sp.getString("iterations","3"));
-		
+
 		density = theLine.getResources().getDisplayMetrics().density;
 
 		//Récupère la vitesse
 		speed = sp.getInt("lign_speed",5);
 		speedKeyboard = (theService.getScreenSize().x)/10;
-		
+
 		//Récupère le délai de départ de la ligne
 		delay = Integer.parseInt(sp.getString("delay","1000"));
 
@@ -117,8 +114,8 @@ public class VerticalLineCtrl{
 		lineThickness *= density;
 
 		verticalParams = new WindowManager.LayoutParams(
-				WindowManager.LayoutParams.MATCH_PARENT,
-				WindowManager.LayoutParams.MATCH_PARENT,
+				theService.getScreenSize().x,
+				theService.getScreenSize().y,
 				WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
 				WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|
 				WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL|
@@ -129,10 +126,49 @@ public class VerticalLineCtrl{
 		verticalParams.gravity = Gravity.TOP | Gravity.START;
 		verticalParams.x = 0;
 		verticalParams.y = 0;
-		verticalParams.height = theService.getScreenSize().y;
-		verticalParams.width = lineThickness;
 
-		theService.addView(theLine, verticalParams);
+		handler = new Handler();
+		runnable = new VerticalLineRunnable();
+
+		if(theService.doAnimation()){
+			verticalParams.height = theService.getScreenSize().y;
+			verticalParams.width = theService.getScreenSize().x;
+			theService.addView(theLine, verticalParams);
+			slideLeft = new Runnable(){
+				@Override
+				public void run() {
+					long distance = (long) (theLine.getX());
+					long duration = (long)(distance/((double)(speed)/12));
+					isMovingRight = false;
+					theLine.setTranslationX(theLine.getX());
+					theLine.animate().setDuration(duration).setInterpolator(null).translationX(0).withEndAction(slideRight).start();
+				}
+			};
+
+			slideRight = new Runnable(){
+				@Override
+				public void run() {
+					if (getIterations()>= ite){
+						stop();
+						theService.getHorizontalLineCtrl().stop();
+					}
+					else{
+						long distance = (long) (theService.getScreenSize().x - theLine.getX());
+						long duration = (long)(distance/((double)(speed)/12));
+						isMovingRight = true;
+						theLine.setTranslationX(theLine.getX());
+						theLine.animate().setDuration(duration).setInterpolator(null).translationX(theService.getScreenSize().x).withEndAction(slideLeft).start();
+						addIterations();
+					}
+				}
+
+			};
+		}
+		else{
+			verticalParams.height = theService.getScreenSize().y;
+			verticalParams.width = lineThickness;
+			theService.addView(theLine, verticalParams);
+		}
 	}
 
 	/**
@@ -141,7 +177,7 @@ public class VerticalLineCtrl{
 	public boolean isMoving(){
 		return isMoving;
 	}
-	
+
 	/**
 	 * @return Retourne "true" si la ligne est visible
 	 */
@@ -153,6 +189,8 @@ public class VerticalLineCtrl{
 	 * Met la ligne en pause (stop le mouvement)
 	 */
 	public void pause(){
+		if(theService.doAnimation())
+			theLine.animate().cancel();
 		isMoving = false;
 	}
 
@@ -172,26 +210,40 @@ public class VerticalLineCtrl{
 		clavier = theService.getClickPanelCtrl().getKeyboard();
 		float theDensity = theLine.getResources().getDisplayMetrics().density;
 
-		if(clavier){
-			verticalParams.height = (int) (300*theDensity);
-			verticalParams.y = (int) (theService.getScreenSize().y-300*theDensity);
-			verticalParams.x = (int) ((size.x/20)-12*theDensity);
-
-		}
-		else{
-			verticalParams.height = theService.getScreenSize().y;
-			verticalParams.y = 0;
-			isMovingRight=true;
-		}
 		isMoving = true;
-		stopIteration = false;
 		theLine.setVisibility(View.VISIBLE);
-		if(speed > 4 && speed <= 7) density *= 2;
-		else if(speed > 7 && speed <= 10) density *= 3;
 		currentColumn = 0;
 		iterations = 0;
-		theService.updateViewLayout(theLine, verticalParams);
-		handler.postDelayed(runnable, delay);
+
+		if(theService.doAnimation()&&!clavier){
+			verticalParams.height = theService.getScreenSize().y;
+			verticalParams.width = theService.getScreenSize().x;
+			verticalParams.y = 0;
+			verticalParams.x = 0;
+			density = theLine.getResources().getDisplayMetrics().density;
+			theService.updateViewLayout(theLine, verticalParams);
+			handler.postDelayed(slideRight, delay);
+			isMovingRight=true;
+		}
+		else{
+			verticalParams.width = lineThickness;
+			if(clavier){
+				verticalParams.height = (int) (300*theDensity);
+				verticalParams.y = (int) (theService.getScreenSize().y-300*theDensity);
+				verticalParams.x = (int) ((size.x/20)-12*theDensity);
+			}
+			else{
+				verticalParams.height = theService.getScreenSize().y;
+				verticalParams.y = 0;
+				isMovingRight=true;
+			}
+			if(speed > 4 && speed <= 7) density *= 2;
+			else if(speed > 7 && speed <= 10) density *= 3;
+			theService.updateViewLayout(theLine, verticalParams);
+			handler.postDelayed(runnable, delay);
+		}
+
+
 	}
 
 	/**
@@ -201,8 +253,17 @@ public class VerticalLineCtrl{
 		isMoving = false;
 		if(theLine!=null)
 			theLine.setVisibility(View.INVISIBLE);
-		
-		restart();
+
+		if(theService.doAnimation()){
+			theLine.animate().cancel();
+			theLine.setX(0);
+			theLine.setY(0);
+		}
+		verticalParams.x = 0;
+		verticalParams.y = 0;
+		density = theLine.getResources().getDisplayMetrics().density;
+
+		theService.updateViewLayout(theLine, verticalParams);
 	}
 
 	/**
@@ -210,21 +271,38 @@ public class VerticalLineCtrl{
 	 */
 	public void setInverse() {
 		iterations = 0;
-		if(isMovingRight) isMovingRight = false;
-		else isMovingRight = true;
+		if(theService.doAnimation()){
+			theLine.animate().cancel();
+			if(isMovingRight)
+				handler.post(slideLeft);
+			else
+				handler.post(slideRight);
+		}
+		else{
+			isMovingRight = !isMovingRight;
+		}
+
+
 	}
 
 	/**
 	 * Replace la ligne dans le coin supérieur supérieur gauche
 	 */
 	public void restart() {
+		if(theService.doAnimation()){
+			theLine.animate().cancel();
+			theLine.setX(0);
+			theLine.setY(0);
+			handler.postDelayed(slideRight, delay);
+		}
 		verticalParams.x = 0;
 		verticalParams.y = 0;
-		theService.updateViewLayout(theLine, verticalParams);
 		density = theLine.getResources().getDisplayMetrics().density;
+
+		theService.updateViewLayout(theLine, verticalParams);
 	}
-	
-	
+
+
 
 	class VerticalLineRunnable implements Runnable {
 		@Override
@@ -250,13 +328,13 @@ public class VerticalLineCtrl{
 						if(verticalParams.x >= (size.x-density)){
 							isMovingRight = false;
 						}
-							
+
 					} 
 					else{
 						if(!clavier){
 							verticalParams.x -= density;
 						}
-							
+
 						else{
 							if(currentColumn>0){
 								verticalParams.x -= speedKeyboard;
@@ -270,7 +348,7 @@ public class VerticalLineCtrl{
 							isMovingRight = true;
 							addIterations();
 						}
-						
+
 
 					} 
 					theService.updateViewLayout(theLine, verticalParams);
@@ -282,61 +360,5 @@ public class VerticalLineCtrl{
 		}
 
 	}
-	
-	/*private class VerticalLineTask extends AsyncTask<Void, Void, Void>{
 
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-		}
-
-		@Override
-		protected void onProgressUpdate(Void... values){
-			super.onProgressUpdate(values);
-			if(!stopIteration)
-				theService.updateViewLayout(theLine, verticalParams);
-			else{
-				stop();
-				theService.getHorizontalLineCtrl().restart();
-			}
-		}
-
-		@Override
-		protected Void doInBackground(Void... arg0) {
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e1) {}
-			while(isMoving){
-				if (getIterations()== Integer.parseInt(sp.getString("iterations","3"))){
-					stopIteration = true;
-					this.publishProgress(arg0);
-				}
-				if((verticalParams.x <= size.x)&&(isMovingRight)){
-					verticalParams.x += density;
-					
-					if(verticalParams.x >= (size.x - density))
-						isMovingRight = false;
-				}
-				else{
-					verticalParams.x -= density;
-					if(verticalParams.x <= density){
-						isMovingRight = true;
-						addIterations();
-					}
-				}
-				
-				try {
-					Thread.sleep((int)(50/speed));
-				} catch (InterruptedException e) {}
-				this.publishProgress(arg0);
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void result) {
-		}
-	}*/
-
-	
 }

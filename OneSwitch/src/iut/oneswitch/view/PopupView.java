@@ -145,6 +145,9 @@ public class PopupView extends View{
 					public void run() {
 						if(clickPanel().waitingGesture()){
 							clickPanel().clickDone();
+							if(sp.getBoolean("vocal", false)) {
+								SpeakAText.speak(theCtrl.getService().getApplicationContext(), "Erreur: Votre appareil ne supporte pas le long clic.");
+							}
 							Toast.makeText(theCtrl.getService(), "Erreur: Votre appareil ne supporte pas le long clic.", Toast.LENGTH_LONG).show();
 						}
 					}

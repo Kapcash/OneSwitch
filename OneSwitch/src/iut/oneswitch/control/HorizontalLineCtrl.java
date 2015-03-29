@@ -50,8 +50,8 @@ public class HorizontalLineCtrl {
 	private float density;
 	private Handler handler;
 	private HorizLineRunnable runnable;
+	private Runnable slideUp, slideDown;
 	private int delay;
-	private boolean stopIteration = false;
 	private int ite;
 	private int currentLine=0;
 	private boolean clavier = false;
@@ -90,18 +90,13 @@ public class HorizontalLineCtrl {
 
 	/**
 	 * 
-	 * @return Retourne la position horizontale de la ligne (en pixel)
-	 */
-	public int getX(){
-		return horizParams.x;
-	}
-
-	/**
-	 * 
 	 * @return Retourne la position verticale de la ligne (en pixel)
 	 */
 	public int getY(){
-		return horizParams.y;
+		if(theService.doAnimation() && !clavier)
+			return (int)theLine.getY();
+		else
+			return horizParams.y;
 	}
 
 	/**
@@ -112,14 +107,11 @@ public class HorizontalLineCtrl {
 		//Object contenant les préférences
 		sp = PreferenceManager.getDefaultSharedPreferences(theService);
 
-		handler = new Handler();
-		runnable = new HorizLineRunnable();
-		
 		size = theService.getScreenSize();
 		theLine = new HorizontalLine(theService);
 		theLine.setVisibility(4);
 		theLine.setId(200);
-		
+
 		ite = Integer.parseInt(sp.getString("iterations","3"));
 
 
@@ -137,8 +129,8 @@ public class HorizontalLineCtrl {
 		lineThickness *= density;
 
 		horizParams = new WindowManager.LayoutParams(
-				WindowManager.LayoutParams.MATCH_PARENT,
-				WindowManager.LayoutParams.MATCH_PARENT,
+				theService.getScreenSize().x,
+				theService.getScreenSize().y,
 				WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
 				WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|
 				WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL|
@@ -150,10 +142,45 @@ public class HorizontalLineCtrl {
 		horizParams.gravity = Gravity.TOP | Gravity.START;
 		horizParams.x = 0;
 		horizParams.y = 0;
-		horizParams.height = lineThickness;
-		horizParams.width = theService.getScreenSize().x;
 
-		theService.addView(theLine, horizParams);
+		handler = new Handler();
+		runnable = new HorizLineRunnable();
+		horizParams.width = theService.getScreenSize().x;
+		if(theService.doAnimation()){
+			horizParams.height = theService.getScreenSize().y;
+			theService.addView(theLine, horizParams);
+			slideDown = new Runnable(){
+				@Override
+				public void run() {
+					if (getIterations()>= ite){
+						stop();
+					}
+					else{
+						long distance = (long) (theService.getScreenSize().y - theLine.getY());
+						long duration = (long)(distance/((double)(speed)/12));
+						isMovingDown = true;
+						theLine.setY(theLine.getY());
+						theLine.animate().setDuration(duration).setInterpolator(null).y(theService.getScreenSize().y).withEndAction(slideUp).start();
+						addIterations();
+					}
+				}
+			};
+
+			slideUp = new Runnable(){
+				@Override
+				public void run() {
+					long distance = (long) (theLine.getY());
+					long duration = (long)(distance/((double)(speed)/12));
+					isMovingDown = false;
+					theLine.setY(theLine.getY());
+					theLine.animate().setDuration(duration).setInterpolator(null).y(0).withEndAction(slideDown).start();
+				}
+			};
+		}
+		else{
+			horizParams.height = lineThickness;
+			theService.addView(theLine, horizParams);
+		}
 	}
 
 	/**
@@ -174,6 +201,8 @@ public class HorizontalLineCtrl {
 	 * Met la ligne en pause (stop le mouvement)
 	 */
 	public void pause(){
+		if(theService.doAnimation())
+			theLine.animate().cancel();
 		isMoving = false;
 	}
 
@@ -194,24 +223,36 @@ public class HorizontalLineCtrl {
 		clavier = theService.getClickPanelCtrl().keyboard();
 		float theDensity = theLine.getResources().getDisplayMetrics().density;
 
-		if(clavier){
-			horizParams.y = (int) (theService.getScreenSize().y-18*theDensity);
-			isMovingDown=false;
-		}
-		else{
-			horizParams.y=0;
-			isMovingDown=true;
-		}
-		
-		theService.updateViewLayout(theLine, horizParams);
-
-		
-		stopIteration = false;
+		horizParams.y = 0;
+		horizParams.x = 0;
 		isMoving = true;
 		theLine.setVisibility(View.VISIBLE);
-		if(speed > 4 && speed <= 7) density *= 2;
-		else if(speed > 7 && speed <= 10) density *= 3;
-		handler.postDelayed(runnable, delay);
+		
+		horizParams.width = theService.getScreenSize().x;
+		if(theService.doAnimation() && !clavier){
+			horizParams.height = theService.getScreenSize().y;
+			horizParams.y = 0;
+			horizParams.x = 0;
+			density = theLine.getResources().getDisplayMetrics().density;
+			isMovingDown=true;
+			theService.updateViewLayout(theLine, horizParams);
+			handler.postDelayed(slideDown, 1000);
+		}
+		else{
+			horizParams.height = lineThickness;
+			if(clavier){
+				horizParams.y = (int) (theService.getScreenSize().y-18*theDensity);
+				isMovingDown=false;
+			}
+			else{
+				horizParams.y=0;
+				isMovingDown=true;
+			}
+			if(speed > 4 && speed <= 7) density *= 2;
+			else if(speed > 7 && speed <= 10) density *= 3;
+			theService.updateViewLayout(theLine, horizParams);
+			handler.postDelayed(runnable, delay);
+		}
 		iterations = 0;
 	}
 
@@ -221,27 +262,55 @@ public class HorizontalLineCtrl {
 	public void stop(){
 		isMoving = false;
 		theLine.setVisibility(View.INVISIBLE);
-		restart();
+
+		if(theService.doAnimation()){
+			theLine.animate().cancel();
+			theLine.setX(0);
+			theLine.setY(0);
+		}
+		else{
+			horizParams.x = 0;
+			horizParams.y = 0;
+			density = theLine.getResources().getDisplayMetrics().density;
+		}
+		theService.updateViewLayout(theLine, horizParams);
 	}
 
 	/**
 	 * Déplace la ligne en sens inverse (de bas en haut)
 	 */
 	public void setInverse() {
+		if(theService.doAnimation()){
+			theLine.animate().cancel();
+			if(isMovingDown)
+				handler.post(slideUp);
+			else
+				handler.post(slideDown);
+		}
+		else{
+			isMovingDown = !isMovingDown;
+		}
 		iterations = 0;
-		isMovingDown = !isMovingDown;
 	}
 
 	/**
 	 * Replace la ligne dans le coin supérieur supérieur gauche
 	 */
 	public void restart() {
-		horizParams.x = 0;
-		horizParams.y = 0;
+		if(theService.doAnimation()){
+			theLine.animate().cancel();
+			theLine.setX(0);
+			theLine.setY(0);
+			handler.postDelayed(slideDown, 1000);
+		}
+		else{
+			horizParams.x = 0;
+			horizParams.y = 0;
+			density = theLine.getResources().getDisplayMetrics().density;
+		}
 		theService.updateViewLayout(theLine, horizParams);
-		density = theLine.getResources().getDisplayMetrics().density;
 	}
-	
+
 	class HorizLineRunnable implements Runnable{
 		public void run(){
 			try{
@@ -292,62 +361,5 @@ public class HorizontalLineCtrl {
 		}
 
 	}
-	
-	/*private class HorizLineTask extends AsyncTask<Void, Void, Void>{
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-		}
-
-		@Override
-		protected void onProgressUpdate(Void... values){
-			super.onProgressUpdate(values);
-			if(!stopIteration){
-				theService.updateViewLayout(theLine, horizParams);
-			}
-			else{
-				stop();
-			}
-		}
-
-		@Override
-		protected Void doInBackground(Void... arg0) {
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e1) {}
-			while(isMoving){
-				if (getIterations()== Integer.parseInt(sp.getString("iterations","3"))){
-					this.publishProgress(arg0);
-				}
-				if((horizParams.y <= size.y)&&(isMovingDown)){
-					horizParams.y += density;
-					if(horizParams.y >= (size.y-density))
-						isMovingDown = false;
-				}
-				else{
-					horizParams.y -= density;
-					if(horizParams.y <= density){
-						isMovingDown = true;
-						addIterations();
-					}
-				}
-				try {
-					Thread.sleep((int) (50/speed));
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				this.publishProgress(arg0);
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void result) {
-		}
-	}
-	 */	
-
-	
 
 }

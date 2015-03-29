@@ -15,16 +15,19 @@ import android.view.View;
 public class HorizontalLine extends View {
 	Paint paint = new Paint();
 	private SharedPreferences sp;
-	private int y = 10;
+	private int lineThickness;
+	private float density;
 
 	/**
 	 * Constructeur de la classe
 	 * @param paramContext
 	 */
-	public HorizontalLine(Context paramContext)
-	{
+	public HorizontalLine(Context paramContext){
 		super(paramContext);
 		sp = PreferenceManager.getDefaultSharedPreferences(paramContext);
+		density = getResources().getDisplayMetrics().density;
+		lineThickness = Integer.parseInt(sp.getString("lign_size","3"));
+		lineThickness *= density;
 
 	}
 
@@ -35,8 +38,8 @@ public class HorizontalLine extends View {
 		try{
 			this.paint.setColor(sp.getInt("color1", 16711681));
 
-			this.paint.setStrokeWidth(2 * paramCanvas.getHeight());
-			paramCanvas.drawLine(0.0F, 0.0F, paramCanvas.getWidth(), 0.0F, this.paint);
+			this.paint.setStrokeWidth(2*lineThickness);
+			paramCanvas.drawLine(0, 0, paramCanvas.getWidth(), 0, this.paint);
 			invalidate();
 		}
 		catch(Exception e){}
