@@ -31,7 +31,7 @@ public class VerticalLine extends View{
 	@Override
 	public void onDraw(Canvas canvas) {
 		try{
-			this.paint.setColor(sp.getInt("color2", 16711681));
+			paint.setColor(sp.getInt("color2", 16711681));
 
 			paint.setStrokeWidth(2*lineThickness);
 			canvas.drawLine(0, 0, 0, canvas.getHeight(), paint);

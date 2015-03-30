@@ -334,7 +334,7 @@ public class VerticalLineCtrl{
 							isMovingRight = false;
 						}
 
-					} 
+					}
 					else{//Si la barre va à gauche
 						if(!clavier){//Si le clavier est ouvert ou non
 							verticalParams.x -= density;
@@ -355,7 +355,7 @@ public class VerticalLineCtrl{
 						}
 
 
-					} 
+					}
 					theService.updateViewLayout(theLine, verticalParams);
 					if(!clavier)handler.postDelayed(this, (int) (55-(5*speed)));
 					else handler.postDelayed(this, 1000);

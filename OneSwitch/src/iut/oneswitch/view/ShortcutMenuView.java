@@ -159,6 +159,7 @@ public class ShortcutMenuView extends View{
 	/**
 	 * Permet de dessiner la popUp
 	 */
+	@Override
 	public void onDraw(Canvas canvas){
 		try{
 			popUp.setContentView(view);
@@ -167,7 +168,7 @@ public class ShortcutMenuView extends View{
 
 			popUp.update(0, 0, (canvas.getWidth()), canvas.getHeight());
 
-			
+
 			selectedIndex = btList.size()-1;
 			selected = btList.get(selectedIndex);
 			listener();

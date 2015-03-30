@@ -53,8 +53,8 @@ public class ScreenTouchDetectorCtrl{
 				WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH |
 				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
 				PixelFormat.TRANSLUCENT);
-		mParams.gravity = Gravity.START | Gravity.TOP; 
-		
+		mParams.gravity = Gravity.START | Gravity.TOP;
+
 		WindowManager.LayoutParams paramStatusBar = new WindowManager.LayoutParams(
 				theService.getScreenSize().x,
 				theService.getStatusBarHeight(),
@@ -63,7 +63,7 @@ public class ScreenTouchDetectorCtrl{
 				WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL|
 				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
 				PixelFormat.TRANSLUCENT);
-		paramStatusBar.gravity = Gravity.START | Gravity.TOP; 
+		paramStatusBar.gravity = Gravity.START | Gravity.TOP;
 		paramStatusBar.x = 0;
 		paramStatusBar.y = 0;
 		paramStatusBar.width = theService.getScreenSize().x;
@@ -87,16 +87,14 @@ public class ScreenTouchDetectorCtrl{
 				WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL|
 				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
 				PixelFormat.TRANSLUCENT);
-		panelHaut.gravity = Gravity.START | Gravity.TOP; 
+		panelHaut.gravity = Gravity.START | Gravity.TOP;
 		bas.invalidate();
 		haut.invalidate();
 		avoidStatusBar.invalidate();
-		//avoidStatusBar.setBackgroundColor(Color.WHITE);
-		//haut.setBackgroundColor(Color.BLACK);
-		//bas.setBackgroundColor(Color.WHITE);
+
 
 		theService.addView(touchLayout, mParams);
-		
+
 		theService.addView(bas, panelBas);
 		theService.addView(haut, panelHaut);
 		theService.addView(avoidStatusBar, paramStatusBar);

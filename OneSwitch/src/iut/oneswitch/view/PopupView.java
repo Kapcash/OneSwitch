@@ -82,10 +82,11 @@ public class PopupView extends View{
 		//AJOUT BOUTON PAGE SUIVANTE, INDEX 4
 		addButton(R.id.but_popup_05);
 	}
-	
+
 	/**
 	 * Permet de dessiner la popUp
 	 */
+	@Override
 	public void onDraw(Canvas canvas){
 		try{
 			popUp.setContentView(view);

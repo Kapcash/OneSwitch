@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.widget.Button;
 
@@ -39,7 +40,7 @@ public class ShortcutMenuCtrl{
 
 		theShortcutMenu = new ShortcutMenuView(theService, this);
 		shortcutMenuParams = new WindowManager.LayoutParams(
-				WindowManager.LayoutParams.MATCH_PARENT,
+				LayoutParams.MATCH_PARENT,
 				theService.getStatusBarHeight(),
 				WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
 				WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|
@@ -87,6 +88,9 @@ public class ShortcutMenuCtrl{
 		}
 	}
 
+	/**
+	 * démarre le défilement des élements du menu
+	 */
 	public void start(){
 		isStarted = true;
 		handler.post(runnable);

@@ -15,17 +15,17 @@ import android.view.KeyEvent;
  *
  */
 public class ActionButton {
-	
+
 	/**
 	 * Indique si le changement du volume est activé ou non.
 	 */
 	private static boolean volumeStop = true;
-	
+
 	/**
 	 * Permet de compter le nombre d'itérations que la barre de volume effectue.
 	 */
 	private static int count;
-	
+
 	/**
 	 * Indique si le volume doit diminué ou augmenté. True indique que le volume doit être diminué.
 	 */
@@ -91,7 +91,7 @@ public class ActionButton {
 		sp = PreferenceManager.getDefaultSharedPreferences(context);
 		final int iterations = Integer.parseInt(sp.getString("iterations","3"));
 		count = 0;
-		
+
 		final AudioManager myAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 		boolean bool = myAudioManager.isMusicActive();
 		int s = 0;
@@ -103,14 +103,15 @@ public class ActionButton {
 
 		Runnable a = new Runnable() {
 
+			@Override
 			public void run() {
-		
+
 				try {
 					if(count != iterations && !volumeStop) {
 						if(!changeWay) {
 							if(myAudioManager.getStreamVolume(stream) != myAudioManager.getStreamMaxVolume(stream)) {
 								myAudioManager.adjustStreamVolume(stream,
-			                        AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI);
+										AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI);
 							}
 							else {
 								changeWay = true;
@@ -119,14 +120,14 @@ public class ActionButton {
 						if(changeWay && count != iterations) {
 							if(myAudioManager.getStreamVolume(stream) != 0) {
 								myAudioManager.adjustStreamVolume(stream,
-				                        AudioManager.ADJUST_LOWER, AudioManager.FLAG_SHOW_UI);
-								
+										AudioManager.ADJUST_LOWER, AudioManager.FLAG_SHOW_UI);
+
 							}
 							else {
 								changeWay = false;
 								count++;
 							}
-							
+
 						}
 						if(count != iterations){
 							handler.postDelayed(this, 250);
@@ -163,7 +164,6 @@ public class ActionButton {
 	 */
 	public static void shutdown(){
 		try{
-			//Runtime.getRuntime().exec("su -c shutdown");
 			Runtime.getRuntime().exec("su -c reboot -p");
 		}
 		catch (IOException e){

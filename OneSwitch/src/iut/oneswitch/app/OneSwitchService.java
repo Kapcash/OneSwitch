@@ -35,7 +35,7 @@ import android.widget.Toast;
  * @author OneSwitch B
  */
 public class OneSwitchService extends Service implements SensorEventListener{
-	
+
 	/**
 	 * Le service de l'application.
 	 */
@@ -56,7 +56,7 @@ public class OneSwitchService extends Service implements SensorEventListener{
 	private WindowManager windowManager;
 	private SensorManager mSensorManager = null;
 	private boolean doAnimation=false;
-	
+
 	/**
 	 * Objet permettant de récupérer les préférences de l'application.
 	 */
@@ -80,6 +80,7 @@ public class OneSwitchService extends Service implements SensorEventListener{
 	 */
 	private boolean call=false;
 
+	@Override
 	public IBinder onBind(Intent paramIntent){
 		return null;
 	}
@@ -90,9 +91,9 @@ public class OneSwitchService extends Service implements SensorEventListener{
 		service = this;
 		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
 		if (currentapiVersion >= 21){
-		    doAnimation = true;
+			doAnimation = true;
 		} else{
-		    doAnimation = false;
+			doAnimation = false;
 		}
 		//Récupère les valeurs de préférences
 		sp = PreferenceManager.getDefaultSharedPreferences(service);
@@ -233,7 +234,7 @@ public class OneSwitchService extends Service implements SensorEventListener{
 	public boolean doAnimation(){
 		return doAnimation;
 	}
-	
+
 	public ClickPanelCtrl getClickPanelCtrl(){
 		return clickCtrl;
 	}
@@ -462,7 +463,7 @@ public class OneSwitchService extends Service implements SensorEventListener{
 
 						Object telephonyInterface = methodGetITelephony.invoke(telephonyManager);
 
-						Class<?> telephonyInterfaceClass =  
+						Class<?> telephonyInterfaceClass =
 								Class.forName(telephonyInterface.getClass().getName());
 						Method methodEndCall = telephonyInterfaceClass.getDeclaredMethod("endCall");
 

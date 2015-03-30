@@ -12,12 +12,12 @@ import android.os.Bundle;
  * @author OneSwitch B
  */
 public class OneSwitchActivity extends Activity{
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		
-		
+
+
 
 		/* Execute une commande "root" dès le démarrage pour que SuperSU (application de root)
 		 * demande d'autoriser les droits root pour l'application et éviter une gêne */

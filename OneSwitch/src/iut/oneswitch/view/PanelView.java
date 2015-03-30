@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 
 /**
@@ -32,14 +33,14 @@ public class PanelView{
 	private void init(){
 		thePanel = new View(theService);
 		clickParams = new WindowManager.LayoutParams(
-				WindowManager.LayoutParams.MATCH_PARENT,
+				LayoutParams.MATCH_PARENT,
 				theService.getStatusBarHeight(),
 				WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
 				WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL|
 				WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|
 				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
 				PixelFormat.TRANSLUCENT);
-		
+
 		clickParams.gravity = Gravity.TOP | Gravity.START;
 		clickParams.x = 0;
 		clickParams.y = 0;
@@ -48,7 +49,7 @@ public class PanelView{
 		thePanel.invalidate();
 		theService.addView(thePanel, clickParams);
 	}
-	
+
 	public void forceLayout(){
 		//thePanel.invalidate();
 	}
@@ -116,27 +117,27 @@ public class PanelView{
 			if(thePanel != null && theService!=  null){
 				theService.removeView(thePanel);
 				clickParams = new WindowManager.LayoutParams(
-						WindowManager.LayoutParams.MATCH_PARENT,
-						WindowManager.LayoutParams.MATCH_PARENT,
+						LayoutParams.MATCH_PARENT,
+						LayoutParams.MATCH_PARENT,
 						WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
 						WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL|
 						WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|
 						WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
-						PixelFormat.TRANSLUCENT); 
+						PixelFormat.TRANSLUCENT);
 				thePanel.invalidate();
 				theService.addView(thePanel, clickParams);
 			}
 		}
 		catch(RuntimeException e){}
 	}
-	
+
 	/**
 	 * Met à jour le panel
 	 */
 	public void updateViewLayout(){
 		theService.updateViewLayout(thePanel, clickParams);
 	}
-	
+
 	/**
 	 * Permet de changer la visibilité du panel
 	 * @param paramBoolean true, le panel est visible, false le panel est invisible.
@@ -149,7 +150,7 @@ public class PanelView{
 			thePanel.setVisibility(View.INVISIBLE);
 		}
 	}
-	
+
 	/**
 	 * Permet d'ajouter le panel au service.
 	 */

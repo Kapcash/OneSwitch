@@ -84,9 +84,8 @@ public class ClickPanelCtrl{
 	 */
 	private void init(){
 		thePanel = new PanelView(theService);
-		//thePanel.setColor(0xCC000000);
 	}
-	
+
 	/**
 	 * Permet de savoir si le clavier OneSwitch est ouvert.
 	 * @return Retourne True si le clavier OneSwitch est ouvert, false sinon.
@@ -94,26 +93,27 @@ public class ClickPanelCtrl{
 	public boolean getKeyboard(){
 		return keyboard;
 	}
-	
+
 	/**
 	 * Vérifie si le clavier OneSwitch est activé ou non.
 	 * @return
 	 */
 	public boolean isInputMethodEnabled() {
-	    String id = Settings.Secure.getString(theService.getContentResolver(), Settings.Secure.DEFAULT_INPUT_METHOD);
+		String id = Settings.Secure.getString(theService.getContentResolver(), Settings.Secure.DEFAULT_INPUT_METHOD);
 
-	    ComponentName defaultInputMethod = ComponentName.unflattenFromString(id);
+		ComponentName defaultInputMethod = ComponentName.unflattenFromString(id);
 
-	    ComponentName myInputMethod = new ComponentName(theService, OneSwitchKeyBoard.class);
+		ComponentName myInputMethod = new ComponentName(theService, OneSwitchKeyBoard.class);
 
-	    return myInputMethod.equals(defaultInputMethod);
+		return myInputMethod.equals(defaultInputMethod);
 	}
-	
+
 	/**
 	 * Listenner du clic sur le panel.
 	 */
 	private void listener(){
 		thePanel.setOnClickListener(new View.OnClickListener(){
+			@Override
 			public void onClick(View paramAnonymousView){
 				int delay = Integer.parseInt(sp.getString("reboundDelay","200"));
 				if (!shortcutMenuVisible){
@@ -178,7 +178,6 @@ public class ClickPanelCtrl{
 						}
 						//QUATRIEME CLICK QUAND LA POPUP EST AFFICHEE
 						else if((!horizLine().isMoving()) && (!verticalLine().isMoving()) && (popupVisible)){
-							//closePopupCtrl(); 
 							popupCtrl.getSelected().performClick();
 						}
 					}
@@ -197,6 +196,7 @@ public class ClickPanelCtrl{
 		});
 
 		thePanel.setOnLongClickListener(new View.OnLongClickListener(){
+			@Override
 			public boolean onLongClick(View paramAnonymousView){
 				keyboard();
 				if(!getKeyboard()){
@@ -255,8 +255,8 @@ public class ClickPanelCtrl{
 
 		});
 	}
-	
-	
+
+
 	/**
 	 * Vérifie si un clavier est ouvert ou non.
 	 * @return Retourne True si un clavier est affiché, false sinon.
@@ -284,7 +284,6 @@ public class ClickPanelCtrl{
 				else{
 					keyboard = false;
 				}
-				//keyboard = Boolean.parseBoolean(line.split(" ")[6].split("=")[1]);
 			}
 			br.close();
 			process.waitFor();
@@ -314,7 +313,7 @@ public class ClickPanelCtrl{
 		removeLines();
 		removeView();
 	}
-	
+
 	/**
 	 * Permet de savoir si nous sommes dans l'attente d'une gesture.
 	 * @return True si nous sommes dans l'attente d'une gesture.
@@ -464,16 +463,14 @@ public class ClickPanelCtrl{
 			SpeakAText.speak(theService.getApplicationContext(), "Appuyez sur l'écran pour choisir un deuxième point.");
 		}
 		Toast.makeText(theService, "Appuyez sur l'écran pour choisir un deuxième point.", Toast.LENGTH_LONG).show();
-		
+
 		forSwipe = true;
-		//this.closeScreenTouchDetection();
 		try{
 			thePanel.addView();
-			//thePanel.reloadPanel();
 		}
 		catch(Exception e){}
 	}
-	
+
 	/**
 	 * Ouvre la vue qu détecte si un geste est effecué.
 	 */
@@ -490,7 +487,7 @@ public class ClickPanelCtrl{
 		if(thePanel!=null)
 			thePanel.setVisible(paramBoolean);
 	}
-	
+
 	/**
 	 * Permet d'optenir le delai de sécurité (dans le cas ou un geste est attendu trop longtemps).
 	 * @return Le délai de sécurité.

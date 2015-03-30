@@ -53,7 +53,7 @@ public class PopupCtrl{
 		int widthCircle = 28;
 		int heightCircle = 28;
 		int largeurTrait = 2;
-		
+
 		density = theService.getResources().getDisplayMetrics().density;
 		circle = new CircleView(theService, this);
 		circleParams = new WindowManager.LayoutParams(0,0,
@@ -63,8 +63,8 @@ public class PopupCtrl{
 				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
 				PixelFormat.TRANSLUCENT);
 		circleParams.gravity = Gravity.TOP | Gravity.START;
-		circleParams.x = (int) (this.posX-((widthCircle/largeurTrait)*density));
-		circleParams.y = (int) (this.posY-((heightCircle/largeurTrait)*density));
+		circleParams.x = (int) (posX-((widthCircle/largeurTrait)*density));
+		circleParams.y = (int) (posY-((heightCircle/largeurTrait)*density));
 		circleParams.height = (int) (density*heightCircle);
 		circleParams.width  = (int) (density*widthCircle);
 		theService.addView(circle, circleParams);
@@ -77,26 +77,26 @@ public class PopupCtrl{
 				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
 				PixelFormat.TRANSLUCENT);
 		popupParams.gravity = Gravity.TOP | Gravity.START;
-		
+
 		//TAILLE DE LA POPUP (en DP)
 		int widthPopup = 170;
 		int heightPopup = 190;
-		
+
 		//ESPACE ENTRE LA POPUP ET LE CERCLE
 		int spacing = 5;
-		
+
 		popupParams.width  = (int) (density*widthPopup);
 		popupParams.height = (int) (density*heightPopup);
 		int rightPadding = (theService.getScreenSize().x - (posX) + spacing);
 		if(rightPadding>((widthPopup+5)*density))	popupParams.x = (circleParams.x+circleParams.width + spacing);
-		else	popupParams.x = (int) circleParams.x - popupParams.width - spacing;
-		popupParams.y = (int) (this.posY-((heightPopup/2)*density));
+		else	popupParams.x = circleParams.x - popupParams.width - spacing;
+		popupParams.y = (int) (posY-((heightPopup/2)*density));
 		theService.addView(thePopup, popupParams);
-		
+
 		handler = new Handler();
 		runnable = new PopupRunnable();
-		
-		
+
+
 	}
 
 	/**
@@ -179,6 +179,7 @@ public class PopupCtrl{
 	 *
 	 */
 	class PopupRunnable implements Runnable{
+		@Override
 		public void run(){
 			if (isStarted){
 				thePopup.selectNext();

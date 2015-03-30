@@ -73,7 +73,7 @@ public class HorizontalLineCtrl {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return Retourne le nombre d'itérations actuel de la ligne.
 	 */
 	public int getIterations(){
@@ -81,7 +81,7 @@ public class HorizontalLineCtrl {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return Retourne l'épaisseur de la ligne.
 	 */
 	public int getThickness(){
@@ -89,7 +89,7 @@ public class HorizontalLineCtrl {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return Retourne la position verticale de la ligne (en pixel).
 	 */
 	public int getY(){
@@ -227,7 +227,7 @@ public class HorizontalLineCtrl {
 		horizParams.x = 0;
 		isMoving = true;
 		theLine.setVisibility(View.VISIBLE);
-		
+
 		horizParams.width = theService.getScreenSize().x;
 		if(theService.doAnimation() && !clavier){
 			horizParams.height = theService.getScreenSize().y;
@@ -317,6 +317,7 @@ public class HorizontalLineCtrl {
 	 *
 	 */
 	class HorizLineRunnable implements Runnable{
+		@Override
 		public void run(){
 			try{
 				if (getIterations()== ite){

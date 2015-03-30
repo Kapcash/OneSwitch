@@ -20,7 +20,7 @@ public class AboutActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		//Charge le .xml
 		setContentView(R.layout.activity_about);
-		
+
 		//Enlève l'icone et modifie le titre de la ActionBar
 		ActionBar ab = getActionBar();
 		ab.setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
@@ -28,7 +28,7 @@ public class AboutActivity extends Activity {
 		ab.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#368aff")));
 		ab.setTitle("A propos");
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();

@@ -10,7 +10,7 @@ import android.graphics.Point;
  *
  */
 public class ActionGesture {
-	
+
 	/**
 	 * Permet d'effectuer un clic.
 	 * @param x L'absisse du point où le clic doit être effectué.
@@ -24,7 +24,7 @@ public class ActionGesture {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Permet d'effectuer un glisser.
 	 * @param x L'absisse du premier point.
@@ -40,7 +40,7 @@ public class ActionGesture {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Effectuer un long clic.
 	 * @param x L'absisse du point où le clic doit être effectué.
@@ -55,7 +55,7 @@ public class ActionGesture {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Permet d'effectuer un glisser vers le haut.
 	 * @param x L'absisse du point à partir duquel le glisser doit être effectué.
@@ -70,7 +70,7 @@ public class ActionGesture {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Permet d'effectuer un glisser vers le bas.
 	 * @param x L'absisse du point à partir duquel le glisser doit être effectué.
@@ -85,7 +85,7 @@ public class ActionGesture {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Permet d'effectuer un glisser vers la gauche.
 	 * @param x L'absisse du point à partir duquel le glisser doit être effectué.
@@ -100,7 +100,7 @@ public class ActionGesture {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Permet d'effectuer un glisser vers la droite.
 	 * @param x L'absisse du point à partir duquel le glisser doit être effectué.
