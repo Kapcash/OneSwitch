@@ -86,12 +86,10 @@ public class PrefGeneralFragment extends PreferenceFragment implements OnSharedP
 		super.onResume();
 		if(sw != null){
 			//Vérifie si le service est activé et met à jour le switch sur la bonne valeur
-			if(isMyServiceRunning(OneSwitchService.class)){
+			if(isMyServiceRunning(OneSwitchService.class))
 				sw.setChecked(true);
-			}
-			else{
+			else
 				sw.setChecked(false);
-			}
 		}
 	}
 	

@@ -91,7 +91,7 @@
             android:entries="@array/pref_reboundDelay_entries"
             android:entryValues="@array/pref_reboundDelay_values"
             android:key="reboundDelay"
-            android:title="@string/reboundDelay_title" />
+            android:title="@string/reboundDelay_title"/>
 
     </PreferenceCategory>
     
