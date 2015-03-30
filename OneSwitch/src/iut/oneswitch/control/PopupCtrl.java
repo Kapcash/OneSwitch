@@ -99,10 +99,18 @@ public class PopupCtrl{
 		
 	}
 
+	/**
+	 * Permet de générer un nouveau point
+	 * @return un nouveau point
+	 */
 	public Point getPos(){
 		return new Point(posX, posY);
 	}
 
+	/**
+	 * Ressort le bouton actuellement sélectionné
+	 * @return le bouton sélectionné
+	 */
 	public View getSelected(){
 		Button localButton = null;
 		if (thePopup != null) {
@@ -111,14 +119,17 @@ public class PopupCtrl{
 		return localButton;
 	}
 
+	/**
+	 * Retourne le service
+	 * @return the Service
+	 */
 	public OneSwitchService getService(){
 		return theService;
 	}
 
-	public boolean isShow(){
-		return isStarted;
-	}
-
+	/**
+	 * Supprime le cercle
+	 */
 	public void removeCircle(){
 		if (circle != null) {
 			theService.removeView(circle);
@@ -126,6 +137,9 @@ public class PopupCtrl{
 		}
 	}
 
+	/**
+	 * Suprimes la pop-up
+	 */
 	public void closePopup(){
 		isStarted = false;
 		handler.removeCallbacksAndMessages(runnable);
@@ -151,11 +165,19 @@ public class PopupCtrl{
 		}
 	}
 
+	/**
+	 * Permet de démarrer la sélection des boutons dans la pop-up
+	 */
 	public void start(){
 		isStarted = true;
 		handler.post(runnable);
 	}
 
+	/**
+	 * Permet de gèrer la sélection dans la pop-up
+	 * @author OneSwitch_B
+	 *
+	 */
 	class PopupRunnable implements Runnable{
 		public void run(){
 			if (isStarted){

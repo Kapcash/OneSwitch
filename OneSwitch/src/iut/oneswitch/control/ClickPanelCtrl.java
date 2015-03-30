@@ -200,6 +200,7 @@ public class ClickPanelCtrl{
 			public boolean onLongClick(View paramAnonymousView){
 				keyboard();
 				if(!getKeyboard()){
+					//Affichage de la pop-up sur appuie long.
 					if(!shortcutMenuVisible && !popupVisible){
 						if ((!horizLine().isMoving()) && (!verticalLine().isMoving()) && (!popupVisible)) {
 							openShortcutMenu();
@@ -244,6 +245,7 @@ public class ClickPanelCtrl{
 					}
 				}
 				else{
+					//Le clavier oneSwitch s'enlève sur un appuie long.
 					removeLines();
 					keyboard=false;
 					ActionButton.back();

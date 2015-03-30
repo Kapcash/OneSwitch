@@ -311,33 +311,38 @@ public class HorizontalLineCtrl {
 		theService.updateViewLayout(theLine, horizParams);
 	}
 
+	/**
+	 * Classe permettant de déplacer la ligne horizontale
+	 * @author OneSwitch_B
+	 *
+	 */
 	class HorizLineRunnable implements Runnable{
 		public void run(){
 			try{
 				if (getIterations()== ite){
 					stop();
 				}
-				if(isMoving){
-					if((horizParams.y <= size.y)&&(isMovingDown)){
-						if(!clavier)
+				if(isMoving){//Si la bare est censé bouger
+					if((horizParams.y <= size.y)&&(isMovingDown)){//Si elle va en bas
+						if(!clavier)//Si le clavier est ouvert ou non
 							horizParams.y += density;
 						else{
-							if(currentLine>0){
+							if(currentLine>0){//Si la barre n'est pas encore arrivé en bas ou non
 								horizParams.y += speedKeyboard;
 								currentLine--;
 							}else{
 								isMovingDown = false;
 								addIterations();
 							}
-						}
+						}//Si la barre arrive en bas de l'écran
 						if(horizParams.y >= (size.y-density))
 							isMovingDown = false;
 					}
-					else{
-						if(!clavier)
+					else{//Si la barre va en haut
+						if(!clavier)//Si le clavier est ouvert ou non
 							horizParams.y -= density;
 						else{
-							if(currentLine<4){
+							if(currentLine<4){//Si la barre n'est pas encore arrivé en haut ou non
 								horizParams.y -= speedKeyboard;
 								currentLine++;
 							}else{
@@ -345,6 +350,7 @@ public class HorizontalLineCtrl {
 								addIterations();
 							}
 						}
+						//Si la barre arrive en haut de l'écran
 						if(horizParams.y <= density){
 							isMovingDown = true;
 							addIterations();

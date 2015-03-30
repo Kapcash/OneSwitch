@@ -304,6 +304,11 @@ public class VerticalLineCtrl{
 
 
 
+	/**
+	 * Classe permettant de déplacer la ligne verticale
+	 * @author OneSwitch_B
+	 *
+	 */
 	class VerticalLineRunnable implements Runnable {
 		@Override
 		public void run(){
@@ -312,38 +317,38 @@ public class VerticalLineCtrl{
 					stop();
 					theService.getHorizontalLineCtrl().stop();
 				}
-				if(isMoving){
-					if((verticalParams.x <= size.x)&&(isMovingRight)){
-						if(!clavier)
+				if(isMoving){//Si la bare est censé bouger
+					if((verticalParams.x <= size.x)&&(isMovingRight)){//Si elle va à droite
+						if(!clavier)//Si le clavier est ouvert ou non
 							verticalParams.x += density;
 						else{
-							if(currentColumn<9){
+							if(currentColumn<9){//Si la barre n'est pas encore arrivé à droite ou non
 								verticalParams.x += speedKeyboard;
 								currentColumn++;
 							}else{
 								isMovingRight = false;
 								addIterations();
 							}
-						}
+						}//Si la barre arrive à droite de l'écran
 						if(verticalParams.x >= (size.x-density)){
 							isMovingRight = false;
 						}
 
 					} 
-					else{
-						if(!clavier){
+					else{//Si la barre va à gauche
+						if(!clavier){//Si le clavier est ouvert ou non
 							verticalParams.x -= density;
 						}
 
 						else{
-							if(currentColumn>0){
+							if(currentColumn>0){//Si la barre n'est pas encore arrivé à gauche ou non
 								verticalParams.x -= speedKeyboard;
 								currentColumn--;
 							}else{
 								isMovingRight = true;
 								addIterations();
 							}
-						}
+						}//Si la barre arrive à gauche de l'écran
 						if(verticalParams.x <= density){
 							isMovingRight = true;
 							addIterations();

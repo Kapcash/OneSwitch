@@ -11,6 +11,11 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputConnection;
 
+/**
+ * Classe permettant de gèrer le clavier OneSwitch
+ * @author OneSwitch_B
+ *
+ */
 public class OneSwitchKeyBoard extends InputMethodService
 implements OnKeyboardActionListener{
 
@@ -28,6 +33,10 @@ implements OnKeyboardActionListener{
 	    return kv;
 	}
 	
+	/**
+	 * Effectuer un son sur un clic
+	 * @param keyCode la touche du clavier
+	 */
 	private void playClick(int keyCode){
 	    AudioManager am = (AudioManager)getSystemService(AUDIO_SERVICE);
 	    switch(keyCode){
