@@ -35,7 +35,10 @@ import android.widget.Toast;
  * @author OneSwitch B
  */
 public class OneSwitchService extends Service implements SensorEventListener{
-
+	
+	/**
+	 * Le service de l'application.
+	 */
 	private OneSwitchService service;
 
 	private ClickPanelCtrl clickCtrl;
@@ -43,17 +46,20 @@ public class OneSwitchService extends Service implements SensorEventListener{
 	private VerticalLineCtrl verticalCtrl;
 
 	/**
-	 * True si le service est démarré, false sinon
+	 * True si le service est démarré, false sinon.
 	 */
 	private boolean isStarted = false;
 	/**
-	 * True si le service est mis en pause, false sinon
+	 * True si le service est mis en pause, false sinon.
 	 */
 	private boolean paused = false;
 	private WindowManager windowManager;
 	private SensorManager mSensorManager = null;
 	private boolean doAnimation=false;
-
+	
+	/**
+	 * Objet permettant de récupérer les préférences de l'application.
+	 */
 	private SharedPreferences sp;
 
 	public static final String TAG = OneSwitchService.class.getName();

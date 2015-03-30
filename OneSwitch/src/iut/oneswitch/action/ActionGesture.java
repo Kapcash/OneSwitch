@@ -5,16 +5,16 @@ import java.io.IOException;
 import android.graphics.Point;
 
 /**
- * Classe permettant de gèrer les actions de la popUp sur un clic normal.
+ * Classe permettant de gèrer les actions de la popUp dévoilé par un clic normal.
  * @author OneSwitch B
  *
  */
 public class ActionGesture {
 	
 	/**
-	 * Permet d'effectuer un clic
-	 * @param x absisses
-	 * @param y ordonné
+	 * Permet d'effectuer un clic.
+	 * @param x L'absisse du point où le clic doit être effectué.
+	 * @param y L'ordonné du point où le clic doit être effectué.
 	 */
 	public static void click(int x, int y){
 		try{
@@ -27,10 +27,10 @@ public class ActionGesture {
 	
 	/**
 	 * Permet d'effectuer un glisser.
-	 * @param x absisses
-	 * @param y ordonné
-	 * @param x2 absisses du deuxième clic
-	 * @param y2 ordonné du deuxième clic
+	 * @param x L'absisse du premier point.
+	 * @param y L'ordonné du premier point.
+	 * @param x2 L'absisse du deuxième point.
+	 * @param y2 L'ordonné du deuxième point.
 	 */
 	public static void swipe(int x, int y, int x2, int y2){
 		try{
@@ -42,9 +42,9 @@ public class ActionGesture {
 	}
 	
 	/**
-	 * Effectuer un long clic
-	 * @param x absisses
-	 * @param y ordonné
+	 * Effectuer un long clic.
+	 * @param x L'absisse du point où le clic doit être effectué.
+	 * @param y L'ordonné du point où le clic doit être effectué.
 	 */
 	public static void longClick(int x, int y){
 		try{
@@ -58,8 +58,8 @@ public class ActionGesture {
 	
 	/**
 	 * Permet d'effectuer un glisser vers le haut.
-	 * @param x absisse
-	 * @param y ordonné
+	 * @param x L'absisse du point à partir duquel le glisser doit être effectué.
+	 * @param y L'ordonné du point à partir duquel le glisser doit être effectué.
 	 * @param screenSize
 	 */
 	public static void pageUp(int x, int y, Point screenSize){
@@ -73,8 +73,8 @@ public class ActionGesture {
 	
 	/**
 	 * Permet d'effectuer un glisser vers le bas.
-	 * @param x absisse
-	 * @param y ordonné
+	 * @param x L'absisse du point à partir duquel le glisser doit être effectué.
+	 * @param y L'ordonné du point à partir duquel le glisser doit être effectué.
 	 * @param screenSize
 	 */
 	public static void pageDown(int x, int y, Point screenSize){
@@ -88,8 +88,8 @@ public class ActionGesture {
 	
 	/**
 	 * Permet d'effectuer un glisser vers la gauche.
-	 * @param x absisse
-	 * @param y ordonné
+	 * @param x L'absisse du point à partir duquel le glisser doit être effectué.
+	 * @param y L'ordonné du point à partir duquel le glisser doit être effectué.
 	 * @param screenSize
 	 */
 	public static void pageLeft(int x, int y, Point screenSize){
@@ -103,8 +103,8 @@ public class ActionGesture {
 	
 	/**
 	 * Permet d'effectuer un glisser vers la droite.
-	 * @param x absisse
-	 * @param y ordonné
+	 * @param x L'absisse du point à partir duquel le glisser doit être effectué.
+	 * @param y L'ordonné du point à partir duquel le glisser doit être effectué.
 	 * @param screenSize
 	 */
 	public static void pageRight(int x, int y, Point screenSize){

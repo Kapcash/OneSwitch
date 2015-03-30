@@ -12,34 +12,34 @@ import android.view.View;
 import android.view.WindowManager;
 
 /**
- * Controlleur de la ligne horizontale
- * Indique ses différents états, initialise ses paramètres, l'active ou la désactive
+ * Controlleur de la ligne horizontale.
+ * Indique ses différents états, initialise ses paramètres, l'active ou la désactive.
  */
 public class HorizontalLineCtrl {
 	private WindowManager.LayoutParams horizParams;
 	/**
-	 * Indique si la ligne se déplace
+	 * Indique si la ligne se déplace.
 	 */
 	private boolean isMoving = false;
 	/**
-	 * Indique si la ligne se déplace vers le bas (vers la navigation bar)
+	 * Indique si la ligne se déplace vers le bas (vers la navigation bar).
 	 */
 	private boolean isMovingDown = true;
 	/**
-	 * Indique si la ligne est affichée ou non
+	 * Indique si la ligne est affichée ou non.
 	 */
 	private boolean isShown = false;
 	/**
-	 * Nombre d'itérations (aller-retours) de la ligne depuis son lancement
+	 * Nombre d'itérations (aller-retours) de la ligne depuis son lancement.
 	 */
 	private int iterations;
 	/**
-	 * Epaisseur de la ligne, en pixel
+	 * Epaisseur de la ligne, en pixel.
 	 */
 	private int lineThickness;
 
 	/**
-	 * Vitesse de déplacement de la ligne
+	 * Vitesse de déplacement de la ligne.
 	 */
 	private float speed;
 	private float speedKeyboard;
@@ -57,8 +57,8 @@ public class HorizontalLineCtrl {
 	private boolean clavier = false;
 
 	/**
-	 * Initialise le controlleur avec le service
-	 * @param paramOneSwitchService Le service (contexte) de l'application
+	 * Initialise le controlleur avec le service.
+	 * @param paramOneSwitchService Le service (contexte) de l'application.
 	 */
 	public HorizontalLineCtrl(OneSwitchService paramOneSwitchService){
 		theService = paramOneSwitchService;
@@ -66,7 +66,7 @@ public class HorizontalLineCtrl {
 	}
 
 	/**
-	 * Ajoute une iterations à la ligne, lorsqu'elle a terminé un aller-retour
+	 * Ajoute une iterations à la ligne, lorsqu'elle a terminé un aller-retour.
 	 */
 	public void addIterations(){
 		iterations++;
@@ -74,7 +74,7 @@ public class HorizontalLineCtrl {
 
 	/**
 	 * 
-	 * @return Retourne le nombre d'itérations actuel de la ligne
+	 * @return Retourne le nombre d'itérations actuel de la ligne.
 	 */
 	public int getIterations(){
 		return iterations;
@@ -82,7 +82,7 @@ public class HorizontalLineCtrl {
 
 	/**
 	 * 
-	 * @return Retourne l'épaisseur de la ligne
+	 * @return Retourne l'épaisseur de la ligne.
 	 */
 	public int getThickness(){
 		return lineThickness;
@@ -90,7 +90,7 @@ public class HorizontalLineCtrl {
 
 	/**
 	 * 
-	 * @return Retourne la position verticale de la ligne (en pixel)
+	 * @return Retourne la position verticale de la ligne (en pixel).
 	 */
 	public int getY(){
 		if(theService.doAnimation() && !clavier)
@@ -100,8 +100,8 @@ public class HorizontalLineCtrl {
 	}
 
 	/**
-	 * Initialise la ligne sur le coin supérieur gauche de l'écran
-	 * Lance la ligne
+	 * Initialise la ligne sur le coin supérieur gauche de l'écran.
+	 * Lance la ligne.
 	 */
 	public void init(){
 		//Object contenant les préférences
@@ -184,21 +184,21 @@ public class HorizontalLineCtrl {
 	}
 
 	/**
-	 * @return Retourne "true" si la ligne se déplace, "false" sinon
+	 * @return Retourne "true" si la ligne se déplace, "false" sinon.
 	 */
 	public boolean isMoving(){
 		return isMoving;
 	}
 
 	/**
-	 * @return Retourne "true" si la ligne est visible
+	 * @return Retourne "true" si la ligne est visible.
 	 */
 	public boolean isShown(){
 		return isShown;
 	}
 
 	/**
-	 * Met la ligne en pause (stop le mouvement)
+	 * Met la ligne en pause (stop le mouvement).
 	 */
 	public void pause(){
 		if(theService.doAnimation())
@@ -207,7 +207,7 @@ public class HorizontalLineCtrl {
 	}
 
 	/**
-	 * Supprime la ligne
+	 * Supprime la ligne.
 	 */
 	public void removeView(){
 		if (theLine != null) {
@@ -216,7 +216,7 @@ public class HorizontalLineCtrl {
 	}
 
 	/**
-	 * Lance le déplacement de la ligne
+	 * Lance le déplacement de la ligne.
 	 */
 	protected void start(){
 		currentLine = 0;

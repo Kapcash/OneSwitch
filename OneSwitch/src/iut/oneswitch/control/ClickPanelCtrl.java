@@ -29,11 +29,11 @@ import android.widget.Toast;
 public class ClickPanelCtrl{
 	private boolean forSwipe = false;
 	/**
-	 * Popup affichant les gestes (clic, clic long, glisser etc.)
+	 * Popup affichant les gestes (clic, clic long, glisser etc.).
 	 */
 	private PopupCtrl popupCtrl;
 	/**
-	 * Panel affichant les raccourcis (Menu, Accueil, Retour etc.)
+	 * Panel affichant les raccourcis (Menu, Accueil, Retour etc.).
 	 */
 	private ScreenTouchDetectorCtrl screenTouch;
 	private boolean popupVisible = false;
@@ -45,7 +45,7 @@ public class ClickPanelCtrl{
 	private ShortcutMenuCtrl shortcutMenuCtrl;
 	private boolean shortcutMenuVisible = false;
 	/**
-	 * Panel invisible, au premier plan, capturant les clics
+	 * Panel invisible, au premier plan, capturant les clics.
 	 */
 	private PanelView thePanel;
 	private OneSwitchService theService;
@@ -60,8 +60,8 @@ public class ClickPanelCtrl{
 	private boolean keyboard=false;
 
 	/**
-	 * Constructeur de la classe
-	 * @param service
+	 * Constructeur de la classe.
+	 * @param service Le service de l'application.
 	 */
 	public ClickPanelCtrl(OneSwitchService service){
 		theService = service;
@@ -71,15 +71,15 @@ public class ClickPanelCtrl{
 	}
 
 	/**
-	 * Raccourcis permettant d'optenir la ligne horizontale
-	 * @return La ligne horizontale
+	 * Raccourcis permettant d'optenir la ligne horizontale.
+	 * @return La ligne horizontale.
 	 */
 	private HorizontalLineCtrl horizLine(){
 		return theService.getHorizontalLineCtrl();
 	}
 
 	/**
-	 * Instancie PanelView
+	 * Instancie PanelView.
 	 * -->Initialise le panel.
 	 */
 	private void init(){
@@ -88,15 +88,15 @@ public class ClickPanelCtrl{
 	}
 	
 	/**
-	 * Permet de savoir si le clavier OneSwitch est ouvert
-	 * @return Retourne True si le clavier OneSwitch est ouvert, False sinon
+	 * Permet de savoir si le clavier OneSwitch est ouvert.
+	 * @return Retourne True si le clavier OneSwitch est ouvert, false sinon.
 	 */
 	public boolean getKeyboard(){
 		return keyboard;
 	}
 	
 	/**
-	 * Vérifie si le clavier OneSwitch est activé ou non
+	 * Vérifie si le clavier OneSwitch est activé ou non.
 	 * @return
 	 */
 	public boolean isInputMethodEnabled() {
@@ -258,8 +258,8 @@ public class ClickPanelCtrl{
 	
 	
 	/**
-	 * Vérifie si un clavier est ouvert ou non
-	 * @return Retourne True si un clavier est affiché, false sinon
+	 * Vérifie si un clavier est ouvert ou non.
+	 * @return Retourne True si un clavier est affiché, false sinon.
 	 */
 	public boolean keyboard(){
 		//Si le clavier OneSwitch n'est pas activé, on stop l'adaptation du clavier
@@ -316,8 +316,8 @@ public class ClickPanelCtrl{
 	}
 	
 	/**
-	 * Permet de savoir si nous sommes dans l'attente d'une gesture
-	 * @return True si nous sommes dans l'attente d'une gesture
+	 * Permet de savoir si nous sommes dans l'attente d'une gesture.
+	 * @return True si nous sommes dans l'attente d'une gesture.
 	 */
 	public boolean waitingGesture(){
 		return waitingGesture;
@@ -333,7 +333,7 @@ public class ClickPanelCtrl{
 	}
 
 	/**
-	 * Permet de stoper les barres, popUP.
+	 * Permet de stoper les barres, pop-up.
 	 */
 	public void stopMove(){
 		removeLines();
@@ -372,15 +372,15 @@ public class ClickPanelCtrl{
 	}
 
 	/**
-	 * Raccourcis permettant d'obtenir la ligne verticale
-	 * @return Retourne la ligne verticale
+	 * Raccourcis permettant d'obtenir la ligne verticale.
+	 * @return Retourne la ligne verticale.
 	 */
 	private VerticalLineCtrl verticalLine(){
 		return theService.getVerticalLineCtrl();
 	}
 
 	/**
-	 * Indique au service qu'un clic a été effectué
+	 * Indique au service qu'un clic a été effectué.
 	 */
 	public void clickDone(){
 		try{
@@ -394,7 +394,7 @@ public class ClickPanelCtrl{
 	}
 
 	/**
-	 * Ferme la popup de gestes
+	 * Ferme la popup de gestes.
 	 */
 	public void closePopupCtrl(){
 		if(popupVisible){
@@ -409,7 +409,7 @@ public class ClickPanelCtrl{
 	}
 
 	/**
-	 * Ferme la popup de raccourcis
+	 * Ferme la popup de raccourcis.
 	 */
 	public void closeShortcutMenu(){
 		if(shortcutMenuVisible){
@@ -422,15 +422,15 @@ public class ClickPanelCtrl{
 	}
 
 	/**
-	 * Donne la position  l'intersection des lignes de pointage
-	 * @return Retourne le point formé par les lignes
+	 * Donne la position  l'intersection des lignes de pointage.
+	 * @return Retourne le point formé par les lignes.
 	 */
 	public Point getPos(){
 		return new Point(posX, posY);
 	}
 
 	/**
-	 * Rafraichit le panel
+	 * Rafraichit le panel.
 	 */
 	public void reloadPanel(){
 		if(thePanel!=null){
@@ -439,7 +439,7 @@ public class ClickPanelCtrl{
 	}
 
 	/**
-	 * Supprime les lignes de pointage
+	 * Supprime les lignes de pointage.
 	 */
 	public void removeLines(){
 		verticalLine().stop();
@@ -447,7 +447,7 @@ public class ClickPanelCtrl{
 	}
 
 	/**
-	 * Supprime le panel de capture du clic
+	 * Supprime le panel de capture du clic.
 	 */
 	public void removeView(){
 		if (thePanel != null) {
@@ -456,8 +456,8 @@ public class ClickPanelCtrl{
 	}
 
 	/**
-	 * Indique si le service doit effectuer un glisser
-	 * @param paramBoolean "True" si l'action à effectuer est un glisser, "false" sinon
+	 * Indique si le service doit effectuer un glisser.
+	 * @param paramBoolean "True" si l'action à effectuer est un glisser, "false" sinon.
 	 */
 	public void swipeMode(){
 		if(sp.getBoolean("vocal", false)) {
@@ -475,7 +475,7 @@ public class ClickPanelCtrl{
 	}
 	
 	/**
-	 * Ouvre la vue qu détecte si un geste est effecué
+	 * Ouvre la vue qu détecte si un geste est effecué.
 	 */
 	public void openScreenTouchDetection(){
 		waitingGesture = true;
@@ -483,8 +483,8 @@ public class ClickPanelCtrl{
 	}
 
 	/**
-	 * Modifie la visibilité du panel de capture du clic
-	 * @param paramBoolean "True" si le panel doit être visible et actif, "false" sinon
+	 * Modifie la visibilité du panel de capture du clic.
+	 * @param paramBoolean "True" si le panel doit être visible et actif, "false" sinon.
 	 */
 	public void setVisible(boolean paramBoolean){
 		if(thePanel!=null)
@@ -492,8 +492,8 @@ public class ClickPanelCtrl{
 	}
 	
 	/**
-	 * Permet d'optenir le delai de sécurité (dans le cas ou un geste est attendu trop longtemps)
-	 * @return Le délai de sécurité
+	 * Permet d'optenir le delai de sécurité (dans le cas ou un geste est attendu trop longtemps).
+	 * @return Le délai de sécurité.
 	 */
 	public int getDelayMillis(){
 		return delayMillis;

@@ -18,10 +18,20 @@ import android.view.inputmethod.InputConnection;
  */
 public class OneSwitchKeyBoard extends InputMethodService
 implements OnKeyboardActionListener{
-
+	
+	/**
+	 * TODO
+	 */
 	private KeyboardView kv;
+	
+	/**
+	 * TODO
+	 */
 	private Keyboard keyboard;
-
+	
+	/**
+	 * TODO
+	 */
 	private boolean caps = false;
 	
 	@Override
@@ -34,8 +44,8 @@ implements OnKeyboardActionListener{
 	}
 	
 	/**
-	 * Effectuer un son sur un clic
-	 * @param keyCode la touche du clavier
+	 * Effectuer un son sur un clic.
+	 * @param keyCode La touche du clavier.
 	 */
 	private void playClick(int keyCode){
 	    AudioManager am = (AudioManager)getSystemService(AUDIO_SERVICE);

@@ -10,18 +10,29 @@ import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 
 /**
- * Permet de gèrer les actions sur les boutons du menu sur appuie long.
+ * Permet de gèrer les actions sur les boutons du menu dévoilé par un appui long.
  * @author OneSwitch B
  *
  */
 public class ActionButton {
-
+	
+	/**
+	 * Indique si le changement du volume est activé ou non.
+	 */
 	private static boolean volumeStop = true;
+	
+	/**
+	 * Permet de compter le nombre d'itérations que la barre de volume effectue.
+	 */
 	private static int count;
+	
+	/**
+	 * Indique si le volume doit diminué ou augmenté. True indique que le volume doit être diminué.
+	 */
 	private static boolean changeWay = false;
 
 	/**
-	 * Permet de gèrer le retour.
+	 * Exécute une commande super-utilisateur afin de simuler la pression du bouton "retour".
 	 */
 	public static void back(){
 		try{
@@ -33,7 +44,7 @@ public class ActionButton {
 	}
 
 	/**
-	 * Permet de gèrer le multi Taches
+	 * Exécute une commande super-utilisateur afin de simuler la pression du bouton "multi-tâches".
 	 */
 	public static void taches(){
 		try{
@@ -45,7 +56,7 @@ public class ActionButton {
 	}
 
 	/**
-	 * Permet de gèrer l'accès à l'accueil.
+	 * Exécute une commande super-utilisateur afin de simuler la pression du bouton "home".
 	 */
 	public static void home(){
 		try{
@@ -57,7 +68,7 @@ public class ActionButton {
 	}
 
 	/**
-	 * Permet de gèrer l'accès au menu s'il y en a un.
+	 * Exécute une commande super-utilisateur afin d'accéder au menu de l'application courante.
 	 */
 	public static void menu(){
 		try{
@@ -69,8 +80,8 @@ public class ActionButton {
 	}
 
 	/**
-	 * Permet de gèrer le volume.
-	 * @param context
+	 * Permet d'augmenter ou de diminuer le volume.
+	 * @param context Le contexte de l'application
 	 * @throws IOException
 	 */
 	public static void volumeUp(final Context context) throws IOException{
@@ -136,7 +147,7 @@ public class ActionButton {
 
 
 	/**
-	 * Permet de gèrer le vérouillage.
+	 * Exécute une commande super-utilisateur afin de simuler la pression du bouton "dévérouiller".
 	 */
 	public static void lock(){
 		try{
@@ -148,7 +159,7 @@ public class ActionButton {
 	}
 
 	/**
-	 * Permet de gèrer le fait d'éteindre l'appareil.
+	 * Exécute une commande super-utilisateur afin de simuler l'arrêt du téléphone.
 	 */
 	public static void shutdown(){
 		try{
@@ -161,7 +172,7 @@ public class ActionButton {
 	}
 
 	/**
-	 * Stopper l'augmentation du volume.
+	 * Permet d'arrêter la changement du volume.
 	 */
 	public static void stopVolumeChange() {
 		volumeStop = true;
