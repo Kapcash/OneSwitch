@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="170dp"
+    android:layout_height="190dp" >
+
+    <Button
+        android:id="@+id/but_popup_02"
+        android:layout_width="76dp"
+        android:layout_height="76dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/buttonpopup"
+        android:drawableTop="@drawable/longclic"
+        android:gravity="center|bottom"
+        android:minWidth="48dp"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:text="@string/bt"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/but_popup_01"
+        android:layout_width="76dp"
+        android:layout_height="76dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/buttonpopup"
+        android:drawableTop="@drawable/clic"
+        android:gravity="center|bottom"
+        android:minWidth="48dp"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:text="@string/bt"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/but_popup_03"
+        android:layout_width="76dp"
+        android:layout_height="76dp"
+        android:layout_alignLeft="@+id/but_popup_01"
+        android:layout_below="@+id/but_popup_01"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/buttonpopup"
+        android:drawableTop="@drawable/swipe"
+        android:gravity="center|bottom"
+        android:minWidth="48dip"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:text="@string/bt"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/but_popup_04"
+        android:layout_width="76dp"
+        android:layout_height="76dp"
+        android:layout_alignLeft="@+id/but_popup_02"
+        android:layout_below="@+id/but_popup_02"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/buttonpopup"
+        android:drawableTop="@drawable/autres"
+        android:gravity="center|bottom"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:text="@string/bt"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/but_popup_05"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/but_popup_03"
+        android:layout_margin="5dp"
+        android:background="@drawable/buttonpopup"
+        android:text="@string/bt"
+        android:textSize="12sp" />
+
+</RelativeLayout>
